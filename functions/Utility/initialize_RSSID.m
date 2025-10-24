@@ -1,0 +1,81 @@
+%% 2. initialize RSSID      %%%%%%
+function [Y_N,U_N,Phi_N,Xi_N,S] = initialize_RSSID(Train_Data,...
+    nl,sy,mean_std_inp,mean_std_out)
+% Using inverse (QR factorization) to calculate terms Pi_orth_U and Psi_N
+% PiOrt_U = eye(size(U_N,2))-(U_N.')*(pinv(U_N*U_N.'))*U_N = I - Q1*Q1.';
+% Psi_N = (Phi_N*Pi_Uc*(Phi_N.'))^(-1) = (R22*R22.')^(-1);
+% P_N = (U_N*U_N.')^(-1) = (R11*R11.')^(-1)
+
+% Build Hankel blocks on (already) normalized data
+[Yp,Y_N] = createHankelMatrix(Train_Data.OutputData,...
+    nl,sy,mean_std_out );
+[Up,U_N] = createHankelMatrix(Train_Data.InputData,...
+    nl,sy,mean_std_inp);
+Phi_N = [Up;Yp];
+% Sizes
+lU   = size(U_N,1);          % r*nu
+lPhi = size(Phi_N,1);        % (r+m)*nu
+T1    = size(U_N,2);
+lY = size(Y_N,1);
+% ========= RQ via QR(S.'): correct stack & correct partitions =========
+[Q,R]  = qr([U_N;Up;Yp;Y_N].');
+R = R.';
+Q1 = Q(:,1:lU);
+% Q2 = Q(:, lU+(1:lPhi));
+R32  = R(lU+lPhi+(1:lY), lU+(1:lPhi));            % lY x lPhi
+Xi_N = R32 *R32.';
+
+if nargout > 4
+    R11 = R(1:lU,1:lU);
+    R22 = R(lU+(1:lPhi),lU+(1:lPhi));
+    S.PiOrt_U = eye(T1) - Q1*Q1.';
+    S.YPiPhi = Y_N*S.PiOrt_U*Phi_N.';
+    S.YU = Y_N*U_N.';
+    S.PhiU = Phi_N*U_N.';
+
+    Iu   = eye(size(R11,1));
+    Iphi = eye(size(R22,1));
+    if istril(R11)                      % LOWER triangular
+        S.P  = R11' \ (R11 \ Iu);       % == (R11*R11.').^(-1) stably
+    else                                % UPPER triangular
+        S.P  = R11  \ (R11' \ Iu);
+    end
+
+    if istril(R22)                      % LOWER triangular
+        S.Psi = R22' \ (R22 \ Iphi);    % == (R22*R22.').^(-1) stably
+    else
+        S.Psi = R22  \ (R22' \ Iphi);
+    end
+end
+
+% Gphi = R22*R22.';                    % == Φ Π_U^⊥ Φ^T (by construction)
+% Gphi = (Gphi+Gphi.')/2;
+% % Cholesky (or tiny ridge if needed)
+% [Rc,p] = chol(Gphi);
+% if p==0
+%     Psi_N = Rc \ (Rc' \ eye(lPhi));  % == (Φ Π_U^⊥ Φ^T)^{-1}
+% else
+%     lam = 1e-8 * trace(Gphi)/lPhi;
+%     Rc  = chol(Gphi + lam*eye(lPhi));
+%     Psi_N = Rc \ (Rc' \ eye(lPhi));
+% end
+% Xi_N = Y_N*PiOrt_U*(Phi_N.')*Psi_N*Phi_N*PiOrt_U;
+% PiOrth_U = eye(T1)-(U_N.')*(pinv(U_N*U_N.'))*U_N;
+% P_N = (R11*R11.')^(-1);
+% Psi_N = R22\((R22.')\eye(lPhi));  % (R22*R22.')^(-1);
+
+%%%%% error analysis %%%%%
+% rcond(Gphi)
+% rcond(P_N)
+% rcond(Psi_N)
+% % rcond(PiOrth_U)
+% % rcond(PiOrt_U)
+% rcond(U_N*U_N.')
+% rank(U_N)==size(U_N,1)
+% % Verify identities (after the fix)
+% PiU_perp_direct = eye(T1) - Q1*Q1.';
+% E1 = norm(U_N*U_N.' - R11*R11.','fro')/norm(U_N*U_N.','fro');
+% E2 = norm(Phi_N*PiU_perp_direct*Phi_N.' - R22*R22.','fro')/norm(R22*R22.','fro');
+% E3 = norm(Xi_N - R32Q2T,'fro') / max(1,norm(R32Q2T,'fro'));
+% fprintf('rel.err UU^T: %.2e,   rel.err ΦΠΦ^T: %.2e\n,  rel.err Xi Xi^T: %.2e\n', E1, E2, E3);
+end
