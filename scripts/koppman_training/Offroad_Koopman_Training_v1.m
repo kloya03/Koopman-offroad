@@ -80,7 +80,7 @@ clc;
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 
 %% Find Koopman Matrices and realizations of latent initial values
-[A,C,B,XGpr,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMtrices(...
+[A,C,B,XGpr,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out);
 et = toc;
 save('train_1','-v7.3')
