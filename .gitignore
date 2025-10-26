@@ -1,1 +1,6 @@
+# Ignore files to upload to git
+# ignore all slurm.out files
+*.out
+
+# Ignore all dataset file as they are large
 Datasets/

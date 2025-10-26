@@ -43,7 +43,7 @@ b.B_rr = 6.2e-4;
 b.C_rr = 1.6e-4;
 
 %% soft soil Parameters for Bekker Model
-if b.terrain == 1
+if b.terrain == "_clay"
     % % Terrain parameters [Clay]
     b.kc = 13200;          % Cohesive modulus [N/m^{n+1}]
     b.kphi = 692200;       % Frictional modulus [N/m^{n+2}]c
@@ -54,9 +54,8 @@ if b.terrain == 1
     b.phi = 0.2269;       % Angle of internal friction [rad]
     b.a0 = 0.43;          % Coefficients for theta_m
     b.a1 = 0.32;          % ''  ''  ''  ''
-    suff = "_clay"
 
-elseif b.terrain == 2
+elseif b.terrain == "_sandyloam"
     % % Terrain parameters [Sandy Loam]
     b.kc = 5300;          % Cohesive modulus [N/m^{n+1}]
     b.kphi = 1515000;     % Frictional modulus [N/m^{n+2}]
@@ -67,8 +66,7 @@ elseif b.terrain == 2
     b.phi = 0.5061;       % Angle of internal friction [rad]
     b.a0 = 0.18;          % Coefficients for theta_m
     b.a1 = 0.32;          % ''  ''  ''  ''
-    suff = "_sandy_loam"
-else
+elseif b.terrain == "_sand"
     % % Terrain parameters [Sand]
     b.kc = 1000;          % Cohesive modulus [N/m^{n+1}]
     b.kphi = 1528600;     % Frictional modulus [N/m^{n+2}]
@@ -80,8 +78,8 @@ else
     b.phi = 0.4712;       % Angle of internal friction [rad]
     b.a0 = 0.18;          % Coefficients for theta_m ????
     b.a1 = 0.32;          % ''  ''  ''  ''           ????
-    suff = "_sand"
-
+else
+    err = "no terrain properties"
 end
 % b.b0 = -0.2;          % Coefficients for theta_r
 % b.b1 = 0;             % ''  ''  ''  ''

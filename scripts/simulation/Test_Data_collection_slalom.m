@@ -1,11 +1,12 @@
 addpath("../../functions/simulation_model")
-% foldername = "../../Datasets/clay_noElev_dataset_100hz";
+foldername = "";
+b.terrain = "_clay";
 b.elev = 0;
 run('loadCommonParams.m');
 b.verbose = false;
 b.hr = nan;
 b.hf = nan;
-b.terrain
+
 %% Time step
 b.dt = 0.01;
 b.tstart = 0;
@@ -16,7 +17,7 @@ ngrid = 1600;
 %% Input values for delta and Fu
 load("../../Datasets/Offroad_InputsSignals.mat")
 
-parfor traj=batch(1)*ngrid+1:batch(2)*ngrid
+for traj=1
     delta_inp = DELTA(:,traj);
     tau_inp = TAU(:,traj);
     N = numel(b.tspan);
@@ -69,8 +70,10 @@ parfor traj=batch(1)*ngrid+1:batch(2)*ngrid
         m.Z_hc = Z_hc;
         m.t_hc = t_hc;
         m.Z0 = Z0;
+        m.INN = INN;
         m.bekk_h = bekk_h;
         m.sig_tau = sig_tau1;
+        m.suff = suff;
         m.fv = fv;
         m.b = b;
         m.events = [te,xe,ie];
