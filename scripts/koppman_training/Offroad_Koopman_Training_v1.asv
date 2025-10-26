@@ -8,10 +8,10 @@ clear;
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-filename ='Datasets/sandyloam_100hz_no_elev_experiment.mat';
+filename ='../../Datasets/sandyloam_100hz_no_elev_experiment_1575.mat';
 load(filename,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
-addpath("functions/Utility")
+addpath("../../functions/Utility")
 global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 %% normalize data
 for i=1:2
@@ -32,7 +32,7 @@ nu = size(trainData,3);       % number of inputs
 nl = 600;                     % time delay--length of Hankel Matrix   *************
 sy = 200;
 su = sy;
-nB = nl-sy;
+nB = 400;
 N4horizon = [nl,sy,su];
 Ntr = randi(size(trainData,4));
 n_stride = 5;
@@ -52,7 +52,7 @@ toc
 for iter =1+n_stride:n_stride:numTrain
 
     %%%%% Check Subspace distance for new data%%%%%
-    traj = iter:iter+n_stride;
+    traj = iter:iter+n_stride-1;
     [Y_N,U_N,Phi_N,Xi_i] = initialize_RSSID(trainData(:,K_obs,:,traj),...
         nl,sy,mean_std_inp,mean_std_out);
     [Gam_Xi_i,ri] = find_ExObs(Xi_i,cut_off);
@@ -73,15 +73,17 @@ for iter =1+n_stride:n_stride:numTrain
         check_sub = subspace(Gam_Xi_i,Gam_Xi_R);
         % check_sub1 = subspace(Gam_Xi_rold,Gam_Xi_R);
         % fprintf('Iteration %d | Counter: %f | Time: %d \n', iter, ct(end,:), toc);
-        fprintf('Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride,rr,ct(end,end),check_sub);
+        fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
     end
 end
-
+clc;
+fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 
 %% Find Koopman Matrices and realizations of latent initial values
 [A,C,B,XGpr,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMtrices(...
     trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out);
-
+et = toc;
+save('train_1','-v7.3')
 %% Fit GP basis functions
 for i =1:rr
     opts = statset('fitrgp');
