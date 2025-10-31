@@ -1,10 +1,12 @@
 %% 6. Gradient Descent
 function [Br,Zlift0,del_cost,total_cost] = GradientDescent(Phi_B,Phi_Z,BZ,Yhr,nB)
 
+
 ntr = size(BZ,2);
 rr = size(Phi_Z,2);
 nu = size(Phi_B,2)./rr;
 ny = size(Yhr,1)./nB;
+nn = 1/(2*nB*ntr);
 % Initial Guess
 Zlift0 = reshape(BZ(nu*rr+1:end,:),rr,ntr);  % Zlift0 = zeros(rr,ntr);  % parameter 2
 vec_Br = sum(BZ(1:nu*rr,:),2)/ntr;   % Br = zeros(rr,1);  % parameter 1 
@@ -14,14 +16,14 @@ num_iter = 5000;        % Number of iterations
 % Compute the predicted output , - phi_B*B_rep - Phi_Z_norm*Z0 prediction is (nx*nB,ntr) 
 prediction = squeeze(pagemtimes(Phi_B,repmat(vec_Br,1,1,ntr)))+Phi_Z*Zlift0;
 residual = Yhr - prediction;
-total_cost = [(1/2*nB*ntr)*sum(diag((residual.')*residual)), zeros(1,num_iter)];
+total_cost = [nn*sum(diag((residual.')*residual)), zeros(1,num_iter)];
 del_cost = total_cost(1,1);
 % fprintf('Iteration %d | Cost: %f\n', 0, total_cost(1));
 
 for iter=1:num_iter
     % Compute the gradient with respect to the j-th feature
-    gradient_Zj = (-1/(nB*ntr))*(Phi_Z.')*residual;
-    gradient_Bs = (-1/(nB*ntr))*pagemtimes(pagetranspose(Phi_B),reshape(residual,ny*nB,1,ntr)); 
+    gradient_Zj = (-2*nn)*(Phi_Z.')*residual;
+    gradient_Bs = (-2*nn)*pagemtimes(pagetranspose(Phi_B),reshape(residual,ny*nB,1,ntr)); 
     gradient_B = sum(gradient_Bs,3);
 
     % Update the Zlift0 j-th  and B parameter
@@ -34,7 +36,7 @@ for iter=1:num_iter
     residual = Yhr - prediction; % size is (nx*nB,ntr)
 
     % Compute the total cost
-    total_cost(iter+1) = sum(diag((1/(2*ntr*nB))*(residual.')*residual));
+    total_cost(iter+1) = sum(diag(nn*(residual.')*residual));
     del_cost(iter) = total_cost(1,iter+1) - total_cost(1,iter);
     fprintf('GD:: Iteration %d | Cost: %f\n', iter, total_cost(iter+1));
 end

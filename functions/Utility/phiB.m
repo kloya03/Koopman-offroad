@@ -1,12 +1,13 @@
 %% 7. PhiB
 
-function [Phi_B_N,BZ] = phiB(Ex_obs,U_tr,Y_tr,nB,Phi_Z)        %%%%%%
+function [Phi_B,D_phiB,BZ] = phiB(Ex_obs,U_tr,Y_tr,nB,Phi_Z)        %%%%%%
 rr = size(Phi_Z,2);
 nu = size(U_tr,1)./nB;
 ny = size(Y_tr,1)./nB;
 
 ntr = size(U_tr,2);
 for i=1:ntr
+    i
     UU = U_tr(:,i);
     YY = Y_tr(:,i);
     phi_B = zeros(ny*nB,nu*rr);
@@ -19,13 +20,15 @@ for i=1:ntr
         phi_B(ny*(ii-1)+1:ny*ii,:) =PHIB;
     end
 
-    % Phi_B(:,:,(iter-1)*ntr+i) = phi_B;
-    Phi_B_N(:,:,i) = (phi_B-...
-        mean(phi_B, 1))./std(phi_B,0,1);    % normalize
-    if nargout > 1
+    % Phi_B(:,:,i) = phi_B;
+    D_phiB(:,:,i) = std(phi_B,0,1);
+    Phi_B(:,:,i) = (phi_B)./D_phiB(:,:,i);    % normalize
+    % (phi_B-mean(phi_B, 1))./std(phi_B,0,1);    % normalize
+    if nargout > 2
         phi = [phi_B Phi_Z];
         BZ(:,i) = pinv((phi.')*phi)*(phi.')*YY;
     end
 end
+clc;
 
 end

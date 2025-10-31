@@ -1,10 +1,12 @@
 %% 6. Gradient Descent
 function [Br,Zlift0,del_cost,total_cost] = GradientDescent(Phi_B,Phi_Z,BZ,Yhr,nB)
 
+
 ntr = size(BZ,2);
 rr = size(Phi_Z,2);
 nu = size(Phi_B,2)./rr;
 ny = size(Yhr,1)./nB;
+nn = 1/(2*nB*ntr);
 % Initial Guess
 Zlift0 = reshape(BZ(nu*rr+1:end,:),rr,ntr);  % Zlift0 = zeros(rr,ntr);  % parameter 2
 vec_Br = sum(BZ(1:nu*rr,:),2)/ntr;   % Br = zeros(rr,1);  % parameter 1 
@@ -14,7 +16,7 @@ num_iter = 5000;        % Number of iterations
 % Compute the predicted output , - phi_B*B_rep - Phi_Z_norm*Z0 prediction is (nx*nB,ntr) 
 prediction = squeeze(pagemtimes(Phi_B,repmat(vec_Br,1,1,ntr)))+Phi_Z*Zlift0;
 residual = Yhr - prediction;
-total_cost = [(1/2*nB*ntr)*sum(diag((residual.')*residual)), zeros(1,num_iter)];
+total_cost = [nn*sum(diag((residual.')*residual)), zeros(1,num_iter)];
 del_cost = total_cost(1,1);
 % fprintf('Iteration %d | Cost: %f\n', 0, total_cost(1));
 

@@ -64,7 +64,7 @@ for iter = 1:Nc
     Psi = Psi - beta * (Psiq * Psiq.');   % symmetric rank-1 update
 
 end
-
+    
 % ===== (5) Save back =====
 S1.P    = P;
 S1.YU   = YU;
