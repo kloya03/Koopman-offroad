@@ -6,7 +6,7 @@ function [err_val] = Koopman_validation(Data,MDL_fitr, K,B,C,K_obs)
 ntr = size(Data,4);
 
 for i=1:ntr
-    [Ymean,Ycov,pos,error_vel,error_pos] = K_RSSID_prediction(Data(:,:,:,i),MDL_fitr,K,B,C,K_obs);
+    [Ymean,pos,y_out,Ycov,error_vel,error_pos] = K_RSSID_prediction(Data(:,:,:,i),MDL_fitr,K,B,C,K_obs);
     
     err_val(:,i) = [error_vel;error_pos];
 end

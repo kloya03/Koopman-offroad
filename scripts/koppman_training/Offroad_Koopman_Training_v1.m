@@ -8,10 +8,10 @@ clear;
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-filename ='../../Datasets/sandyloam_100hz_no_elev_experiment_1575.mat';
+filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1575.mat';
 load(filename,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
-addpath("../../functions/Utility")
+addpath("../../functions/utility")
 % global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 K_obs = 4:6;  % Only velocities as the observable
 %% normalize data
@@ -53,7 +53,8 @@ toc
 for iter =1+n_stride:n_stride:numTrain
     
     %%%%% Check Subspace distance for new data%%%%%
-    traj = iter:min(iter+n_stride-1,numTrain);
+    traj = 58;
+    % traj = iter:min(iter+n_stride-1,numTrain);
     [Y_N,U_N,Phi_N,Xi_i] = initialize_RSSID(trainData(:,K_obs,:,traj),...
         nl,sy,mean_std_inp,mean_std_out);
     [Gam_Xi_i,ri] = find_ExObs(Xi_i,cut_off);
@@ -85,11 +86,11 @@ save('train_test_2','-v7.3')
 %% Find Koopman Matrices and realizations of latent initial values
 clc;
 clear;
-load("train_test_2.mat")
+% load("train_test_2.mat")
 [A,C,B,XGpr,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out);
 et2 = toc
-save('train_test_3','-v7.3')
+
 %% Fit GP basis functions
 maxiter = 1000;
 for i =1:rr
@@ -102,6 +103,10 @@ for i =1:rr
         'HyperparameterOptimizationOptions',struct('UseParallel',true,...
         'ShowPlots',0));
 end
+save('train_test_3','-v7.3')
+%% Validate the model using the validation datasetclc;
+clc;
+clear;
 
-%% Validate the model using the validation dataset
-errors = Koopman_validation(valData,MDL_fitr.gprMDL,K,B,C,K_obs);
+load("train_test_3.mat")
+errors = Koopman_validation(valData,MDL_fitr,A,B,C,K_obs);

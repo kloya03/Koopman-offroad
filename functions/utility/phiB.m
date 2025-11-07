@@ -20,7 +20,7 @@ for i=1:ntr
         phi_B(ny*(ii-1)+1:ny*ii,:) =PHIB;
     end
 
-    % Phi_B(:,:,i) = phi_B;
+    % Phi_B(:,:,i) = phi_B;  % 
     D_phiB(:,:,i) = std(phi_B,0,1);
     Phi_B(:,:,i) = (phi_B)./D_phiB(:,:,i);    % normalize
     % (phi_B-mean(phi_B, 1))./std(phi_B,0,1);    % normalize

@@ -1,6 +1,6 @@
 %% 10. Koopman Prediction
 
-function [Ymean,Ycov,pos,error_vel,error_pos] = K_RSSID_prediction(data,MDL_fitr,K,B,C,K_obs)
+function [Ymean,pos,y_out,Ycov,error_vel,error_pos] = K_RSSID_prediction(data,MDL_fitr,K,B,C,K_obs)
 % data : 1 experiment with n sample time points and input output
 
 rr = size(K,1);
@@ -18,11 +18,11 @@ for i = 1:rr
 end
 pos0 = (y_out(1,1:3)).';
 pos = pos0;
-Ymean = [(y_out(1,1:3)).';C*Z_Gpr(:,1)];
-Ycov = diag(C*Z_Gpr(:,2)*C.');
+Ymean = C*Z_Gpr(:,1);
+Ycov = diag(C*diag(Z_Gpr(:,2))*C.');
 for i = 2:size(tspan,1) 
 
-    if mod(i,1000)==0
+    if mod(i,100)==0
         Ymean_corr = y_out(i,K_obs).';
         Ymean = [Ymean Ymean_corr];
         for j = 1:rr
