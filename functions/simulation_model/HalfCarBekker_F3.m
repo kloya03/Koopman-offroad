@@ -101,11 +101,11 @@ while maxErr > errTol && ct < 25
 
     % Wheel angular accelerations
     domega_r = (-b.R*(Flr + Frr_r) + tau_t)./b.Iw;
-    domega_f = -(b.R*(Flf + Frr_f))./b.Iw;
+    domega_f = (-b.R*(Flf + Frr_f))./b.Iw;
 
     % Accelerations
     ddx = (b.m*dy*dpsi*cos(th) + b.m*dz*dth +...
-        (Flf*cos(delta_t) - Fcf*sin(delta_t) + Flr) - f_adx - Frr_f - Frr_r) / b.m;
+        (Flf*cos(delta_t) - Fcf*sin(delta_t) + Flr) - f_adx) / b.m;
     ddy = (-b.m*dx*dpsi*cos(th) + b.m*dz*dpsi*sin(th) + Flf*sin(delta_t) + Fcf*cos(delta_t) + Fcr- f_ady) / b.m;
     ddpsi = ((Flf*sin(delta_t) + Fcf*cos(delta_t))*b.Lf - Fcr*b.Lr)/b.Iz;
 
@@ -165,7 +165,7 @@ dZdt = [dX;
         domega_r];
 
 forces = [Flf, Fcf, Nf, Frr_f, Flr, Fcr, Nr, Frr_r, f_adx, f_ady, tau_t, delta_t];
-vel = [vlf, vcf, omega_f, sf, vlr, vcr, omega_r, sr];
+vel = [vlf, vcf, omega_f, sf, beta_f, vlr, vcr, omega_r, sr, beta_r];
 out1 = [int_f,int_r];  
 out2 = [forces, vel];
 out3 = [vec_force_f.',vec_force_r.'];
