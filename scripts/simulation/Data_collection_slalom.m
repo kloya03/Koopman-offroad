@@ -59,7 +59,7 @@ parfor traj=batch(1)*ngrid+1:batch(2)*ngrid
         dZdt = cell2mat(dZdt.').';
 
         % fv = [Flf, Fcf, Nf, Frr_f, Flr, Fcr, Nr, Frr_r, f_adx, f_ady, b.tau_t, delta,...
-        %                         vlf, vcf, omega_f, b.sf, vlr, vcr, omega_r, b.sr]
+        %                         vlf, vcf, omega_f, b.sf, beta_f, vlr, vcr, omega_r, b.sr, beta_r]
         % bekk_h = [-int_sig_sin_f, int_tau_cos_f, thf_f, thr_f, thm_f, hf_f,
         %                 -int_sig_sin_r, int_tau_cos_r, thf_r, thr_r, thm_r, hf_r]
         % sig_tau = [sig_f, tau_xf, sig_r, tau_xr]
