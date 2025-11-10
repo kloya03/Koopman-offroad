@@ -19,9 +19,7 @@ A = pinv(Gamma_Xi_R(1:end-ny,:))*Gamma_Xi_R(ny+1:end,:);
 clearvars Phi_B_N phi_Z_N
 rr = size(BN, 1); 
 nu = size(BN, 2);
-
-% un-normalize from the std of feature marix phi_B and phi_Z
-B = reshape(diag(D_PhiB)\BN(:),rr,nu);   %% un-normalize the B matrix 
+Bn = reshape(diag(D_PhiB)\BN(:),rr,nu);   %% un-normalize the B matrix 
 Zlift = diag(D_PhiZ)\ZliftN;             %% un-normalize the Z matrix 
 
 Yini = Y_tr(1:ny,:); %*diag(mean_std_out(2,:))).' + mean_std_out(1,:).';
@@ -32,4 +30,6 @@ ZGp = Zlift(:,idx_GP);
 ytest(:,:)= XGp - (C)*ZGp;
 XGpr = XGp.';
 ZGpr = ZGp.';
+
+
 end
