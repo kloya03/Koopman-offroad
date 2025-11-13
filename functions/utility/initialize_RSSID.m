@@ -18,8 +18,8 @@ lPhi = size(Phi_N,1);        % (r+m)*nu
 T1    = size(U_N,2);
 lY = size(Y_N,1);
 % ========= RQ via QR(S.'): correct stack & correct partitions =========
-[Q,R]  = qr([U_N;Up;Yp;Y_N].');
-R = R.';
+S_UPhiY = [U_N;Up;Yp;Y_N];
+[Q,R]  = qr(S_UPhiY.',0);
 Q1 = Q(:,1:lU);
 % Q2 = Q(:, lU+(1:lPhi));
 R32  = R(lU+lPhi+(1:lY), lU+(1:lPhi));            % lY x lPhi

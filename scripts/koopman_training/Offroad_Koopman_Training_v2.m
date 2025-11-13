@@ -28,10 +28,10 @@ clearvars out inp
 %% Parameters
 tic
 % parameters selection 
-nl = 400;                     % time delay--length of Hankel Matrix   *************
-sy = 200;
+nl = 600;                     % time delay--length of Hankel Matrix   *************
+sy = 300;
 cut_off = 7;
-nB = 200;
+nB = 300;
 save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
 
 ny = size(trainData(:,K_obs),2);     % number of outputs
@@ -39,7 +39,7 @@ nu = size(trainData,3);       % number of inputs
 su = sy;
 N4horizon = [nl,sy,su];
 Ntr = randi(size(trainData,4));
-n_stride = 2;
+n_stride = 5;
 idx_data = 1:n_stride;
 prev_GrassDist = [];
 ct = [];

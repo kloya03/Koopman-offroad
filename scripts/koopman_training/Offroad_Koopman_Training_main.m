@@ -73,7 +73,7 @@ nu = size(trainData,3);       % number of inputs
 su = sy;
 N4horizon = [nl,sy,su];
 Ntr = randi(size(trainData,4));
-n_stride = 1;
+n_stride = 5;
 idx_data = 1:n_stride;
 prev_GrassDist = [];
 ct = [];
@@ -111,7 +111,7 @@ for iter =1+n_stride:n_stride:numTrain
         [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
         check_sub = subspace(Gam_Xi_i,Gam_Xi_R);
         % check_sub1 = subspace(Gam_Xi_rold,Gam_Xi_R);
-        if mod(iter,10)==0
+        if mod(iter,3)==0
             fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n',...
                 iter,iter+n_stride-1,rr,ct(end,end),check_sub);
         end
