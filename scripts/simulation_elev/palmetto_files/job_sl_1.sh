@@ -8,6 +8,6 @@
 
 module add matlab/2023b
 
-cd /scratch/kloya/Koopman-offroad/scripts/simulation_elev
+cd /scratch/kloya/Koopman-offroad/scripts/simulation_elev/palmetto_files
 
 matlab -nodisplay -nosplash < batch1_sandyloam.m > results_sandyloam_1.txt
