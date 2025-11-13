@@ -59,10 +59,12 @@ ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-filename ='../../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
-load(filename,"b","trainData","valData","testData","numTest","numVal",...
+% data_file ='../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
+% addpath("../../../functions/utility")
+addpath(function_file_path)
+load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
-addpath("../../../functions/utility")
+
 % global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 K_obs = 4:6;  % Only velocities as the observable
 
@@ -176,7 +178,9 @@ for jj = 1:size(refresh,2)
 
 end
 et_val = toc;
-save(ws_name,'-v7.3')
+output_dir = fullfile(pwd, 'results_sandyloam');
+ws_path = fullfile(output_dir, ws_name);
+save(ws_path,'-v7.3')
 
 
 disp(['Saved workspace as: ', ws_name]);
