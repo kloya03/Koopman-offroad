@@ -119,16 +119,18 @@ for iter =1+n_stride:n_stride:numTrain
         [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
         check_sub = subspace(Gam_Xi_i,Gam_Xi_R);
         % check_sub1 = subspace(Gam_Xi_rold,Gam_Xi_R);
-        % fprintf('Iteration %d | Counter: %f | Time: %d \n', iter, ct(end,:), toc);
-        fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
+        if mod(iter,10)==0
+            fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n',...
+                iter,iter+n_stride-1,rr,ct(end,end),check_sub);
+        end
     end
 end
-clc;
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 et_RSSID = toc;
 %% Find Koopman Matrices and realizations of latent initial values
 
 opts.maxiter = 10000;
+opts.del_cost_tol = 1e-9;
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
 et_GD = toc;

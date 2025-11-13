@@ -12,6 +12,7 @@ x = [vec_Br;Zlift0(:)];  % Combine parameters for cost function
 alpha_Z = 0.99;          % Learning rate
 alpha_B = 0.01;
 num_iter = opts.max_iter;        % Number of iterations
+cost_tol  = opts.del_cost_tol;        % stop if cost change is tiny
 
 for iter=1:num_iter
     % Compute the gradient with respect to the j-th feature and total cost
@@ -28,9 +29,19 @@ for iter=1:num_iter
     % Compute the del_cost
     if iter > 2
         del_cost(iter-1) = total_cost(1,iter) - total_cost(1,iter-1);
-    end
 
-    fprintf('GD:: Iteration %d | Cost: %f\n', iter, total_cost(iter));
+        if mod(iter,200)==0
+            fprintf('GD:: Iteration %d | Cost: %f| Cost delta: %f\n', iter, total_cost(iter), del_cost(end));
+        end
+        
+        if abs(del_cost(iter-1)) < cost_tol
+            fprintf('GD:: Stopping early at iter %d (cost plateau: |ΔJ| = %.3e)\n', ...
+                iter, abs(del_cost(iter-1)));
+            break;
+        end
+    end
+    
+    
 end
 total_cost(1,iter+1) = BZ_cost_func(x,Phi_B,Phi_Z,Yhr,nB);
 Br = reshape(vec_Br,rr,nu);
