@@ -12,13 +12,10 @@ module add matlab/2023b
 # The directory where you call sbatch from:
 SLURM_DIR="$SLURM_SUBMIT_DIR"
 
-# Parameter file must be ONE LEVEL BACK:
-#   If you run sbatch inside /scripts/slurm/
-#   then params_sandyloam.txt is inside /scripts/simulation/
-PARAM_FILE="$SLURM_DIR/../params.txt"
 
 # MATLAB script directory:
 MATLAB_DIR="$SLURM_DIR/.."
+PARAM_FILE="$MATLAB_DIR/params.txt"
 DATA_FILE = "$MATLAB_DIR/../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat"
 FUNCTIONS_FILE = "$MATLAB_DIR/../../functions/utility"
 
