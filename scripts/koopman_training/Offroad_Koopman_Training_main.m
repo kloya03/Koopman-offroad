@@ -1,5 +1,56 @@
 clc;
 clear;
+
+%% %%%%%%%%%% Palmetto Cluster %%%%%%%%%%
+disp('----------------------------------------------');
+disp('--- MATLAB Script Running (SLURM Job Info) ---');
+disp('----------------------------------------------');
+
+% Get Slurm IDs (if running on Palmetto)
+job_id  = getenv('SLURM_JOB_ID');         % e.g. '12345678'
+task_id = getenv('SLURM_ARRAY_TASK_ID');  % e.g. '5'
+
+if isempty(job_id)
+    job_id = 'local';
+end
+if isempty(task_id)
+    task_id = '0';
+end
+
+% Display job and task info
+fprintf('SLURM Job ID:       %s\n', job_id);
+fprintf('SLURM Array Task ID:%s\n', task_id);
+
+% Display parameter values (these variables must be passed from sbatch)
+fprintf('Parameter nB:       %s\n', num2str(nB));
+fprintf('Parameter nl:       %s\n', num2str(nl));
+fprintf('Parameter sy:       %s\n', num2str(sy));
+fprintf('Parameter cut_off:  %s\n', num2str(cut_off));
+fprintf('Parameter tag:      %s\n', param_tag);
+
+disp('----------------------------------------------');
+
+if isempty(job_id),  job_id  = 'local'; end
+if isempty(task_id), task_id = '0';      end
+
+% Use the tag from the shell if available
+if exist('param_tag','var')
+    base_name = sprintf('sandyloam_%s_koopman_model', param_tag);
+else
+    base_name = sprintf('sandyloam_nB%d_nl%d_sy%g_cut%g_koopman_model', ...
+                        nB, nl, sy, cut_off);
+end
+
+ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
+
+% parameters selection 
+% nl = 400;                     % time delay--length of Hankel Matrix   *************
+% sy = 200;
+% cut_off = 7;
+% nB = 200;
+% save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
+
+%%
 % ny : number of outputs
 % nu : number of inputs
 % nl : time delay--length of rows in Hankel Matrix
@@ -8,10 +59,10 @@ clear;
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1575.mat';
+filename ='../../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
 load(filename,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
-addpath("../../functions/utility")
+addpath("../../../functions/utility")
 % global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 K_obs = 4:6;  % Only velocities as the observable
 
@@ -27,13 +78,6 @@ end
 clearvars out inp
 %% Parameters
 tic
-% parameters selection 
-nl = 400;                     % time delay--length of Hankel Matrix   *************
-sy = 200;
-cut_off = 7;
-nB = 200;
-save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
-
 ny = size(trainData(:,K_obs),2);     % number of outputs
 nu = size(trainData,3);       % number of inputs
 su = sy;
@@ -50,7 +94,7 @@ ct = [];
 
 [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
 %% Recursive SSID
-toc
+et_initialize = toc
 for iter =1+n_stride:n_stride:numTrain
     
     %%%%% Check Subspace distance for new data%%%%%
@@ -81,13 +125,13 @@ for iter =1+n_stride:n_stride:numTrain
 end
 clc;
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
-et1 = toc;
+et_RSSID = toc;
 %% Find Koopman Matrices and realizations of latent initial values
 
 opts.maxiter = 10000;
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
-et2 = toc;
+et_GD = toc;
 
 % un-normalize from the mean and std of I/O data
 B = Bn./mean_std_inp(2,:);
@@ -107,7 +151,7 @@ for i =1:rr
         'HyperparameterOptimizationOptions',struct('UseParallel',true,...
         'ShowPlots',0));
 end
-et3 = toc;
+et_GP = toc;
 %% Validate the model using the validation dataset
 
 refresh = [25,50,75,100,125,150,175,200,225,250];
@@ -129,5 +173,9 @@ for jj = 1:size(refresh,2)
     overall_error(:,jj) = total_rmse./test_ntr;
 
 end
+et_val = toc;
+save(ws_name,'-v7.3')
 
-save(save_filename,'-v7.3')
+
+disp(['Saved workspace as: ', ws_name]);
+disp('--- Done ---');
