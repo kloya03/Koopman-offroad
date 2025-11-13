@@ -79,7 +79,8 @@ prev_GrassDist = [];
 ct = [];
 
 %% Initialize with n_stride trajectory data
-[~,~,~,Xi_N1,SN1] = initialize_RSSID(trainData(:,K_obs,:,idx_data),...
+exp_Ni = getexp(trainData(:,K_obs,:),idx_data);
+[~,~,~,Xi_N1,SN1] = initialize_RSSID(exp_Ni,...
     nl,sy,mean_std_inp,mean_std_out);
 
 [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
@@ -89,7 +90,8 @@ for iter =1+n_stride:n_stride:numTrain
     
     %%%%% Check Subspace distance for new data%%%%%
     traj = iter:min(iter+n_stride-1,numTrain);
-    [Y_N,U_N,Phi_N,Xi_i] = initialize_RSSID(trainData(:,K_obs,:,traj),...
+    exp_Ni = getexp(trainData(:,K_obs,:),traj);
+    [Y_N,U_N,Phi_N,Xi_i] = initialize_RSSID(exp_Ni,...
         nl,sy,mean_std_inp,mean_std_out);
     [Gam_Xi_i,ri] = find_ExObs(Xi_i,cut_off);
     GrDR_N = subspace(Gam_Xi_i,Gam_Xi_R);
@@ -116,15 +118,16 @@ for iter =1+n_stride:n_stride:numTrain
     end
 end
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
-et_RSSID = toc;
+et_RSSID = toc
 %% Find Koopman Matrices and realizations of latent initial values
 
 opts.maxiter = 10000;
 opts.del_cost_tol = 1e-9;
+exp_N = trainData(:,K_obs,:,idx_data);
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
-    trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
-et_GD = toc;
-
+    exp_N,Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
+et_GD = toc
+clearvars exp_ni exp_N
 % un-normalize from the mean and std of I/O data
 B = Bn./mean_std_inp(2,:);
 C = Cn.*mean_std_out(2,:).';
@@ -143,7 +146,7 @@ for i =1:rr
         'HyperparameterOptimizationOptions',struct('UseParallel',true,...
         'ShowPlots',0));
 end
-et_GP = toc;
+et_GP = toc
 %% Validate the model using the validation dataset
 
 refresh = [25,50,75,100,125,150,175,200,225,250];
@@ -165,7 +168,7 @@ for jj = 1:size(refresh,2)
     overall_error(:,jj) = total_rmse./test_ntr;
 
 end
-et_val = toc;
+et_val = toc
 output_dir = fullfile(pwd, 'results_sandyloam');
 ws_path = fullfile(output_dir, ws_name);
 save(ws_path,'-v7.3')

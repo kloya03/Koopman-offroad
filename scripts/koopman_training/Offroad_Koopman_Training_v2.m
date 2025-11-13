@@ -8,7 +8,7 @@ clear;
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1575.mat';
+filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
 load(filename,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
 addpath("../../functions/utility")
