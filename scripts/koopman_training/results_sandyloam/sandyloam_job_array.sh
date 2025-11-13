@@ -7,7 +7,7 @@
 #SBATCH --time=30:00:00
 #SBATCH --output=%x_%A_%a.txt            # Saves output in the folder you call sbatch from
 
-module add matlab/2023b
+module add matlab/2025a
 
 # The directory where you call sbatch from:
 SLURM_DIR="$SLURM_SUBMIT_DIR"

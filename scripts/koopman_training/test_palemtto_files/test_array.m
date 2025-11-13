@@ -1,6 +1,6 @@
 % test_array.m
 disp('--- MATLAB Test Script Running ---');
-
+ver
 % Display incoming parameters
 disp(['Parameter a = ', num2str(a)]);
 disp(['Parameter b = ', num2str(b)]);
