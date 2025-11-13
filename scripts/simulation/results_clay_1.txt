@@ -1,0 +1,487 @@
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+>> >> >> >> >> >> 
+b = 
+
+  struct with fields:
+
+      terrain: "_clay"
+         elev: 0
+            R: 0.3300
+            b: 0.2286
+           mw: 30
+          mwi: 5
+           Iw: 0.2723
+           kf: 5000
+           kr: 5000
+           cf: 300
+           cr: 300
+            m: 476.2700
+           Lf: 1.3595
+           Lr: 1.3595
+           Iy: 641.4071
+           Iz: 592.4901
+            g: 9.8100
+          Afx: 2.5000
+          Afy: 4.5000
+      rho_air: 1.2000
+           Cd: 0.5000
+     alpha_rr: -0.4000
+      beta_rr: 0.8000
+         P_rr: 0.3343
+         A_rr: 0.0084
+         B_rr: 6.2000e-04
+         C_rr: 1.6000e-04
+           kc: 13200
+         kphi: 692200
+            n: 0.5000
+           kx: 0.0100
+           ky: 0.0100
+           co: 4140
+          phi: 0.2269
+           a0: 0.4300
+           a1: 0.3200
+          lam: 0.0800
+       ret_xy: 1
+    tau_curve: [function_handle]
+            H: 0
+
+
+ans = 
+
+    "_clay"
+
+Starting parallel pool (parpool) using the 'Processes' profile ...
+Connected to parallel pool with 56 workers.
+Finished traj 40
+Finished traj 23
+Finished traj 46
+Finished traj 47
+Finished traj 10
+Finished traj 26
+Finished traj 39
+Finished traj 28
+Finished traj 42
+Finished traj 5
+Finished traj 31
+Finished traj 15
+Finished traj 1
+Finished traj 20
+Finished traj 4
+Finished traj 13
+Finished traj 3
+Finished traj 36
+Finished traj 6
+Finished traj 27
+Finished traj 21
+Finished traj 51
+Finished traj 18
+Finished traj 34
+Finished traj 48
+Finished traj 2
+Finished traj 45
+Finished traj 33
+Finished traj 29
+Finished traj 25
+Finished traj 38
+Finished traj 43
+Finished traj 32
+Finished traj 49
+Finished traj 12
+Finished traj 24
+Finished traj 22
+Finished traj 56
+Finished traj 16
+Finished traj 17
+Finished traj 37
+Finished traj 14
+Finished traj 19
+Finished traj 55
+Finished traj 8
+Finished traj 11
+Finished traj 35
+Finished traj 30
+Finished traj 41
+Finished traj 44
+Finished traj 50
+Finished traj 53
+Finished traj 7
+Finished traj 221
+Finished traj 152
+Finished traj 125
+Finished traj 173
+Finished traj 197
+Finished traj 131
+Finished traj 224
+Finished traj 149
+Finished traj 137
+Finished traj 62
+Finished traj 140
+Finished traj 170
+Finished traj 59
+Finished traj 124
+Finished traj 123
+Finished traj 134
+Finished traj 151
+Finished traj 167
+Finished traj 150
+Finished traj 101
+Finished traj 110
+Finished traj 200
+Finished traj 68
+Finished traj 128
+Finished traj 164
+Finished traj 143
+Finished traj 107
+Finished traj 65
+Finished traj 223
+Finished traj 86
+Finished traj 222
+Finished traj 179
+Finished traj 169
+Finished traj 113
+Finished traj 168
+Finished traj 119
+Finished traj 130
+Finished traj 116
+Finished traj 129
+Finished traj 182
+Finished traj 215
+Finished traj 80
+Finished traj 104
+Finished traj 92
+Finished traj 161
+Finished traj 133
+Finished traj 132
+Finished traj 158
+Finished traj 106
+Finished traj 105
+Finished traj 146
+Finished traj 191
+Finished traj 203
+Finished traj 109
+Finished traj 95
+Finished traj 108
+Finished traj 100
+Finished traj 122
+Finished traj 99
+Finished traj 79
+Finished traj 78
+Finished traj 166
+Finished traj 67
+Finished traj 165
+Finished traj 66
+Finished traj 89
+Finished traj 115
+Finished traj 114
+Finished traj 209
+Finished traj 148
+Finished traj 147
+Finished traj 98
+Finished traj 188
+Finished traj 199
+Finished traj 198
+Finished traj 127
+Finished traj 126
+Finished traj 136
+Finished traj 135
+Finished traj 181
+Finished traj 178
+Finished traj 180
+Finished traj 177
+Finished traj 61
+Finished traj 190
+Finished traj 60
+Finished traj 189
+Finished traj 103
+Finished traj 202
+Finished traj 102
+Finished traj 201
+Finished traj 214
+Finished traj 88
+Finished traj 213
+Finished traj 87
+Finished traj 91
+Finished traj 90
+Finished traj 160
+Finished traj 85
+Finished traj 159
+Finished traj 163
+Finished traj 84
+Finished traj 162
+Finished traj 64
+Finished traj 220
+Finished traj 63
+Finished traj 219
+Finished traj 142
+Finished traj 141
+Finished traj 121
+Finished traj 120
+Finished traj 208
+Finished traj 118
+Finished traj 207
+Finished traj 117
+Finished traj 284
+Finished traj 283
+Finished traj 112
+Finished traj 94
+Finished traj 77
+Finished traj 111
+Finished traj 93
+Finished traj 145
+Finished traj 290
+Finished traj 289
+Finished traj 144
+Finished traj 254
+Finished traj 253
+Finished traj 187
+Finished traj 186
+Finished traj 248
+Finished traj 247
+Finished traj 58
+Finished traj 57
+Finished traj 314
+Finished traj 313
+Finished traj 228
+Finished traj 76
+Finished traj 75
+Finished traj 236
+Finished traj 235
+Finished traj 286
+Finished traj 285
+Finished traj 157
+Finished traj 300
+Finished traj 299
+Finished traj 139
+Finished traj 138
+Finished traj 227
+Finished traj 97
+Finished traj 96
+Finished traj 156
+Finished traj 343
+Finished traj 266
+Finished traj 260
+Finished traj 265
+Finished traj 259
+Finished traj 345
+Finished traj 274
+Finished traj 273
+Finished traj 328
+Finished traj 296
+Finished traj 327
+Finished traj 295
+Finished traj 310
+Finished traj 320
+Finished traj 309
+Finished traj 319
+Finished traj 268
+Finished traj 267
+Finished traj 258
+Finished traj 257
+Finished traj 292
+Finished traj 337
+Finished traj 291
+Finished traj 316
+Finished traj 315
+Finished traj 256
+Finished traj 255
+Finished traj 342
+Finished traj 234
+Finished traj 233
+Finished traj 304
+Finished traj 252
+Finished traj 303
+Finished traj 251
+Finished traj 298
+Finished traj 297
+Finished traj 334
+Finished traj 333
+Finished traj 246
+Finished traj 245
+Finished traj 264
+Finished traj 263
+Finished traj 302
+Finished traj 322
+Finished traj 301
+Finished traj 321
+Finished traj 276
+Finished traj 275
+Finished traj 278
+Finished traj 277
+Finished traj 377
+Finished traj 362
+Finished traj 368
+Finished traj 294
+Finished traj 367
+Finished traj 293
+Finished traj 349
+Finished traj 339
+Finished traj 358
+Finished traj 306
+Finished traj 282
+Finished traj 305
+Finished traj 281
+Finished traj 363
+Finished traj 354
+Finished traj 336
+Finished traj 272
+Finished traj 335
+Finished traj 242
+Finished traj 271
+Finished traj 241
+Finished traj 375
+Finished traj 372
+Finished traj 381
+Finished traj 366
+Finished traj 348
+Finished traj 378
+Finished traj 361
+Finished traj 356
+Finished traj 387
+Finished traj 357
+Finished traj 9
+Finished traj 344
+Finished traj 400
+Finished traj 330
+Finished traj 371
+Finished traj 329
+Finished traj 353
+Finished traj 359
+Finished traj 324
+Finished traj 355
+Finished traj 323
+Finished traj 373
+Finished traj 389
+Finished traj 332
+Finished traj 350
+Finished traj 331
+Finished traj 388
+Finished traj 391
+Finished traj 392
+Finished traj 398
+Finished traj 352
+Finished traj 351
+Finished traj 347
+Finished traj 308
+Finished traj 385
+Finished traj 307
+Finished traj 374
+Finished traj 250
+Finished traj 370
+Finished traj 249
+Finished traj 396
+Finished traj 346
+Finished traj 365
+Finished traj 382
+Finished traj 399
+Finished traj 397
+Finished traj 393
+Finished traj 384
+Finished traj 318
+Finished traj 74
+Finished traj 317
+Warning: Failure at t=3.574381e+00.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (7.105427e-15) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 395
+Finished traj 386
+Finished traj 380
+Finished traj 394
+Finished traj 73
+Finished traj 360
+Finished traj 196
+Finished traj 72
+Warning: Failure at t=1.290291e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 195
+Finished traj 262
+Finished traj 261
+Finished traj 232
+Finished traj 231
+Warning: Failure at t=3.439760e+00.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (7.105427e-15) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 176
+Finished traj 185
+Warning: Failure at t=1.409810e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 175
+Finished traj 184
+Finished traj 183
+Finished traj 174
+Finished traj 288
+Finished traj 226
+Finished traj 287
+Finished traj 225
+Finished traj 71
+Warning: Failure at t=1.375573e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 340
+Warning: Failure at t=1.364102e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 70
+Finished traj 69
+Finished traj 270
+Warning: Failure at t=1.481678e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 383
+Warning: Failure at t=8.553790e+00.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 269
+Finished traj 341
+Warning: Failure at t=5.250426e+00.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (1.421085e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 390
+Finished traj 312
+Warning: Failure at t=3.124714e+00.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (7.105427e-15) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Warning: Failure at t=1.456101e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 311
+Finished traj 206
+Finished traj 205
+Finished traj 204
+Finished traj 364
+Warning: Failure at t=1.515696e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 83
+Finished traj 244
+Finished traj 82
+Finished traj 243
+Finished traj 81
+Finished traj 172
+Warning: Failure at t=1.512429e+01.  Unable to meet integration tolerances without reducing the step size below the smallest value allowed (2.842171e-14) at time t.
+> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('ode113', '/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m', 428)" style="font-weight:bold">ode113</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/funfun/ode113.m',428,0)">line 428</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel_function>make_general_channel/channel_general', '/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m', 852)" style="font-weight:bold">parallel_function>make_general_channel/channel_general</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/matlab/lang/parallel_function.m',852,0)">line 852</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('parallel.internal.parfor.cppRemoteParallelFunction', '/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m', 53)" style="font-weight:bold">parallel.internal.parfor.cppRemoteParallelFunction</a> (<a href="matlab: opentoline('/software/commercial/matlab/R2023b/toolbox/parallel/cluster/+parallel/+internal/+parfor/cppRemoteParallelFunction.m',53,0)">line 53</a>)
+Finished traj 171
