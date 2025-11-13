@@ -6,14 +6,14 @@ close all;
 startIndex = 1;  % Starting index
 endIndex = 1600; % Ending index
 missingFiles=[];
-foldername = '../../Datasets/sandyloam_noElev_dataset_100hz';
+foldername = '../../datasets/sandyloam_Elev_dataset_100hz';
 fails=[]; incomp =[]; comp = [];
 exp_u_incomp = [];exp_y_incomp = {};
 exp_x_incomp = {};exp_t_incomp = {};
 exp_bekk_h_incomp = {};exp_dZdt_incomp = {};
 exp_fv_incomp = {};exp_sig_tau_incomp = {};
 ct = 0; ctf = 0;
-for iter=startIndex:endIndex
+for iter=startIndex:100
 %     clc;
     iter
 
@@ -28,13 +28,24 @@ for iter=startIndex:endIndex
         continue
     end
     load(fileName)
+
+    if iter ==startIndex
+        [xq, yq] = meshgrid(linspace(-1, 200, 200), linspace(-1, 200, 200));
+        zq = arrayfun(b.h, xq, yq);
+        figure(1)
+        hold on;
+        surf(xq, yq, zq); shading interp; colormap jet;
+        xlabel('x (m)'); ylabel('y (m)'); zlabel('Height (m)');
+        title('Smooth Random Terrain via Low-Frequency Fourier Series');
+        axis equal
+    end
     % Ht = b.h(Z_hc(:,1),Z_hc(:,2));
     if  abs(max(Z_hc(:,4))) > 20
         fails = [fails, iter]
     elseif size(t_hc,1) == 2001
         i=1;
         ct = ct+1;
-        % plotFigures(i,Z_hc,t_hc,fv,"complete")
+        plotFigures(i,Z_hc,t_hc,fv,"complete")
         Data_states = Z_hc(:,1:12);
         % Data_observables = [dZdt(:,4:5), dZdt(:,8), dZdt(:,3), dZdt(:,9)];
         Data_observables = [Z_hc(:,1:6)];%,Z_hc(:,4:5), Z_hc(:,6)];
@@ -71,10 +82,12 @@ for iter=startIndex:endIndex
 end
 ind_ref{1} = "X, Y, psi, u, v, dpsi, z, dz, theta, dtheta, wf, wr";
 ind_ref{2} = "fv = [Flf, Fcf, Nf, Frr_f, Flr, Fcr, Nr, Frr_r, f_adx, f_ady,"+...
-    "b.tau_t, delta, vlf, vcf, omega_f, b.sf, vlr, vcr, omega_r, b.sr]";
+    "b.tau_t, delta, vlf, vcf, omega_f, b.sf, beta_f vlr, vcr, omega_r, b.sr, beta_r]";
 ind_ref{3} = "bekk_h = [-int_sig_sin_f, int_tau_cos_f, thf_f, thr_f, thm_f, hf_f,"+...
     "-int_sig_sin_r, int_tau_cos_r, thf_r,thr_r, thm_r, hf_r]";
 ind_ref{4} = "sig_tau = [sig_f, tau_xf, sig_r, tau_xr]";
+
+
 
 
 %% Divide into Test, Training and validation set
@@ -109,14 +122,16 @@ val_xy = reshape(cell2mat(valData(:,[1,2]).OutputData),...
 train_xy = reshape(cell2mat(trainData(:,[1,2]).OutputData),...
     size(trainData.OutputData{1},1),2,size(trainData.OutputData,2));
 
+
+
 %% Save all
-save('../../Datasets/sandyloam_100hz_no_elev_experiment_1575.mat',...
-    "exp_x_incomp","exp_t_incomp","exp_y_incomp","exp_u_incomp","incomp",...
-    "exp_x","exp_y","exp_u","missingFiles","b","t_hc","exp_sig_tau_incomp",...
-    "exp_fv_incomp","fails","exp_dZdt_incomp","exp_bekk_h_incomp",...
-    "exp_sig_tau","exp_fv","exp_dZdt","exp_bekk_h","ind_ref","numTraj",...
-    "numVal","numTrain","numTest","comp","allindices","trainData",...
-    "testData","valData","test_xy","train_xy","val_xy",'-v7.3');
+% save('../../Datasets/sandyloam_100hz_no_elev_experiment_1575.mat',...
+%     "exp_x_incomp","exp_t_incomp","exp_y_incomp","exp_u_incomp","incomp",...
+%     "exp_x","exp_y","exp_u","missingFiles","b","t_hc","exp_sig_tau_incomp",...
+%     "exp_fv_incomp","fails","exp_dZdt_incomp","exp_bekk_h_incomp",...
+%     "exp_sig_tau","exp_fv","exp_dZdt","exp_bekk_h","ind_ref","numTraj",...
+%     "numVal","numTrain","numTest","comp","allindices","trainData",...
+%     "testData","valData","test_xy","train_xy","val_xy",'-v7.3');
 
 %% plot training validation and testing data
 % for i = 1:size(trainData.OutputData,2)
@@ -164,6 +179,8 @@ save('../../Datasets/sandyloam_100hz_no_elev_experiment_1575.mat',...
 
 function plotFigures(i,Z_hc, t_hc, fv, plot_title)
 
+
+
 % XY trajectory
 figure(i);
 hold on;
@@ -189,28 +206,28 @@ end
 title(plot_title)
 
 % Inputs
-figure(i+2);
-subplot(2, 1, 1);
-stairs(t_hc, fv(:,12), 'linewidth', 1.5);
-hold on;
-ylabel('$\delta$', 'fontsize', 20, 'Interpreter', 'latex');
-grid on;
-subplot(2, 1, 2);
-stairs(t_hc, fv(:,11), 'linewidth', 1.5);
-hold on;
-ylabel('$\tau$', 'fontsize', 20, 'Interpreter', 'latex');
-grid on;
-title(plot_title)
-
-% % Observables
-figure(i+3)
-hold on;
-hold on; grid on;
-scatter3(Z_hc(:,4),Z_hc(:,5),Z_hc(:,6),'b','filled','MarkerFaceAlpha',0.1,'MarkerEdgeColor','none')
-xlabel('$u$','fontsize',20,'interpreter','latex')
-ylabel('$v$','fontsize',20,'interpreter','latex')
-zlabel('$\dot{\psi}$','fontsize',20,'interpreter','latex')
-title(plot_title)
+% figure(i+2);
+% subplot(2, 1, 1);
+% stairs(t_hc, fv(:,12), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\delta$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% subplot(2, 1, 2);
+% stairs(t_hc, fv(:,11), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\tau$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% title(plot_title)
+% 
+% % % Observables
+% figure(i+3)
+% hold on;
+% hold on; grid on;
+% scatter3(Z_hc(:,4),Z_hc(:,5),Z_hc(:,6),'b','filled','MarkerFaceAlpha',0.1,'MarkerEdgeColor','none')
+% xlabel('$u$','fontsize',20,'interpreter','latex')
+% ylabel('$v$','fontsize',20,'interpreter','latex')
+% zlabel('$\dot{\psi}$','fontsize',20,'interpreter','latex')
+% title(plot_title)
 
 end
 

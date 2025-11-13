@@ -14,6 +14,7 @@ load(filename,"b","trainData","valData","testData","numTest","numVal",...
 addpath("../../functions/utility")
 % global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 K_obs = 4:6;  % Only velocities as the observable
+
 %% normalize data
 for i=1:2
     inp = cell2mat(trainData(:,:,i).InputData);
@@ -24,23 +25,24 @@ for i=K_obs
     mean_std_out(:,i+1-K_obs(1,1)) = [mean(out(:));std(out(:))];
 end
 clearvars out inp
+%% Parameters
 tic
-
-%% Parameter selection
-tic
-ny = size(trainData(:,K_obs),2);     % number of outputs
-nu = size(trainData,3);       % number of inputs
+% parameters selection 
 nl = 400;                     % time delay--length of Hankel Matrix   *************
 sy = 200;
-su = sy;
+cut_off = 7;
 nB = 200;
+save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
+
+ny = size(trainData(:,K_obs),2);     % number of outputs
+nu = size(trainData,3);       % number of inputs
+su = sy;
 N4horizon = [nl,sy,su];
 Ntr = randi(size(trainData,4));
 n_stride = 2;
 idx_data = 1:n_stride;
 prev_GrassDist = [];
 ct = [];
-cut_off = 7;
 
 %% Initialize with n_stride trajectory data
 [~,~,~,Xi_N1,SN1] = initialize_RSSID(trainData(:,K_obs,:,idx_data),...
@@ -79,15 +81,13 @@ for iter =1+n_stride:n_stride:numTrain
 end
 clc;
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
-et1 = toc
-% save('train_test_2','-v7.3')
+et1 = toc;
 %% Find Koopman Matrices and realizations of latent initial values
-% clc;
-% clear;
-% load("train_test_2.mat")
-[A,Cn,Bn,XGpr,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
-    trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out);
-et2 = toc
+
+opts.maxiter = 10000;
+[A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
+    trainData(:,K_obs,:,idx_data),Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
+et2 = toc;
 
 % un-normalize from the mean and std of I/O data
 B = Bn./mean_std_inp(2,:);
@@ -100,62 +100,34 @@ maxiter = 1000;
 for i =1:rr
     opts = statset('fitrgp');
     opts.TolFun = 1e-08; opts.MaxIter = maxiter;
-    MDL_fitr(i).gprMDL = fitrgp(XGpr,ZGpr(:,i),'verbose',0,...
+    MDL_fitr(i).gprMDL = fitrgp(XGprn,ZGpr(:,i),'verbose',0,...
         'FitMethod','exact','PredictMethod','exact',...
         'KernelFunction','ardsquaredexponential',...
         'optimizeHyperparameters','auto',...
         'HyperparameterOptimizationOptions',struct('UseParallel',true,...
         'ShowPlots',0));
 end
-% save('train_test_3','-v7.3')
-%% Validate the model using the validation datasetclc;
-clc;
-clear;
+et3 = toc;
+%% Validate the model using the validation dataset
 
-load("train_test_3.mat")
-data = valData;
-Bn = B; Cn = C;
-B = Bn./mean_std_inp(2,:);
-C = Cn.*mean_std_out(2,:).';
-Bc1 = -B*mean_std_inp(1,:).';
-Cc1 = mean_std_out(1,:).';
-ntr = size(data,4);
-refresh = [25,50,125,150,200,1000];
-ll=500;
-jj =randi(ntr) % 857%
-for i=1 %1:6
-    [Ymean,pos,y_out,Ycov,error_vel,error_pos] = K_RSSID_prediction(data(:,:,:,jj),...
-        MDL_fitr,A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh(end-i+1),ll);
-    
-    err_val(:,i) = [error_vel;error_pos];
+refresh = [25,50,75,100,125,150,175,200,225,250];
+test_ntr = size(testData,4);
+
+for jj = 1:size(refresh,2)
+    time_error = zeros(size(testData(:,:,:,1).OutputData)).';
+        total_rmse = zeros(size(testData(:,:,:,1).OutputData,2),1);
+    for i=1:test_ntr
+        [Y_pred,y_out,error,Y_pred_95]  = K_RSSID_prediction(testData(:,:,:,i),...
+            MDL_fitr,A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh(jj));
+
+        time_error = time_error + error.withTime;
+        total_rmse = total_rmse + error.overallRMSE;  % make sure time stamp...
+                                              %  for each traj is same otherwise ...
+                                              % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
+    end
+    error_with_time(:,:,jj) = time_error./test_ntr;
+    overall_error(:,jj) = total_rmse./test_ntr;
+
 end
-err_val
-%
-figure(1)
-subplot(2,3,1)
-plot(Ymean(1,1:ll));
-hold on;
-plot(y_out(1:ll,4));
-axis([0 ll 0 13])
 
-subplot(2,3,2)
-plot(Ymean(2,1:ll));
-hold on;
-plot(y_out(1:ll,5));
-% axis([0 ll -1 1])
-
-subplot(2,3,3)
-plot(Ymean(3,1:ll));
-hold on;
-plot(y_out(1:ll,6));
-% axis([0 ll -1 1])
-
-subplot(2,3,4)
-plot(pos(1,1:ll),pos(2,1:ll));
-hold on;
-plot(y_out(1:ll,1),y_out(1:ll,2));
-
-subplot(2,3,5)
-plot(pos(3,1:ll));
-hold on;
-plot(y_out(1:ll,3));
+save(save_filename,'-v7.3')

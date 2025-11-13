@@ -1,12 +1,12 @@
 %% 5. Find Koopman matrices and latent state realization
 
-function [A,C,B,XGpr,ZGpr,ytest,del_cost,total_cost] = find_KoopmanMatrices(Train_Data,...
+function [An,Cn,Bn,XGprn,ZGpr,ytest,del_cost,total_cost] = find_KoopmanMatrices(Train_Data,...
     Gamma_Xi_R,nB,mean_std_inp,mean_std_out,opts)
 
 ny = size(mean_std_out,2);
 % A,C computation for Recursive SSID
-C = Gamma_Xi_R(1:ny,:);
-A = pinv(Gamma_Xi_R(1:end-ny,:))*Gamma_Xi_R(ny+1:end,:);
+Cn = Gamma_Xi_R(1:ny,:);
+An = pinv(Gamma_Xi_R(1:end-ny,:))*Gamma_Xi_R(ny+1:end,:);
 
 [~,~,U_tr] = createHankelMatrix(Train_Data.InputData,nB,0,mean_std_inp);   %% time consuming
 [~,~,Y_tr] = createHankelMatrix(Train_Data.OutputData,nB,0,mean_std_out);  %% time consuming
@@ -21,7 +21,7 @@ rr = size(BN, 1);
 nu = size(BN, 2);
 
 % un-normalize from the std of feature marix phi_B and phi_Z
-B = reshape(diag(D_PhiB)\BN(:),rr,nu);   %% un-normalize the B matrix 
+Bn = reshape(diag(D_PhiB)\BN(:),rr,nu);   %% un-normalize the B matrix 
 Zlift = diag(D_PhiZ)\ZliftN;             %% un-normalize the Z matrix 
 
 Yini = Y_tr(1:ny,:); %*diag(mean_std_out(2,:))).' + mean_std_out(1,:).';
@@ -30,6 +30,6 @@ Yini = Y_tr(1:ny,:); %*diag(mean_std_out(2,:))).' + mean_std_out(1,:).';
 XGp = Yini(:,idx_GP);
 ZGp = Zlift(:,idx_GP); 
 ytest(:,:)= XGp - (C)*ZGp;
-XGpr = XGp.';
+XGprn = XGp.';
 ZGpr = ZGp.';
 end

@@ -1,7 +1,7 @@
 %% 10. Koopman Prediction
 
-function [Ymean,pos,y_out,Ycov,error_vel,error_pos] = K_RSSID_prediction(data,MDL_fitr,...
-    K,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh,ll)
+function [Y_pred,y_out,error,Y_pred_95] = K_RSSID_prediction(data,MDL_fitr,...
+    K,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh)
 % data : 1 experiment with n sample time points and input output
 
 rr = size(K,1);
@@ -9,44 +9,57 @@ y_out = data.OutputData;
 u_in = (data.InputData).';
 ts = data.Ts;
 tspan = data.SamplingInstants - ts;
-
+Y_pred = zeros(size(y_out));
+Y_cov = zeros(size(y_out,1),size(K_obs,2));
 % GP initial condition
 Z_Gpr = zeros(rr,2);
 for i = 1:rr
-    X0 = (y_out(1,K_obs) - mean_std_out(1,:))./mean_std_out(2,:);  % normalize back for GP remove later
+    X0 = (y_out(1,K_obs) - mean_std_out(1,:))./mean_std_out(2,:);  % normalize back for GP 
     [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(i).gprMDL,X0);
     Z_Gpr(i,:) = [Zi_mean Zi_sd.^2];
     Z_95(i,:) = Zi_95;
 end
-pos0 = (y_out(1,1:3)).';
-pos = pos0;
-Ymean = C*Z_Gpr(:,1)+Cc1;            % added normalized terms
-Ycov = diag(C*diag(Z_Gpr(:,2))*C.');
+pos0 = (y_out(1,1:3));
+Ymean = C*Z_Gpr(:,1)+Cc1;            % added normalized terms for unnormalized
+Y_pred(1,:) = [pos0.';Ymean.'];
+Y_cov(:,1) = diag(C*diag(Z_Gpr(:,2))*C.');
 for i = 2:size(tspan,1) 
 
     if mod(i,refresh)==0
-        X0_corr = ((y_out(i,K_obs) - mean_std_out(1,:))./mean_std_out(2,:)).'; % normalize back for GP remove later
-        Ymean = [Ymean y_out(i,K_obs).'];
+        X0_corr = ((y_out(i,K_obs) - mean_std_out(1,:))./mean_std_out(2,:)).'; % normalize back for GP 
+        Ymean = y_out(i,K_obs).';
+        pos_cur = y_out(i,1:3).';
         for j = 1:rr
             [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(j).gprMDL,X0_corr.');
             Z_Gpr(j,:) = [Zi_mean Zi_sd.^2];
             Z_95(j,:) = Zi_95;
         end
+        
     else
-        Z_Gpr(:,1) = K*Z_Gpr(:,1) + B*u_in(:,i-1) + Bc1;  % added normalized terms
+        Z_Gpr(:,1) = K*Z_Gpr(:,1) + B*u_in(:,i-1) + Bc1;  % added normalized terms for unnormalized
         Z_Gpr(:,2) = diag(K*diag(Z_Gpr(:,2))*K.');
-        Ymean = [Ymean C*Z_Gpr(:,1)+Cc1];                 % added normalized terms
-        Ycov = [Ycov C*diag(Z_Gpr(:,2))*C.'];
+        Y_cov(:,i) = diag(C*diag(Z_Gpr(:,2))*C.');
+        Ymean = C*Z_Gpr(:,1)+Cc1;                 % added normalized terms for unnormalized
+        dx = Ymean(1,1).*cos(pos0(3,1)) - Ymean(2,1).*sin(pos0(3,1));
+        dy = Ymean(1,1).*sin(pos0(3,1)) + Ymean(2,1).*cos(pos0(3,1));
+        pos_cur = pos0+[dx;dy;Ymean(3,i)].*ts;
     end
-
-    dx = Ymean(1,i).*cos(pos0(3,1)) - Ymean(2,i).*sin(pos0(3,1));
-    dy = Ymean(1,i).*sin(pos0(3,1)) + Ymean(2,i).*cos(pos0(3,1));
-    pos_cur = pos0+[dx;dy;Ymean(3,i)].*ts;
-    pos =  [pos pos_cur];
     pos0 = pos_cur;
+    Y_pred(i,:) =  [pos0.';Ymean.'];  
+    Y_cov(:,i) = diag(C*diag(Z_Gpr(:,2))*C.');
 end
 
-error_vel = rmse(Ymean(:,1:ll),y_out(1:ll,K_obs).',2);
-error_pos = rmse(pos(:,1:ll),y_out(1:ll,1:3).',2);
+if nargout > 3
+    % Confidence Interval
+    Ystd = sqrt(Ycov);
+    CI95 = tinv([0.025 0.975],inf);
+    for i=1:size(K_obs,2)
+        YCI_95(:,:,i) = bsxfun(@times, Ystd(i,:), CI95(:));
+        Y_pred_95(:,:,i) = (Y_pred(:,K_obs(i))).' + YCI_95(:,:,i);
+    end
+end
+
+error.withTime = Y_pred - y_out;
+error.overallRMSE = rmse(Y_pred,y_out,2);
 
 end

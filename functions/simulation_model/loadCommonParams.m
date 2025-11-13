@@ -185,6 +185,7 @@ b.ddh_xy = @(x, y) b.H/ zmax * arrayfun(@(xi, yi) ...
 
 
 % [xq, yq] = meshgrid(linspace(-1, b.Lx, 200), linspace(-1, b.Ly, 200));
+% [xq, yq] = meshgrid(linspace(-1, 200, 200), linspace(-1, 200, 200));
 % zq = arrayfun(b.h, xq, yq);
 % surf(xq, yq, zq); shading interp; colormap jet;
 % xlabel('x (m)'); ylabel('y (m)'); zlabel('Height (m)');

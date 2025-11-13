@@ -42,16 +42,11 @@ prev_GrassDist = [];
 ct = [];
 cut_off = 7;
 
-%% Initialize with 5 trajectory data
+%% Initialize with n_stride trajectory data
 [~,~,~,Xi_N1,SN1] = initialize_RSSID(trainData(:,K_obs,:,idx_data),...
     nl,sy,mean_std_inp,mean_std_out);
 
 [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
-
-
-
-
-
 %% Recursive SSID
 toc
 for iter =1+n_stride:n_stride:numTrain
@@ -130,7 +125,7 @@ ll=500;
 jj =randi(ntr) % 857%
 for i=1 %1:6
     [Ymean,pos,y_out,Ycov,error_vel,error_pos] = K_RSSID_prediction(data(:,:,:,jj),...
-        MDL_fitr,A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh(end-i+1),ll);
+        MDL_fitr,A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh(end-i+1));
     
     err_val(:,i) = [error_vel;error_pos];
 end
