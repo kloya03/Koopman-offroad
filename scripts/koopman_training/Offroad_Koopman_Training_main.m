@@ -1,5 +1,3 @@
-clc;
-clear;
 
 %% %%%%%%%%%% Palmetto Cluster %%%%%%%%%%
 disp('----------------------------------------------');
@@ -9,13 +7,6 @@ disp('----------------------------------------------');
 % Get Slurm IDs (if running on Palmetto)
 job_id  = getenv('SLURM_JOB_ID');         % e.g. '12345678'
 task_id = getenv('SLURM_ARRAY_TASK_ID');  % e.g. '5'
-
-if isempty(job_id)
-    job_id = 'local';
-end
-if isempty(task_id)
-    task_id = '0';
-end
 
 % Display job and task info
 fprintf('SLURM Job ID:       %s\n', job_id);
@@ -29,9 +20,6 @@ fprintf('Parameter cut_off:  %s\n', num2str(cut_off));
 fprintf('Parameter tag:      %s\n', param_tag);
 
 disp('----------------------------------------------');
-
-if isempty(job_id),  job_id  = 'local'; end
-if isempty(task_id), task_id = '0';      end
 
 % Use the tag from the shell if available
 if exist('param_tag','var')
