@@ -88,8 +88,8 @@ exp_Ni = getexp(trainData(:,K_obs,:),idx_data);
     nl,sy,mean_std_inp,mean_std_out);
 
 [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
-%% Recursive SSID
 et_initialize = toc
+%% Recursive SSID
 for iter =1+n_stride:n_stride:numTrain
     
     %%%%% Check Subspace distance for new data%%%%%
