@@ -19,9 +19,8 @@ T1    = size(U_N,2);
 lY = size(Y_N,1);
 % ========= RQ via QR(S.'): correct stack & correct partitions =========
 S_UPhiY = [U_N;Up;Yp;Y_N];
-[Q,R]  = qr(S_UPhiY.');
+[Q,R]  = qr(S_UPhiY.',0);
 R = R.';   % To get lower triangular matrix
-Q = Q.';
 Q1 = Q(:,1:lU);
 % Q2 = Q(:, lU+(1:lPhi));
 R32  = R(lU+lPhi+(1:lY), lU+(1:lPhi));            % lY x lPhi

@@ -32,14 +32,14 @@ end
 ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
 
 % parameters selection 
-% clc;
-% clear;
-% nl = 400;                     % time delay--length of Hankel Matrix   *************
-% sy = 200;
-% cut_off = 7;
-% nB = 200;
-% save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
-count = 0;
+clc;
+clear;
+nl = 400;                     % time delay--length of Hankel Matrix   *************
+sy = 200;
+cut_off = 7;
+nB = 200;
+save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
+
 %%
 % ny : number of outputs
 % nu : number of inputs
@@ -49,13 +49,13 @@ count = 0;
 % Nts : No. of time steps in a trajectory
 % nc : No. of columns in Hankel Matrix
 % nB : No of rows for B matrix computation
-% filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
-% load(filename,"b","trainData","valData","testData","numTest","numVal",...
-%     "numTrain","t_hc");
-% addpath("../../functions/utility")
-addpath(function_file_path)
-load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
+filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
+load(filename,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
+addpath("../../functions/utility")
+% addpath(function_file_path)
+% load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
+    % "numTrain","t_hc");
 
 % global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
 K_obs = 4:6;  % Only velocities as the observable
@@ -104,7 +104,6 @@ for iter =1+n_stride:n_stride:numTrain
 
     %%%% Updating the Subspace %%%%%
     if GrDR_N > 0.01
-        count = count+1;
         ct = [ct;iter GrDR_N];
         idx_data = [idx_data, traj];
 
@@ -116,7 +115,7 @@ for iter =1+n_stride:n_stride:numTrain
         [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
         check_sub = subspace(Gam_Xi_i,Gam_Xi_R);
         % check_sub1 = subspace(Gam_Xi_rold,Gam_Xi_R);
-        if mod(count,5)==0
+        if mod(ct,10)==0
             fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n',...
                 iter,iter+n_stride-1,rr,ct(end,end),check_sub);
         end
