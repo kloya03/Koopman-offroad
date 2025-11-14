@@ -32,11 +32,11 @@ end
 ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
 
 % parameters selection 
-% nl = 400;                     % time delay--length of Hankel Matrix   *************
-% sy = 200;
-% cut_off = 7;
-% nB = 200;
-% save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
+nl = 400;                     % time delay--length of Hankel Matrix   *************
+sy = 200;
+cut_off = 7;
+nB = 200;
+save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
 
 %%
 % ny : number of outputs
