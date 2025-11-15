@@ -6,11 +6,17 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2G
 #SBATCH --time=00:05:00
-#SBATCH --output=test_output_%A_%a.txt  # Unique output per task
+#SBATCH --output=def/test_output_%A_%a.txt  # Unique output per task
 
-module add matlab/2025a
+module add matlab/2023b
 
-cd $SLURM_SUBMIT_DIR
+SLURM_DIR="$SLURM_SUBMIT_DIR"
+
+MATLAB_DIR="$SLURM_DIR/.."
+
+cd "$MATLAB_DIR"
+
+MATLAB_DIR=$SLURM_SUBMIT_DIR../
 
 PARAM_FILE="params_test.txt"
 

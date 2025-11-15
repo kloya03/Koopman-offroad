@@ -17,7 +17,7 @@ disp(['SLURM job_id: ', job_id]);
 disp(['SLURM task_id: ', task_id]);
 
 % Save workspace file
-ws_name = sprintf('ws_test_%s_job%s_task%s.mat', param_tag, job_id, task_id);
+ws_name = sprintf('abc/ws_test_%s_job%s_task%s.mat', param_tag, job_id, task_id);
 
 param_sum = a+b
 save(ws_name);

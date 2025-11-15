@@ -1,4 +1,13 @@
 
+% ny : number of outputs
+% nu : number of inputs
+% nl : time delay--length of rows in Hankel Matrix
+% sy, su: Past time delay--length O/I   < nl
+% nr, nr_i : (nx*nl)  No. of rows in Hankel Matrix
+% Nts : No. of time steps in a trajectory
+% nc : No. of columns in Hankel Matrix
+% nB : No of rows for B matrix computation
+
 %% %%%%%%%%%% Palmetto Cluster %%%%%%%%%%
 disp('----------------------------------------------');
 disp('--- MATLAB Script Running (SLURM Job Info) ---');
@@ -31,34 +40,23 @@ end
 
 ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
 
-% parameters selection 
-% clc;
-% clear;
-% nl = 400;                     % time delay--length of Hankel Matrix   *************
-% sy = 200;
-% cut_off = 7;
-% nB = 200;
-% save_filename = "Koopman_model_"+nl+"_"+sy+"_"+cut_off+"_"+nB;%d_%d_%d',nl,sy,cut_off,nB
-count = 0;
-%%
-% ny : number of outputs
-% nu : number of inputs
-% nl : time delay--length of rows in Hankel Matrix
-% sy, su: Past time delay--length O/I   < nl
-% nr, nr_i : (nx*nl)  No. of rows in Hankel Matrix
-% Nts : No. of time steps in a trajectory
-% nc : No. of columns in Hankel Matrix
-% nB : No of rows for B matrix computation
-% filename ='../../datasets/sandyloam_100hz_no_elev_experiment_1579.mat';
-% load(filename,"b","trainData","valData","testData","numTest","numVal",...
-%     "numTrain","t_hc");
-% addpath("../../functions/utility")
 addpath(function_file_path)
 load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
     "numTrain","t_hc");
 
-% global ny nu nl sy su Ntr mean_std_inp mean_std_out idx_data K_obs
+%% Parameters
+tic
+count = 0;
 K_obs = 4:6;  % Only velocities as the observable
+ny = size(trainData(:,K_obs),2);     % number of outputs
+nu = size(trainData,3);       % number of inputs
+su = sy;
+N4horizon = [nl,sy,su];
+Ntr = randi(size(trainData,4));
+n_stride = 5;
+idx_data = 1:n_stride;
+prev_GrassDist = [];
+ct = [];
 
 %% normalize data
 for i=1:2
@@ -70,17 +68,6 @@ for i=K_obs
     mean_std_out(:,i+1-K_obs(1,1)) = [mean(out(:));std(out(:))];
 end
 clearvars out inp
-%% Parameters
-tic
-ny = size(trainData(:,K_obs),2);     % number of outputs
-nu = size(trainData,3);       % number of inputs
-su = sy;
-N4horizon = [nl,sy,su];
-Ntr = randi(size(trainData,4));
-n_stride = 5;
-idx_data = 1:n_stride;
-prev_GrassDist = [];
-ct = [];
 
 %% Initialize with n_stride trajectory data
 exp_Ni = getexp(trainData(:,K_obs,:),idx_data);
@@ -124,10 +111,15 @@ for iter =1+n_stride:n_stride:numTrain
 end
 fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 et_RSSID = toc
+
+s_name = sprintf('part1_%s_job%s_task%s.mat', base_name, job_id, task_id);
+output_dir = fullfile(pwd, 'results_sandyloam/part1');
+ws_path = fullfile(output_dir, s_name);
+save(ws_path,'-v7.3')
 %% Find Koopman Matrices and realizations of latent initial values
 
 opts.max_iter = 10000;
-opts.del_cost_tol = 1e-9;
+opts.del_cost_tol = 1e-6;
 exp_N = trainData(:,K_obs,:,idx_data);
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     exp_N,Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);

@@ -14,7 +14,7 @@ An = pinv(Gamma_Xi_R(1:end-ny,:))*Gamma_Xi_R(ny+1:end,:);
 [Phi_Z_N,D_PhiZ,Ex_obs] = phiZ(Cn,An,nB); 
 [Phi_B_N,D_PhiB,BZ]  = phiB_parallel(Ex_obs,U_tr,Y_tr,nB,Phi_Z_N);   %% time consuming
 
-[BN,ZliftN,del_cost,total_cost] = GradientDescent_v2(Phi_B_N,Phi_Z_N,BZ,Y_tr,nB,opts);
+[BN,ZliftN,del_cost,total_cost] = GradientDescent_ADAM(Phi_B_N,Phi_Z_N,BZ,Y_tr,nB,opts);
 % [BN, ZliftN, total_cost, del_cost] = FitB_Z0_fminunc(Phi_B_N, Phi_Z_N, BZ, Y_tr, nB);
 clearvars Phi_B_N phi_Z_N
 rr = size(BN, 1); 

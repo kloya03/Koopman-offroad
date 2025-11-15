@@ -5,9 +5,9 @@
 #SBATCH --tasks-per-node=28
 #SBATCH --mem=100G
 #SBATCH --time=30:00:00
-#SBATCH --output=%x_%A_%a.txt            # Saves output in the folder you call sbatch from
+#SBATCH --output=part1/slurm_outputs/%x_%A_%a.txt            # Saves output in the folder you call sbatch from
 
-module add matlab/2025a
+module add matlab/2023b
 
 # The directory where you call sbatch from:
 SLURM_DIR="$SLURM_SUBMIT_DIR"
