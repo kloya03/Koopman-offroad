@@ -126,7 +126,7 @@ fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist:
 et_RSSID = toc
 %% Find Koopman Matrices and realizations of latent initial values
 
-opts.maxiter = 10000;
+opts.max_iter = 10000;
 opts.del_cost_tol = 1e-9;
 exp_N = trainData(:,K_obs,:,idx_data);
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...

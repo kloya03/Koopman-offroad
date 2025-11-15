@@ -1,10 +1,10 @@
 %% 10. Koopman Prediction
 
 function [Y_pred,y_out,error,Y_pred_95] = K_RSSID_prediction(data,MDL_fitr,...
-    K,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh)
+    A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh)
 % data : 1 experiment with n sample time points and input output
 
-rr = size(K,1);
+rr = size(A,1);
 y_out = data.OutputData;
 u_in = (data.InputData).';
 ts = data.Ts;
@@ -36,8 +36,8 @@ for i = 2:size(tspan,1)
         end
         
     else
-        Z_Gpr(:,1) = K*Z_Gpr(:,1) + B*u_in(:,i-1) + Bc1;  % added normalized terms for unnormalized
-        Z_Gpr(:,2) = diag(K*diag(Z_Gpr(:,2))*K.');
+        Z_Gpr(:,1) = A*Z_Gpr(:,1) + B*u_in(:,i-1) + Bc1;  % added normalized terms for unnormalized
+        Z_Gpr(:,2) = diag(A*diag(Z_Gpr(:,2))*A.');
         Y_cov(:,i) = diag(C*diag(Z_Gpr(:,2))*C.');
         Ymean = C*Z_Gpr(:,1)+Cc1;                 % added normalized terms for unnormalized
         dx = Ymean(1,1).*cos(pos0(3,1)) - Ymean(2,1).*sin(pos0(3,1));

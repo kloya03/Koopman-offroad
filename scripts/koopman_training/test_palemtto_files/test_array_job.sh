@@ -8,7 +8,7 @@
 #SBATCH --time=00:05:00
 #SBATCH --output=test_output_%A_%a.txt  # Unique output per task
 
-module add matlab/2023b
+module add matlab/2025a
 
 cd $SLURM_SUBMIT_DIR
 

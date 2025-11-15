@@ -11,7 +11,7 @@ An = pinv(Gamma_Xi_R(1:end-ny,:))*Gamma_Xi_R(ny+1:end,:);
 [~,~,U_tr] = createHankelMatrix(Train_Data.InputData,nB,0,mean_std_inp);   %% time consuming
 [~,~,Y_tr] = createHankelMatrix(Train_Data.OutputData,nB,0,mean_std_out);  %% time consuming
 
-[Phi_Z_N,D_PhiZ,Ex_obs] = phiZ(C,A,nB); 
+[Phi_Z_N,D_PhiZ,Ex_obs] = phiZ(Cn,An,nB); 
 [Phi_B_N,D_PhiB,BZ]  = phiB_parallel(Ex_obs,U_tr,Y_tr,nB,Phi_Z_N);   %% time consuming
 
 [BN,ZliftN,del_cost,total_cost] = GradientDescent_v2(Phi_B_N,Phi_Z_N,BZ,Y_tr,nB,opts);

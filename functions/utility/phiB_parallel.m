@@ -10,7 +10,6 @@ want_BZ =  nargout > 2;
 
 ntr = size(U_tr,2);
 parfor i=1:ntr
-    i
     UU = U_tr(:,i);
     YY = Y_tr(:,i);
     phi_B = zeros(ny*nB,nu*rr);
@@ -37,6 +36,5 @@ end
 
 D_phiB = std(reshape(permute(Phi_B, [1 3 2]), [ny*nB*ntr, nu*rr]));
 Phi_B = Phi_B./(reshape(D_phiB,1,nu*rr,1));
-clc;
 
 end
