@@ -1,0 +1,417 @@
+Running Task 1 with:
+nB=200, nl=400, sy=200, cut_off=1
+Using parameter file: /scratch/kloya/Koopman-offroad/scripts/koopman_training/results/../params.txt
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+----------------------------------------------
+--- MATLAB Script Running (SLURM Job Info) ---
+----------------------------------------------
+SLURM Job ID:       7118348
+SLURM Array Task ID:1
+Parameter nB:       200
+Parameter nl:       400
+Parameter sy:       200
+Parameter cut_off:  1
+Parameter tag:      nB200_nl400_sy200_c1
+----------------------------------------------
+
+et_initialize =
+
+    5.0417
+
+RSSID:: Iteration   26-  30 | sytem order:   8 | Gr Dist: 0.24 | check Dist: 0.25  
+RSSID:: Iteration   51-  55 | sytem order:   9 | Gr Dist: 1.18 | check Dist: 1.18  
+RSSID:: Iteration   76-  80 | sytem order:   9 | Gr Dist: 0.24 | check Dist: 0.26  
+RSSID:: Iteration  101- 105 | sytem order:   9 | Gr Dist: 0.39 | check Dist: 0.37  
+RSSID:: Iteration  126- 130 | sytem order:   9 | Gr Dist: 0.47 | check Dist: 0.46  
+RSSID:: Iteration  151- 155 | sytem order:   9 | Gr Dist: 0.27 | check Dist: 0.26  
+RSSID:: Iteration  176- 180 | sytem order:   9 | Gr Dist: 0.19 | check Dist: 0.18  
+RSSID:: Iteration  201- 205 | sytem order:   8 | Gr Dist: 0.19 | check Dist: 0.22  
+RSSID:: Iteration  226- 230 | sytem order:   8 | Gr Dist: 0.22 | check Dist: 0.22  
+RSSID:: Iteration  251- 255 | sytem order:   8 | Gr Dist: 0.42 | check Dist: 0.42  
+RSSID:: Iteration  276- 280 | sytem order:   7 | Gr Dist: 0.28 | check Dist: 0.27  
+RSSID:: Iteration  301- 305 | sytem order:   7 | Gr Dist: 0.14 | check Dist: 0.13  
+RSSID:: Iteration  326- 330 | sytem order:   6 | Gr Dist: 0.15 | check Dist: 0.15  
+RSSID:: Iteration  351- 355 | sytem order:   6 | Gr Dist: 0.73 | check Dist: 0.73  
+RSSID:: Iteration  376- 380 | sytem order:   6 | Gr Dist: 0.06 | check Dist: 0.06  
+RSSID:: Iteration  401- 405 | sytem order:   6 | Gr Dist: 0.31 | check Dist: 0.31  
+RSSID:: Iteration  426- 430 | sytem order:   6 | Gr Dist: 0.27 | check Dist: 0.27  
+RSSID:: Iteration  451- 455 | sytem order:   5 | Gr Dist: 0.27 | check Dist: 0.27  
+RSSID:: Iteration  476- 480 | sytem order:   5 | Gr Dist: 0.83 | check Dist: 0.83  
+RSSID:: Iteration  501- 505 | sytem order:   5 | Gr Dist: 0.56 | check Dist: 0.56  
+RSSID:: Iteration  526- 530 | sytem order:   5 | Gr Dist: 0.11 | check Dist: 0.11  
+RSSID:: Iteration  551- 555 | sytem order:   5 | Gr Dist: 0.18 | check Dist: 0.18  
+RSSID:: Iteration  576- 580 | sytem order:   5 | Gr Dist: 0.81 | check Dist: 0.81  
+RSSID:: Iteration  601- 605 | sytem order:   5 | Gr Dist: 0.19 | check Dist: 0.19  
+RSSID:: Iteration  626- 630 | sytem order:   5 | Gr Dist: 1.20 | check Dist: 1.20  
+RSSID:: Iteration  651- 655 | sytem order:   5 | Gr Dist: 0.32 | check Dist: 0.31  
+RSSID:: Iteration  676- 680 | sytem order:   5 | Gr Dist: 0.23 | check Dist: 0.23  
+RSSID:: Iteration  701- 705 | sytem order:   5 | Gr Dist: 0.30 | check Dist: 0.30  
+RSSID:: Iteration  726- 730 | sytem order:   5 | Gr Dist: 0.08 | check Dist: 0.08  
+RSSID:: Iteration  751- 755 | sytem order:   5 | Gr Dist: 1.30 | check Dist: 1.30  
+RSSID:: Iteration  776- 780 | sytem order:   5 | Gr Dist: 0.32 | check Dist: 0.31  
+RSSID:: Iteration  801- 805 | sytem order:   5 | Gr Dist: 0.13 | check Dist: 0.13  
+RSSID:: Iteration  826- 830 | sytem order:   5 | Gr Dist: 1.19 | check Dist: 1.19  
+RSSID:: Iteration  851- 855 | sytem order:   5 | Gr Dist: 1.25 | check Dist: 1.25  
+RSSID:: Iteration  876- 880 | sytem order:   5 | Gr Dist: 0.41 | check Dist: 0.41  
+RSSID:: Iteration  901- 905 | sytem order:   5 | Gr Dist: 0.20 | check Dist: 0.20  
+RSSID:: Iteration  926- 930 | sytem order:   5 | Gr Dist: 0.15 | check Dist: 0.15  
+RSSID:: Iteration  951- 955 | sytem order:   5 | Gr Dist: 0.18 | check Dist: 0.18  
+RSSID:: Iteration  976- 980 | sytem order:   5 | Gr Dist: 0.22 | check Dist: 0.22  
+RSSID:: Iteration 1001-1005 | sytem order:   5 | Gr Dist: 0.27 | check Dist: 0.27  
+RSSID:: Iteration 1026-1030 | sytem order:   5 | Gr Dist: 0.13 | check Dist: 0.13  
+RSSID:: Iteration 1051-1055 | sytem order:   5 | Gr Dist: 0.66 | check Dist: 0.66  
+RSSID:: Iteration 1076-1080 | sytem order:   5 | Gr Dist: 0.13 | check Dist: 0.13  
+RSSID:: Iteration 1101-1105 | sytem order:   5 | Gr Dist: 0.71 | check Dist: 0.71  
+RSSID:: Iteration 1126-1130 | sytem order:   5 | Gr Dist: 0.84 | check Dist: 0.84  
+RSSID:: Iteration 1151-1155 | sytem order:   5 | Gr Dist: 0.44 | check Dist: 0.44  
+RSSID:: Iteration 1176-1180 | sytem order:   5 | Gr Dist: 0.26 | check Dist: 0.26  
+RSSID:: Iteration 1201-1205 | sytem order:   5 | Gr Dist: 0.15 | check Dist: 0.14  
+RSSID:: Iteration 1226-1230 | sytem order:   4 | Gr Dist: 1.12 | check Dist: 1.12  
+RSSID:: Iteration 1251-1255 | sytem order:   4 | Gr Dist: 1.33 | check Dist: 1.33  
+RSSID:: Iteration 1276-1280 | sytem order:   4 | Gr Dist: 1.07 | check Dist: 1.08  
+RSSID:: Iteration 1301-1305 | sytem order:   4 | Gr Dist: 0.17 | check Dist: 0.17  
+RSSID:: Iteration 1326-1330 | sytem order:   4 | Gr Dist: 1.03 | check Dist: 1.03  
+RSSID:: Iteration 1351-1355 | sytem order:   4 | Gr Dist: 0.19 | check Dist: 0.19  
+RSSID:: Iteration 1376-1380 | sytem order:   4 | Gr Dist: 0.25 | check Dist: 0.25  
+RSSID:: Iteration 1401-1405 | sytem order:   4 | Gr Dist: 1.01 | check Dist: 1.01  
+RSSID:: Iteration 1421-1425 | sytem order:   4 | Gr Dist: 0.45 | check Dist: 0.45  
+
+et_RSSID =
+
+   1.3992e+04
+
+Starting parallel pool (parpool) using the 'Processes' profile ...
+Connected to parallel pool with 28 workers.
+Adam GD:: Iter  100 | Cost: 2.556393e-01 | ΔJ: -1.289857e-03 | mean(|step|): 5.008438e-04 | max(|step|): 9.702062e-03
+Adam GD:: Iter  200 | Cost: 1.855071e-01 | ΔJ: -3.843626e-04 | mean(|step|): 1.726201e-04 | max(|step|): 9.339021e-03
+Adam GD:: Iter  300 | Cost: 1.590968e-01 | ΔJ: -1.843527e-04 | mean(|step|): 1.181818e-04 | max(|step|): 8.969543e-03
+Adam GD:: Iter  400 | Cost: 1.447762e-01 | ΔJ: -1.130121e-04 | mean(|step|): 8.363310e-05 | max(|step|): 8.598867e-03
+Adam GD:: Iter  500 | Cost: 1.353222e-01 | ΔJ: -7.998702e-05 | mean(|step|): 5.297910e-05 | max(|step|): 8.230291e-03
+Adam GD:: Iter  600 | Cost: 1.283455e-01 | ΔJ: -6.117591e-05 | mean(|step|): 2.810814e-05 | max(|step|): 7.863706e-03
+Adam GD:: Iter  700 | Cost: 1.229074e-01 | ΔJ: -4.837869e-05 | mean(|step|): 1.191244e-05 | max(|step|): 7.497394e-03
+Adam GD:: Iter  800 | Cost: 1.185818e-01 | ΔJ: -3.861247e-05 | mean(|step|): 5.196363e-06 | max(|step|): 7.129479e-03
+Adam GD:: Iter  900 | Cost: 1.151309e-01 | ΔJ: -3.075248e-05 | mean(|step|): 7.882323e-06 | max(|step|): 6.758661e-03
+Adam GD:: Iter 1000 | Cost: 1.123910e-01 | ΔJ: -2.432094e-05 | mean(|step|): 1.311788e-05 | max(|step|): 6.384394e-03
+Adam GD:: Iter 1100 | Cost: 1.102330e-01 | ΔJ: -1.906334e-05 | mean(|step|): 2.474055e-05 | max(|step|): 6.006801e-03
+Adam GD:: Iter 1200 | Cost: 1.085489e-01 | ΔJ: -1.482995e-05 | mean(|step|): 1.323661e-05 | max(|step|): 5.626524e-03
+Adam GD:: Iter 1300 | Cost: 1.072474e-01 | ΔJ: -1.134306e-05 | mean(|step|): 4.841208e-05 | max(|step|): 5.244597e-03
+Adam GD:: Iter 1400 | Cost: 1.062506e-01 | ΔJ: -8.651750e-06 | mean(|step|): 2.261659e-05 | max(|step|): 4.862430e-03
+Adam GD:: Iter 1500 | Cost: 1.054948e-01 | ΔJ: -6.552724e-06 | mean(|step|): 1.005681e-05 | max(|step|): 4.481675e-03
+Adam GD:: Iter 1600 | Cost: 1.049270e-01 | ΔJ: -4.890695e-06 | mean(|step|): 1.864108e-05 | max(|step|): 4.104283e-03
+Adam GD:: Iter 1700 | Cost: 1.045058e-01 | ΔJ: -4.040067e-06 | mean(|step|): 1.059181e-04 | max(|step|): 3.732394e-03
+Adam GD:: Iter 1800 | Cost: 1.041932e-01 | ΔJ: -2.656303e-06 | mean(|step|): 6.237102e-06 | max(|step|): 3.368591e-03
+Adam GD:: Iter 1900 | Cost: 1.039663e-01 | ΔJ: -2.087521e-06 | mean(|step|): 1.448454e-05 | max(|step|): 3.015302e-03
+Adam GD:: Iter 2000 | Cost: 1.038026e-01 | ΔJ: -1.378788e-06 | mean(|step|): 5.277918e-06 | max(|step|): 2.675214e-03
+Adam GD:: Iter 2100 | Cost: 1.036871e-01 | ΔJ: -1.401447e-06 | mean(|step|): 9.940689e-05 | max(|step|): 2.351003e-03
+Adam GD:: Iter 2200 | Cost: 1.036046e-01 | ΔJ: -6.780387e-07 | mean(|step|): 4.861687e-06 | max(|step|): 2.045019e-03
+Adam GD:: Iter 2300 | Cost: 1.035482e-01 | ΔJ: -4.638552e-07 | mean(|step|): 3.609362e-06 | max(|step|): 2.125318e-03
+Adam GD:: Stopping early at iter 2357 (cost plateau: |ΔJ| = 7.748e-09)
+
+et_GD =
+
+   1.4396e+04
+
+Copying objective function to workers...
+Done copying objective function to workers.
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|    1 |      27 | Accept |  4.9771e-08 |      14.102 |  4.5163e-08 |  4.6322e-08 |    0.0015369 |         true |
+|    2 |      27 | Best   |  4.5163e-08 |      14.082 |  4.5163e-08 |  4.6322e-08 |    0.0012114 |        false |
+|    3 |       6 | Accept |  4.2836e-08 |      15.618 |  4.2836e-08 |  5.1902e-08 |   0.00019018 |        false |
+|    4 |       6 | Accept |   5.901e-08 |      14.537 |  4.2836e-08 |  5.1902e-08 |    0.0019916 |        false |
+|    5 |       6 | Best   |  4.2836e-08 |      15.307 |  4.2836e-08 |  5.1902e-08 |   0.00042778 |         true |
+|    6 |       6 | Accept |  4.2836e-08 |      14.935 |  4.2836e-08 |  5.1902e-08 |   0.00017179 |        false |
+|    7 |       6 | Accept |  4.2836e-08 |      14.626 |  4.2836e-08 |  5.1902e-08 |   0.00017405 |         true |
+|    8 |       6 | Accept |  4.2836e-08 |      14.623 |  4.2836e-08 |  5.1902e-08 |   0.00018345 |        false |
+|    9 |       6 | Accept |  7.1228e-08 |      14.607 |  4.2836e-08 |  5.1902e-08 |    0.0024014 |        false |
+|   10 |       6 | Accept |  4.2836e-08 |       14.92 |  4.2836e-08 |  5.1902e-08 |   0.00047636 |         true |
+|   11 |       6 | Accept |  5.0687e-08 |       14.36 |  4.2836e-08 |  5.1902e-08 |    0.0015914 |        false |
+|   12 |       6 | Accept |  4.2836e-08 |      14.495 |  4.2836e-08 |  5.1902e-08 |   0.00016545 |        false |
+|   13 |       6 | Accept |  5.7667e-08 |      14.338 |  4.2836e-08 |  5.1902e-08 |    0.0019361 |         true |
+|   14 |       6 | Accept |  4.2836e-08 |      14.689 |  4.2836e-08 |  5.1902e-08 |   0.00098426 |        false |
+|   15 |       6 | Accept |  4.2836e-08 |      14.544 |  4.2836e-08 |  5.1902e-08 |    0.0004444 |         true |
+|   16 |       6 | Accept |  4.2836e-08 |      14.911 |  4.2836e-08 |  5.1902e-08 |   0.00033043 |        false |
+|   17 |       6 | Accept |  5.7871e-08 |      14.551 |  4.2836e-08 |  5.1902e-08 |    0.0019447 |        false |
+|   18 |       6 | Accept |  1.5255e-07 |      14.773 |  4.2836e-08 |  5.1902e-08 |    0.0037902 |         true |
+|   19 |       6 | Accept |  7.3195e-08 |      14.404 |  4.2836e-08 |  5.1902e-08 |    0.0024559 |        false |
+|   20 |       6 | Accept |  9.4652e-08 |      14.271 |  4.2836e-08 |  5.1902e-08 |    0.0029391 |         true |
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|   21 |       6 | Accept |  4.2836e-08 |      14.822 |  4.2836e-08 |  5.1902e-08 |   0.00035298 |         true |
+|   22 |       6 | Accept |  1.7731e-07 |       14.31 |  4.2836e-08 |  5.1902e-08 |    0.0040595 |         true |
+|   23 |       6 | Accept |  4.2945e-08 |      14.232 |  4.2836e-08 |  5.1902e-08 |    0.0010118 |         true |
+|   24 |       6 | Accept |  4.2836e-08 |       14.82 |  4.2836e-08 |  5.1902e-08 |   0.00051361 |         true |
+|   25 |      28 | Accept |  3.1104e-07 |      19.492 |  4.2836e-08 |  5.2624e-08 |     0.004797 |         true |
+|   26 |      27 | Accept |  3.4874e-07 |      19.712 |  4.2836e-08 |  7.8365e-08 |    0.0058634 |         true |
+|   27 |      27 | Accept |  3.9046e-07 |      19.917 |  4.2836e-08 |  7.8365e-08 |    0.0065776 |        false |
+|   28 |      27 | Accept |  4.6517e-07 |      22.696 |  4.2836e-08 |  7.9226e-08 |    0.0073756 |         true |
+|   29 |      28 | Accept |  4.9414e-08 |       10.77 |  4.2836e-08 |   7.716e-08 |    0.0015149 |        false |
+|   30 |      27 | Accept |  4.6991e-08 |      11.502 |  4.2836e-08 |  7.5146e-08 |    0.0013524 |        false |
+|   31 |      27 | Accept |  9.8575e-08 |      11.794 |  4.2836e-08 |  7.5146e-08 |    0.0030122 |         true |
+
+__________________________________________________________
+Optimization completed.
+MaxObjectiveEvaluations of 30 reached.
+Total function evaluations: 31
+Total elapsed time: 32.4709 seconds
+Total objective function evaluation time: 466.7582
+
+Best observed feasible point:
+      Sigma       Standardize
+    __________    ___________
+
+    0.00042778       true    
+
+Observed objective function value = 4.2836e-08
+Estimated objective function value = 1.2645e-07
+Function evaluation time = 15.3065
+
+Best estimated feasible point (according to models):
+      Sigma       Standardize
+    __________    ___________
+
+    0.00098426       false   
+
+Estimated objective function value = 7.5146e-08
+Estimated function evaluation time = 14.3593
+
+Copying objective function to workers...
+Done copying objective function to workers.
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|    1 |      28 | Best   |  1.6901e-07 |      11.753 |  1.6901e-07 |  1.6901e-07 |    0.0018573 |         true |
+|    2 |      15 | Best   |  1.3044e-07 |       12.23 |  1.3044e-07 |  1.5233e-07 |    0.0008156 |        false |
+|    3 |      15 | Accept |  1.7806e-07 |      11.863 |  1.3044e-07 |  1.5233e-07 |    0.0021589 |         true |
+|    4 |      15 | Accept |  1.3044e-07 |      12.242 |  1.3044e-07 |  1.5233e-07 |   0.00016644 |        false |
+|    5 |      15 | Accept |  1.3044e-07 |      12.357 |  1.3044e-07 |  1.5233e-07 |    0.0001962 |        false |
+|    6 |      15 | Accept |  1.3044e-07 |       12.35 |  1.3044e-07 |  1.5233e-07 |   0.00032919 |        false |
+|    7 |      15 | Accept |  1.3044e-07 |      12.503 |  1.3044e-07 |  1.5233e-07 |   0.00086737 |        false |
+|    8 |      15 | Accept |   1.964e-07 |      12.499 |  1.3044e-07 |  1.5233e-07 |    0.0026972 |        false |
+|    9 |      15 | Accept |  1.7594e-07 |      12.332 |  1.3044e-07 |  1.5233e-07 |      0.00209 |        false |
+|   10 |      15 | Accept |  2.6072e-07 |      12.391 |  1.3044e-07 |  1.5233e-07 |    0.0038492 |        false |
+|   11 |      15 | Accept |  1.3044e-07 |      12.223 |  1.3044e-07 |  1.5233e-07 |   0.00015882 |        false |
+|   12 |      15 | Accept |  1.4798e-07 |      12.456 |  1.3044e-07 |  1.5233e-07 |    0.0012181 |        false |
+|   13 |      15 | Accept |  1.3044e-07 |      12.591 |  1.3044e-07 |  1.5233e-07 |   0.00046734 |        false |
+|   14 |      15 | Accept |  1.3044e-07 |      12.301 |  1.3044e-07 |  1.5233e-07 |   0.00016772 |         true |
+|   15 |      15 | Accept |  1.3044e-07 |      12.561 |  1.3044e-07 |  1.5233e-07 |   0.00076286 |        false |
+|   16 |      21 | Accept |  1.3044e-07 |      12.846 |  1.3044e-07 |  1.4659e-07 |   0.00019394 |         true |
+|   17 |      21 | Accept |  1.3044e-07 |      12.995 |  1.3044e-07 |  1.4659e-07 |   0.00019977 |        false |
+|   18 |      21 | Accept |  1.3044e-07 |      12.945 |  1.3044e-07 |  1.4659e-07 |    0.0003433 |        false |
+|   19 |      21 | Accept |  1.3044e-07 |      13.213 |  1.3044e-07 |  1.4659e-07 |   0.00016573 |        false |
+|   20 |      21 | Accept |  1.3044e-07 |      13.091 |  1.3044e-07 |  1.4659e-07 |   0.00017827 |        false |
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|   21 |      21 | Accept |  1.3044e-07 |      12.799 |  1.3044e-07 |  1.4659e-07 |   0.00017882 |         true |
+|   22 |      21 | Accept |  1.4959e-07 |      12.837 |  1.3044e-07 |  1.4659e-07 |     0.001246 |         true |
+|   23 |      21 | Accept |  1.3044e-07 |      12.713 |  1.3044e-07 |  1.4659e-07 |   0.00038509 |         true |
+|   24 |      28 | Accept |  1.3044e-07 |      11.657 |  1.3044e-07 |  1.4568e-07 |   0.00014483 |        false |
+|   25 |      22 | Accept |  1.3044e-07 |      12.134 |  1.3044e-07 |  1.4746e-07 |   0.00092295 |         true |
+|   26 |      22 | Accept |  2.1208e-07 |      11.979 |  1.3044e-07 |  1.4746e-07 |     0.003065 |        false |
+|   27 |      22 | Accept |  1.3044e-07 |       11.75 |  1.3044e-07 |  1.4746e-07 |   0.00047798 |         true |
+|   28 |      22 | Accept |  1.3044e-07 |      12.447 |  1.3044e-07 |  1.4746e-07 |   0.00034022 |        false |
+|   29 |      22 | Accept |   1.795e-07 |      12.375 |  1.3044e-07 |  1.4746e-07 |     0.002205 |         true |
+|   30 |      22 | Accept |  1.5808e-07 |      12.561 |  1.3044e-07 |  1.4746e-07 |    0.0014732 |         true |
+|   31 |      22 | Accept |  1.3044e-07 |      12.435 |  1.3044e-07 |  1.4746e-07 |   0.00070384 |        false |
+
+__________________________________________________________
+Optimization completed.
+MaxObjectiveEvaluations of 30 reached.
+Total function evaluations: 31
+Total elapsed time: 26.4564 seconds
+Total objective function evaluation time: 385.4285
+
+Best observed feasible point:
+      Sigma      Standardize
+    _________    ___________
+
+    0.0008156       false   
+
+Observed objective function value = 1.3044e-07
+Estimated objective function value = 1.4751e-07
+Function evaluation time = 12.2302
+
+Best estimated feasible point (according to models):
+      Sigma       Standardize
+    __________    ___________
+
+    0.00046734       false   
+
+Estimated objective function value = 1.4746e-07
+Estimated function evaluation time = 12.4273
+
+Copying objective function to workers...
+Done copying objective function to workers.
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|    1 |      28 | Best   |  7.8509e-07 |      10.819 |  7.8509e-07 |  7.8509e-07 |    0.0021331 |         true |
+|    2 |      28 | Accept |  9.2951e-07 |      11.416 |  7.8509e-07 |  8.5637e-07 |    0.0030324 |         true |
+|    3 |      28 | Accept |  8.2454e-07 |       12.23 |  7.8509e-07 |  8.5165e-07 |    0.0023835 |        false |
+|    4 |      28 | Accept |  1.4325e-06 |      13.219 |  7.8509e-07 |  9.0276e-07 |    0.0064069 |        false |
+|    5 |      27 | Accept |   6.378e-07 |      13.506 |  6.1547e-07 |  8.0668e-07 |      0.00132 |         true |
+|    6 |      27 | Best   |  6.1547e-07 |      13.503 |  6.1547e-07 |  8.0668e-07 |   0.00031286 |        false |
+|    7 |      27 | Accept |  6.1547e-07 |      13.771 |  6.1547e-07 |  7.8908e-07 |   0.00032465 |        false |
+|    8 |      15 | Accept |  6.1547e-07 |      14.533 |  6.1547e-07 |    7.69e-07 |   0.00036182 |        false |
+|    9 |      15 | Accept |  6.1547e-07 |      14.432 |  6.1547e-07 |    7.69e-07 |   0.00011924 |         true |
+|   10 |      15 | Accept |  1.4237e-06 |      14.196 |  6.1547e-07 |    7.69e-07 |    0.0063367 |        false |
+|   11 |      15 | Accept |  6.1547e-07 |      14.164 |  6.1547e-07 |    7.69e-07 |   0.00097499 |        false |
+|   12 |      15 | Accept |  1.4569e-06 |      13.919 |  6.1547e-07 |    7.69e-07 |    0.0065939 |         true |
+|   13 |      15 | Accept |  6.1547e-07 |      14.485 |  6.1547e-07 |    7.69e-07 |   0.00080656 |        false |
+|   14 |      15 | Accept |  6.1814e-07 |      14.494 |  6.1547e-07 |    7.69e-07 |    0.0010448 |         true |
+|   15 |      15 | Accept |  6.1547e-07 |       14.12 |  6.1547e-07 |    7.69e-07 |   0.00053646 |         true |
+|   16 |      15 | Accept |  6.1547e-07 |       14.42 |  6.1547e-07 |    7.69e-07 |   0.00016754 |        false |
+|   17 |      15 | Accept |  6.1547e-07 |      14.355 |  6.1547e-07 |    7.69e-07 |   0.00043698 |         true |
+|   18 |      15 | Accept |  1.4161e-06 |      14.062 |  6.1547e-07 |    7.69e-07 |    0.0062749 |        false |
+|   19 |      15 | Accept |  6.1547e-07 |       14.78 |  6.1547e-07 |    7.69e-07 |   0.00058542 |         true |
+|   20 |      15 | Accept |  6.1547e-07 |      14.562 |  6.1547e-07 |    7.69e-07 |    0.0004849 |        false |
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|   21 |      28 | Accept |  6.1547e-07 |      15.007 |  6.1547e-07 |  7.5465e-07 |   0.00020815 |         true |
+|   22 |      28 | Accept |  4.0825e-06 |      19.878 |  6.1547e-07 |  6.8351e-07 |     0.013229 |        false |
+|   23 |      20 | Accept |  1.7164e-06 |      21.523 |  6.1547e-07 |  6.5014e-07 |    0.0082788 |         true |
+|   24 |      20 | Accept |  4.1643e-06 |      22.401 |  6.1547e-07 |  6.5014e-07 |     0.013889 |        false |
+|   25 |      20 | Accept |  2.3278e-06 |      20.672 |  6.1547e-07 |  6.5014e-07 |     0.010552 |         true |
+|   26 |      20 | Accept |  1.8971e-06 |      21.237 |  6.1547e-07 |  6.5014e-07 |    0.0091399 |        false |
+|   27 |      20 | Accept |  3.3518e-06 |      20.009 |  6.1547e-07 |  6.5014e-07 |     0.011808 |        false |
+|   28 |      20 | Accept |  3.0601e-06 |      20.463 |  6.1547e-07 |  6.5014e-07 |     0.011577 |         true |
+|   29 |      20 | Accept |  6.5811e-06 |       13.13 |  6.1547e-07 |  6.5014e-07 |     0.019778 |         true |
+|   30 |      20 | Accept |  6.1547e-07 |      12.829 |  6.1547e-07 |  6.5014e-07 |   0.00010014 |         true |
+|   31 |      20 | Accept |    8.17e-07 |      11.803 |  6.1547e-07 |  6.5014e-07 |    0.0023358 |        false |
+
+__________________________________________________________
+Optimization completed.
+MaxObjectiveEvaluations of 30 reached.
+Total function evaluations: 31
+Total elapsed time: 27.611 seconds
+Total objective function evaluation time: 473.9367
+
+Best observed feasible point:
+      Sigma       Standardize
+    __________    ___________
+
+    0.00031286       false   
+
+Observed objective function value = 6.1547e-07
+Estimated objective function value = 6.6443e-07
+Function evaluation time = 13.5032
+
+Best estimated feasible point (according to models):
+      Sigma       Standardize
+    __________    ___________
+
+    0.00036182       false   
+
+Estimated objective function value = 6.5014e-07
+Estimated function evaluation time = 14.3285
+
+Copying objective function to workers...
+Done copying objective function to workers.
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|    1 |      28 | Best   |  1.2165e-06 |      10.303 |  1.2165e-06 |  1.2165e-06 |   0.00042288 |        false |
+|    2 |      24 | Accept |  1.2165e-06 |      10.623 |  1.2165e-06 |  1.2165e-06 |   0.00039859 |        false |
+|    3 |      24 | Accept |  1.2165e-06 |      10.391 |  1.2165e-06 |  1.2165e-06 |    0.0001036 |        false |
+|    4 |      24 | Accept |  1.2165e-06 |      10.617 |  1.2165e-06 |  1.2165e-06 |   0.00089621 |        false |
+|    5 |      24 | Accept |  1.2165e-06 |      10.565 |  1.2165e-06 |  1.2165e-06 |   0.00028814 |         true |
+|    6 |      24 | Accept |  1.2165e-06 |      10.539 |  1.2165e-06 |  1.2165e-06 |   0.00016993 |        false |
+|    7 |      19 | Accept |  1.2165e-06 |      10.931 |  1.2165e-06 |  1.3001e-06 |    0.0006276 |         true |
+|    8 |      19 | Accept |  1.2165e-06 |      10.817 |  1.2165e-06 |  1.3001e-06 |   0.00049984 |         true |
+|    9 |      19 | Accept |  1.2165e-06 |      11.049 |  1.2165e-06 |  1.3001e-06 |   0.00013195 |         true |
+|   10 |      19 | Accept |  1.9923e-06 |      11.184 |  1.2165e-06 |  1.3001e-06 |    0.0057615 |        false |
+|   11 |      19 | Accept |  1.2643e-06 |      11.146 |  1.2165e-06 |  1.3001e-06 |    0.0014979 |        false |
+|   12 |      19 | Accept |  1.2165e-06 |      10.856 |  1.2165e-06 |  1.3001e-06 |    0.0004248 |        false |
+|   13 |      20 | Accept |  1.2851e-06 |      11.598 |  1.1916e-06 |  1.2572e-06 |     0.001623 |         true |
+|   14 |      20 | Accept |  1.1941e-06 |      11.649 |  1.1916e-06 |  1.2572e-06 |    0.0012798 |         true |
+|   15 |      20 | Accept |  1.5183e-06 |      11.602 |  1.1916e-06 |  1.2572e-06 |    0.0025172 |         true |
+|   16 |      20 | Accept |  2.7328e-06 |      11.525 |  1.1916e-06 |  1.2572e-06 |    0.0092703 |        false |
+|   17 |      20 | Accept |  1.2165e-06 |      11.484 |  1.1916e-06 |  1.2572e-06 |   0.00034173 |        false |
+|   18 |      20 | Best   |  1.1916e-06 |      11.501 |  1.1916e-06 |  1.2572e-06 |      0.00126 |         true |
+|   19 |      20 | Accept |  1.2165e-06 |      11.246 |  1.1916e-06 |  1.2572e-06 |    0.0001159 |         true |
+|   20 |      20 | Accept |  1.2165e-06 |      11.203 |  1.1916e-06 |  1.2572e-06 |   0.00015716 |        false |
+|===============================================================================================================|
+| Iter | Active  | Eval   | Objective:  | Objective   | BestSoFar   | BestSoFar   |        Sigma |  Standardize |
+|      | workers | result | log(1+loss) | runtime     | (observed)  | (estim.)    |              |              |
+|===============================================================================================================|
+|   21 |      20 | Accept |  1.2165e-06 |      11.485 |  1.1916e-06 |  1.2572e-06 |   0.00022963 |         true |
+|   22 |      26 | Accept |    2.34e-06 |      12.074 |  1.1862e-06 |  1.3876e-06 |    0.0076589 |         true |
+|   23 |      26 | Best   |  1.1862e-06 |      11.998 |  1.1862e-06 |  1.3876e-06 |    0.0011876 |        false |
+|   24 |      26 | Accept |  1.1901e-06 |      11.916 |  1.1862e-06 |  1.3876e-06 |    0.0012467 |        false |
+|   25 |      28 | Accept |  3.7436e-06 |      17.584 |  1.1862e-06 |  1.2689e-06 |     0.011373 |         true |
+|   26 |      15 | Accept |  4.2406e-06 |       21.03 |  1.1862e-06 |  1.2004e-06 |     0.013648 |         true |
+|   27 |      15 | Accept |  3.9491e-06 |      23.745 |  1.1862e-06 |  1.2004e-06 |     0.012499 |        false |
+|   28 |      15 | Accept |  1.2165e-06 |      11.325 |  1.1862e-06 |  1.2004e-06 |   0.00010968 |        false |
+|   29 |      15 | Accept |  1.6513e-06 |      10.779 |  1.1862e-06 |  1.2004e-06 |    0.0030891 |         true |
+|   30 |      15 | Accept |  1.2708e-06 |      11.062 |  1.1862e-06 |  1.2004e-06 |    0.0015205 |        false |
+|   31 |      15 | Accept |  1.9582e-06 |       10.14 |  1.1862e-06 |  1.2004e-06 |    0.0055396 |         true |
+|   32 |      15 | Accept |  1.3145e-06 |      12.468 |  1.1862e-06 |  1.2004e-06 |    0.0019019 |        false |
+|   33 |      15 | Accept |  2.1686e-06 |      11.716 |  1.1862e-06 |  1.2004e-06 |    0.0067855 |        false |
+|   34 |      15 | Accept |  2.1721e-06 |      12.563 |  1.1862e-06 |  1.2004e-06 |    0.0068041 |         true |
+|   35 |      15 | Accept |  1.2165e-06 |      11.793 |  1.1862e-06 |  1.2004e-06 |   0.00013648 |        false |
+|   36 |      15 | Accept |  1.2028e-06 |      14.724 |  1.1862e-06 |  1.2004e-06 |    0.0010462 |        false |
+|   37 |      15 | Accept |  1.2165e-06 |      11.511 |  1.1862e-06 |  1.2004e-06 |   0.00021654 |         true |
+|   38 |      15 | Accept |  2.1465e-06 |      10.567 |  1.1862e-06 |  1.2004e-06 |    0.0066656 |        false |
+|   39 |      15 | Accept |  1.1963e-06 |      9.2488 |  1.1862e-06 |  1.2004e-06 |    0.0010741 |         true |
+
+__________________________________________________________
+Optimization completed.
+MaxObjectiveEvaluations of 30 reached.
+Total function evaluations: 39
+Total elapsed time: 27.9462 seconds
+Total objective function evaluation time: 468.5602
+
+Best observed feasible point:
+      Sigma      Standardize
+    _________    ___________
+
+    0.0011876       false   
+
+Observed objective function value = 1.1862e-06
+Estimated objective function value = 1.354e-06
+Function evaluation time = 11.9984
+
+Best estimated feasible point (according to models):
+      Sigma      Standardize
+    _________    ___________
+
+    0.0004248       false   
+
+Estimated objective function value = 1.2004e-06
+Estimated function evaluation time = 10.5924
+
+
+et_GP =
+
+   1.4519e+04
+
+{Error using vertcat
+Dimensions of arrays being concatenated are not consistent.
+
+Error in K_RSSID_prediction (line 24)
+Y_pred(1,:) = [pos0.';Ymean.'];
+
+Error in Offroad_Koopman_Training_main (line 159)
+        [Y_pred,y_out,error,Y_pred_95]  = K_RSSID_prediction(testData(:,:,:,i),...
+} 
+Parallel pool using the 'Processes' profile is shutting down.

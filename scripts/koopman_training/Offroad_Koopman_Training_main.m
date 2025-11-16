@@ -34,8 +34,8 @@ disp('----------------------------------------------');
 if exist('param_tag','var')
     base_name = sprintf('sandyloam_%s', param_tag);
 else
-    base_name = sprintf('sandyloam_nB%d_nl%d_sy%g_cut%g_koopman_model', ...
-                        nB, nl, sy, cut_off);
+    base_name = sprintf('sandyloam_nl%d_sy%g_nB%d_cut%g_koopman_model', ...
+                        nl, sy, nB, cut_off);
 end
 
 ws_name = sprintf('task%s_%s_koopman_model.mat', task_id, base_name);
@@ -144,9 +144,9 @@ for i =1:rr
 end
 et_GP = toc
 
-output_dir = fullfile(pwd, 'results/sandyloam_noelev_models');
-ws_path = fullfile(output_dir, ws_name);
-save(ws_path,'-v7.3')
+% output_dir = fullfile(pwd, 'results/sandyloam_noelev_models');
+% ws_path = fullfile(output_dir, ws_name);
+% save(ws_path,'-v7.3')
 %% Validate the model using the validation dataset
 
 refresh = [25,50,75,100,125,150,175,200,225,250];
@@ -168,9 +168,10 @@ for jj = 1:size(refresh,2)
     overall_error(:,jj) = total_rmse./test_ntr;
 
 end
+display(overall_error)
 et_val = toc
 ws_name = sprintf('task%s_%s_error.mat', task_id, base_name);
-output_dir = fullfile(pwd, 'results/sandyloam_noelev_models/error');
+output_dir = fullfile(pwd, 'results/sandyloam_noelev_models/models_with_error');
 ws_path = fullfile(output_dir, ws_name);
 save(ws_path,'-v7.3')
 

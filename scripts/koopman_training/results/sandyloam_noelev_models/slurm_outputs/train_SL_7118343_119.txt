@@ -1,0 +1,75 @@
+Running Task 119 with:
+nB=300, nl=600, sy=400, cut_off=4
+Using parameter file: /scratch/kloya/Koopman-offroad/scripts/koopman_training/results/../params.txt
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+----------------------------------------------
+--- MATLAB Script Running (SLURM Job Info) ---
+----------------------------------------------
+SLURM Job ID:       7118466
+SLURM Array Task ID:119
+Parameter nB:       300
+Parameter nl:       600
+Parameter sy:       400
+Parameter cut_off:  4
+Parameter tag:      nB300_nl600_sy400_c4
+----------------------------------------------
+
+et_initialize =
+
+    3.0206
+
+RSSID:: Iteration   26-  30 | sytem order:  25 | Gr Dist: 1.56 | check Dist: 1.56  
+RSSID:: Iteration   51-  55 | sytem order:  25 | Gr Dist: 0.31 | check Dist: 0.31  
+RSSID:: Iteration   76-  80 | sytem order:  25 | Gr Dist: 1.56 | check Dist: 1.56  
+RSSID:: Iteration  101- 105 | sytem order:  25 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration  126- 130 | sytem order:  25 | Gr Dist: 1.10 | check Dist: 1.10  
+RSSID:: Iteration  151- 155 | sytem order:  26 | Gr Dist: 1.44 | check Dist: 1.44  
+RSSID:: Iteration  176- 180 | sytem order:  26 | Gr Dist: 1.56 | check Dist: 1.56  
+RSSID:: Iteration  201- 205 | sytem order:  26 | Gr Dist: 1.27 | check Dist: 1.26  
+RSSID:: Iteration  226- 230 | sytem order:  26 | Gr Dist: 0.66 | check Dist: 0.66  
+RSSID:: Iteration  251- 255 | sytem order:  26 | Gr Dist: 1.02 | check Dist: 1.02  
+RSSID:: Iteration  276- 280 | sytem order:  26 | Gr Dist: 1.41 | check Dist: 1.41  
+RSSID:: Iteration  301- 305 | sytem order:  26 | Gr Dist: 1.54 | check Dist: 1.54  
+RSSID:: Iteration  326- 330 | sytem order:  26 | Gr Dist: 0.80 | check Dist: 0.80  
+RSSID:: Iteration  351- 355 | sytem order:  26 | Gr Dist: 1.55 | check Dist: 1.55  
+RSSID:: Iteration  376- 380 | sytem order:  26 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration  401- 405 | sytem order:  26 | Gr Dist: 1.55 | check Dist: 1.55  
+RSSID:: Iteration  426- 430 | sytem order:  26 | Gr Dist: 1.46 | check Dist: 1.46  
+RSSID:: Iteration  451- 455 | sytem order:  26 | Gr Dist: 1.12 | check Dist: 1.13  
+RSSID:: Iteration  476- 480 | sytem order:  26 | Gr Dist: 0.39 | check Dist: 0.39  
+RSSID:: Iteration  501- 505 | sytem order:  26 | Gr Dist: 0.29 | check Dist: 0.29  
+RSSID:: Iteration  526- 530 | sytem order:  27 | Gr Dist: 1.51 | check Dist: 1.39  
+RSSID:: Iteration  551- 555 | sytem order:  27 | Gr Dist: 0.68 | check Dist: 0.68  
+RSSID:: Iteration  576- 580 | sytem order:  27 | Gr Dist: 0.62 | check Dist: 0.62  
+RSSID:: Iteration  601- 605 | sytem order:  26 | Gr Dist: 1.54 | check Dist: 1.54  
+RSSID:: Iteration  626- 630 | sytem order:  26 | Gr Dist: 1.14 | check Dist: 1.14  
+RSSID:: Iteration  651- 655 | sytem order:  26 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration  676- 680 | sytem order:  26 | Gr Dist: 1.56 | check Dist: 1.56  
+RSSID:: Iteration  701- 705 | sytem order:  26 | Gr Dist: 0.74 | check Dist: 0.76  
+RSSID:: Iteration  726- 730 | sytem order:  27 | Gr Dist: 1.55 | check Dist: 1.51  
+RSSID:: Iteration  751- 755 | sytem order:  27 | Gr Dist: 1.49 | check Dist: 1.49  
+RSSID:: Iteration  776- 780 | sytem order:  27 | Gr Dist: 1.25 | check Dist: 1.25  
+RSSID:: Iteration  801- 805 | sytem order:  27 | Gr Dist: 1.49 | check Dist: 1.49  
+RSSID:: Iteration  826- 830 | sytem order:  27 | Gr Dist: 1.31 | check Dist: 1.31  
+RSSID:: Iteration  851- 855 | sytem order:  27 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration  876- 880 | sytem order:  27 | Gr Dist: 0.91 | check Dist: 0.91  
+RSSID:: Iteration  901- 905 | sytem order:  27 | Gr Dist: 1.45 | check Dist: 1.45  
+RSSID:: Iteration  926- 930 | sytem order:  27 | Gr Dist: 0.76 | check Dist: 0.76  
+RSSID:: Iteration  951- 955 | sytem order:  26 | Gr Dist: 1.41 | check Dist: 1.41  
+RSSID:: Iteration  976- 980 | sytem order:  26 | Gr Dist: 1.25 | check Dist: 1.25  
+RSSID:: Iteration 1001-1005 | sytem order:  26 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration 1026-1030 | sytem order:  26 | Gr Dist: 1.35 | check Dist: 1.35  
+RSSID:: Iteration 1051-1055 | sytem order:  26 | Gr Dist: 0.29 | check Dist: 0.29  
+RSSID:: Iteration 1076-1080 | sytem order:  26 | Gr Dist: 1.35 | check Dist: 1.34  
+RSSID:: Iteration 1101-1105 | sytem order:  26 | Gr Dist: 0.55 | check Dist: 0.55  
+RSSID:: Iteration 1126-1130 | sytem order:  26 | Gr Dist: 1.52 | check Dist: 1.51  
+RSSID:: Iteration 1151-1155 | sytem order:  26 | Gr Dist: 1.33 | check Dist: 1.32  
