@@ -32,13 +32,13 @@ disp('----------------------------------------------');
 
 % Use the tag from the shell if available
 if exist('param_tag','var')
-    base_name = sprintf('sandyloam_%s_koopman_model', param_tag);
+    base_name = sprintf('sandyloam_%s', param_tag);
 else
     base_name = sprintf('sandyloam_nB%d_nl%d_sy%g_cut%g_koopman_model', ...
                         nB, nl, sy, cut_off);
 end
 
-ws_name = sprintf('%s_job%s_task%s.mat', base_name, job_id, task_id);
+ws_name = sprintf('task%s_%s_koopman_model.mat', task_id, base_name);
 
 addpath(function_file_path)
 load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
@@ -97,34 +97,33 @@ for iter =1+n_stride:n_stride:numTrain
 
         % Recursive subspace Identification
         [Xi_N1,SN1] = RSSID_pomoesp_scalar(Y_N,U_N,Phi_N,Xi_N1,SN1);
-        % [~,~,~,Xi_NN] = initialize_RSSID(trainData(:,K_obs,:,1:traj(:,end)),nl,sy,mean_std_inp,mean_std_out);
         
         % Find reduced order subspace
         [Gam_Xi_R,rr] = find_ExObs(Xi_N1,cut_off);
         check_sub = subspace(Gam_Xi_i,Gam_Xi_R);
-        % check_sub1 = subspace(Gam_Xi_rold,Gam_Xi_R);
+        
         if mod(count,5)==0
-            fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n',...
+            fprintf('RSSID:: Iteration %4d-%4d | sytem order: %3d | Gr Dist: %.2f | check Dist: %.2f  \n',...
                 iter,iter+n_stride-1,rr,ct(end,end),check_sub);
         end
     end
 end
-fprintf('RSSID:: Iteration %d-%d | sytem order: %d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
+fprintf('RSSID:: Iteration %4d-%4d | sytem order: %3d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 et_RSSID = toc
 
-s_name = sprintf('part1_%s_job%s_task%s.mat', base_name, job_id, task_id);
-output_dir = fullfile(pwd, 'results_sandyloam/part1');
-ws_path = fullfile(output_dir, s_name);
-save(ws_path,'-v7.3')
+% s_name = sprintf('part1_%s_job%s_task%s.mat', base_name, job_id, task_id);
+% output_dir = fullfile(pwd, 'results_sandyloam/part1');
+% ws_path = fullfile(output_dir, s_name);
+% save(ws_path,'-v7.3')
 %% Find Koopman Matrices and realizations of latent initial values
 
-opts.max_iter = 10000;
-opts.del_cost_tol = 1e-6;
+opts.max_iter = 5000;
+opts.del_cost_tol = 1e-8;
 exp_N = trainData(:,K_obs,:,idx_data);
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
     exp_N,Gam_Xi_R,nB,mean_std_inp,mean_std_out,opts);
 et_GD = toc
-clearvars exp_ni exp_N
+clearvars exp_Ni exp_N
 % un-normalize from the mean and std of I/O data
 B = Bn./mean_std_inp(2,:);
 C = Cn.*mean_std_out(2,:).';
@@ -144,6 +143,10 @@ for i =1:rr
         'ShowPlots',0));
 end
 et_GP = toc
+
+output_dir = fullfile(pwd, 'results/sandyloam_noelev_models');
+ws_path = fullfile(output_dir, ws_name);
+save(ws_path,'-v7.3')
 %% Validate the model using the validation dataset
 
 refresh = [25,50,75,100,125,150,175,200,225,250];
@@ -166,7 +169,8 @@ for jj = 1:size(refresh,2)
 
 end
 et_val = toc
-output_dir = fullfile(pwd, 'results_sandyloam');
+ws_name = sprintf('task%s_%s_error.mat', task_id, base_name);
+output_dir = fullfile(pwd, 'results/sandyloam_noelev_models/error');
 ws_path = fullfile(output_dir, ws_name);
 save(ws_path,'-v7.3')
 

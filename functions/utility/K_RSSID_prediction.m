@@ -14,8 +14,8 @@ Y_cov = zeros(size(y_out,1),size(K_obs,2));
 % GP initial condition
 Z_Gpr = zeros(rr,2);
 for i = 1:rr
-    X0 = (y_out(1,K_obs) - mean_std_out(1,:))./mean_std_out(2,:);  % normalize back for GP 
-    [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(i).gprMDL,X0);
+    X0n = (y_out(1,K_obs) - mean_std_out(1,:))./mean_std_out(2,:);  % normalize back for GP 
+    [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(i).gprMDL,X0n);
     Z_Gpr(i,:) = [Zi_mean Zi_sd.^2];
     Z_95(i,:) = Zi_95;
 end
@@ -26,11 +26,11 @@ Y_cov(:,1) = diag(C*diag(Z_Gpr(:,2))*C.');
 for i = 2:size(tspan,1) 
 
     if mod(i,refresh)==0
-        X0_corr = ((y_out(i,K_obs) - mean_std_out(1,:))./mean_std_out(2,:)).'; % normalize back for GP 
+        X0_corrn = ((y_out(i,K_obs) - mean_std_out(1,:))./mean_std_out(2,:)).'; % normalize back for GP 
         Ymean = y_out(i,K_obs).';
         pos_cur = y_out(i,1:3).';
         for j = 1:rr
-            [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(j).gprMDL,X0_corr.');
+            [Zi_mean,Zi_sd,Zi_95] = predict(MDL_fitr(j).gprMDL,X0_corrn.');
             Z_Gpr(j,:) = [Zi_mean Zi_sd.^2];
             Z_95(j,:) = Zi_95;
         end

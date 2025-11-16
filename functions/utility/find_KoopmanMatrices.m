@@ -29,7 +29,7 @@ Yini = Y_tr(1:ny,:); %*diag(mean_std_out(2,:))).' + mean_std_out(1,:).';
 [~,idx_GP] = min(min_D);
 XGp = Yini(:,idx_GP);
 ZGp = Zlift(:,idx_GP); 
-ytest(:,:)= XGp - (C)*ZGp;
+ytest(:,:)= XGp - Cn*ZGp;
 XGprn = XGp.';
 ZGpr = ZGp.';
 end

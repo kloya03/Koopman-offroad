@@ -7,9 +7,11 @@ function [Gam_Xi_R,rr] = find_ExObs(Xi_N,ntau)
 sig = diag(S);                  % for PSD, sig == eigenvalues
 Cu  = cumsum(sig) / sum(sig);   % NO sqrt here
 rr   = max(find(round(Cu,ntau) == 1,1, 'first'),3);
-% if isempty(rr)
-%     rr = 1200; % Default value if no rank is found
-% end
+ct = 0;
+while isempty(rr)
+    ct =ct +1;
+    rr = max(find(round(Cu,ntau-ct) == 1,1, 'first'),3); % Default value if no rank is found
+end
 % rr   = max(find(Cu >= tau, 1, 'first'),3);
 Gam_Xi_R = U(:,1:rr)*sqrt(S(1:rr,1:rr));
 
