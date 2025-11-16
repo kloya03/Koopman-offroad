@@ -10,7 +10,7 @@ u_in = (data.InputData).';
 ts = data.Ts;
 tspan = data.SamplingInstants - ts;
 Y_pred = zeros(size(y_out));
-Y_cov = zeros(size(y_out,1),size(K_obs,2));
+Y_cov = zeros(size(K_obs,2),size(y_out,1));
 % GP initial condition
 Z_Gpr = zeros(rr,2);
 for i = 1:rr
@@ -42,16 +42,16 @@ for i = 2:size(tspan,1)
         Ymean = C*Z_Gpr(:,1)+Cc1;                 % added normalized terms for unnormalized
         dx = Ymean(1,1).*cos(pos0(3,1)) - Ymean(2,1).*sin(pos0(3,1));
         dy = Ymean(1,1).*sin(pos0(3,1)) + Ymean(2,1).*cos(pos0(3,1));
-        pos_cur = pos0+[dx;dy;Ymean(3,i)].*ts;
+        pos_cur = pos0+[dx;dy;Ymean(3,end)].*ts;
     end
     pos0 = pos_cur;
-    Y_pred(i,:) =  [pos0.';Ymean.'];  
+    Y_pred(i,:) =  [pos0.', Ymean.'];  
     Y_cov(:,i) = diag(C*diag(Z_Gpr(:,2))*C.');
 end
 
 if nargout > 3
     % Confidence Interval
-    Ystd = sqrt(Ycov);
+    Ystd = sqrt(Y_cov);
     CI95 = tinv([0.025 0.975],inf);
     for i=1:size(K_obs,2)
         YCI_95(:,:,i) = bsxfun(@times, Ystd(i,:), CI95(:));
@@ -59,7 +59,7 @@ if nargout > 3
     end
 end
 
-error.withTime = Y_pred - y_out;
-error.overallRMSE = rmse(Y_pred,y_out,2);
+error.withTime = (Y_pred - y_out).^2;
+error.overallRMSE = rmse(Y_pred,y_out,1);
 
 end

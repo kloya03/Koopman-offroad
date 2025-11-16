@@ -31,14 +31,7 @@ fprintf('Parameter tag:      %s\n', param_tag);
 disp('----------------------------------------------');
 
 % Use the tag from the shell if available
-if exist('param_tag','var')
-    base_name = sprintf('sandyloam_%s', param_tag);
-else
-    base_name = sprintf('sandyloam_nl%d_sy%g_nB%d_cut%g_koopman_model', ...
-                        nl, sy, nB, cut_off);
-end
-
-ws_name = sprintf('task%s_%s_koopman_model.mat', task_id, base_name);
+base_name = sprintf('%s', param_tag);
 
 addpath(function_file_path)
 load(data_file_path,"b","trainData","valData","testData","numTest","numVal",...
@@ -117,7 +110,7 @@ et_RSSID = toc
 % save(ws_path,'-v7.3')
 %% Find Koopman Matrices and realizations of latent initial values
 
-opts.max_iter = 5000;
+opts.max_iter = 10000;
 opts.del_cost_tol = 1e-8;
 exp_N = trainData(:,K_obs,:,idx_data);
 [A,Cn,Bn,XGprn,ZGpr, ytest,del_cost,total_cost] = find_KoopmanMatrices(...
@@ -152,7 +145,7 @@ et_GP = toc
 refresh = [25,50,75,100,125,150,175,200,225,250];
 test_ntr = size(testData,4);
 
-for jj = 1:size(refresh,2)
+parfor jj = 1:size(refresh,2)
     time_error = zeros(size(testData(:,:,:,1).OutputData)).';
         total_rmse = zeros(size(testData(:,:,:,1).OutputData,2),1);
     for i=1:test_ntr
@@ -164,7 +157,7 @@ for jj = 1:size(refresh,2)
                                               %  for each traj is same otherwise ...
                                               % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
     end
-    error_with_time(:,:,jj) = time_error./test_ntr;
+    error_with_time(:,:,jj) =  sqrt(time_error./test_ntr);
     overall_error(:,jj) = total_rmse./test_ntr;
 
 end

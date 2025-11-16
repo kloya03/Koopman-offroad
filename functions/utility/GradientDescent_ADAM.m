@@ -67,18 +67,23 @@ for iter = 1:num_iter
     if iter > 2
         del_cost(iter-1) = total_cost(1,iter) - total_cost(1,iter-1);
 
-        if mod(iter,100) == 0
+        if mod(iter,500) == 0
             fprintf(['Adam GD:: Iter %4d | Cost: %e | ΔJ: %e | ' ...
                 'mean(|step|): %e | max(|step|): %e\n'], ...
                 iter, total_cost(iter), del_cost(iter-1), ...
                 mean(abs(step)), max(abs(step)));
         end
+    else
+        fprintf(['Adam GD:: Iter %4d | Cost: %e | ΔJ: %e | ' ...
+                'mean(|step|): %e | max(|step|): %e\n'], ...
+                iter, total_cost(iter), del_cost(iter-1), ...
+                mean(abs(step)), max(abs(step)));
 
-        if abs(del_cost(iter-1)) < cost_tol
-            fprintf('Adam GD:: Stopping early at iter %d (cost plateau: |ΔJ| = %.3e)\n', ...
-                iter, abs(del_cost(iter-1)));
-            break;
-        end
+        % if abs(del_cost(iter-1)) < cost_tol
+        %     fprintf('Adam GD:: Stopping early at iter %d (cost plateau: |ΔJ| = %.3e)\n', ...
+        %         iter, abs(del_cost(iter-1)));
+        %     break;
+        % end
     end
 end
 
