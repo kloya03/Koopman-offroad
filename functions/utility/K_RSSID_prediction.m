@@ -19,9 +19,9 @@ for i = 1:rr
     Z_Gpr(i,:) = [Zi_mean Zi_sd.^2];
     Z_95(i,:) = Zi_95;
 end
-pos0 = (y_out(1,1:3));
+pos0 = (y_out(1,1:3)).';
 Ymean = C*Z_Gpr(:,1)+Cc1;            % added normalized terms for unnormalized
-Y_pred(1,:) = [pos0.';Ymean.'];
+Y_pred(1,:) = [pos0.', Ymean.'];
 Y_cov(:,1) = diag(C*diag(Z_Gpr(:,2))*C.');
 for i = 2:size(tspan,1) 
 
