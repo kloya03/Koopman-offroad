@@ -146,7 +146,7 @@ refresh = [25,50,75,100,125,150,175,200,225,250];
 test_ntr = size(testData,4);
 
 for jj = 1:size(refresh,2)
-    time_error = zeros(size(testData(:,:,:,1).OutputData)).';
+    time_error = zeros(size(testData(:,:,:,1).OutputData));
         total_rmse = zeros(size(testData(:,:,:,1).OutputData,2),1);
     for i=1:test_ntr
         [Y_pred,y_out,error,Y_pred_95]  = K_RSSID_prediction(testData(:,:,:,i),...

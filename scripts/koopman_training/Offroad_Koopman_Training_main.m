@@ -141,19 +141,22 @@ et_GP = toc
 % ws_path = fullfile(output_dir, ws_name);
 % save(ws_path,'-v7.3')
 %% Validate the model using the validation dataset
-
+% clc
+% clear
+% load("results/sandyloam_noelev_models/models/task1_sandyloam_nB200_nl400_sy200_c1_koopman_model.mat")
+% addpath('../../functions/utility')
 refresh = [25,50,75,100,125,150,175,200,225,250];
 test_ntr = size(testData,4);
 
 parfor jj = 1:size(refresh,2)
-    time_error = zeros(size(testData(:,:,:,1).OutputData)).';
+    time_error = zeros(size(testData(:,:,:,1).OutputData));
         total_rmse = zeros(size(testData(:,:,:,1).OutputData,2),1);
     for i=1:test_ntr
         [Y_pred,y_out,error,Y_pred_95]  = K_RSSID_prediction(testData(:,:,:,i),...
             MDL_fitr,A,B,Bc1,C,Cc1,K_obs,mean_std_out,refresh(jj));
 
         time_error = time_error + error.withTime;
-        total_rmse = total_rmse + error.overallRMSE;  % make sure time stamp...
+        total_rmse = total_rmse + (error.overallRMSE).';  % make sure time stamp...
                                               %  for each traj is same otherwise ...
                                               % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
     end
