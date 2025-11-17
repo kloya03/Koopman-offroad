@@ -1,0 +1,40 @@
+Running Task 56 with:
+nB=300, nl=600, sy=200, cut_off=1
+Using parameter file: /scratch/kloya/Koopman-offroad/scripts/koopman_training/results/../params.txt
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+----------------------------------------------
+--- MATLAB Script Running (SLURM Job Info) ---
+----------------------------------------------
+SLURM Job ID:       7149006
+SLURM Array Task ID:56
+Parameter nB:       300
+Parameter nl:       600
+Parameter sy:       200
+Parameter cut_off:  1
+Parameter tag:      clay_nl600_sy200_nB300_c1
+----------------------------------------------
+
+et_initialize =
+
+    5.3609
+
+RSSID:: Iteration   26-  30 | sytem order:   3 | Gr Dist: 1.54 | check Dist: 0.89  
+RSSID:: Iteration   51-  55 | sytem order:   4 | Gr Dist: 1.47 | check Dist: 1.47  
+RSSID:: Iteration   76-  80 | sytem order:   4 | Gr Dist: 1.57 | check Dist: 1.57  
+RSSID:: Iteration  101- 105 | sytem order:   5 | Gr Dist: 1.49 | check Dist: 0.32  
+RSSID:: Iteration  126- 130 | sytem order:   5 | Gr Dist: 0.86 | check Dist: 0.86  
+RSSID:: Iteration  151- 155 | sytem order:   5 | Gr Dist: 0.40 | check Dist: 0.40  
+RSSID:: Iteration  176- 180 | sytem order:   5 | Gr Dist: 1.04 | check Dist: 1.03  
+RSSID:: Iteration  201- 205 | sytem order:   5 | Gr Dist: 0.47 | check Dist: 0.47  
+RSSID:: Iteration  226- 230 | sytem order:   5 | Gr Dist: 0.65 | check Dist: 0.65  
+RSSID:: Iteration  251- 255 | sytem order:   5 | Gr Dist: 0.78 | check Dist: 0.78  
+RSSID:: Iteration  276- 280 | sytem order:   5 | Gr Dist: 0.84 | check Dist: 0.84  

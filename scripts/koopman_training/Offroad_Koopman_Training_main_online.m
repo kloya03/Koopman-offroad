@@ -75,7 +75,7 @@ for iter =1+n_stride:n_stride:numTrain
     %%%%% Check Subspace distance for new data%%%%%
     traj = iter:min(iter+n_stride-1,numTrain);
     exp_Ni = getexp(trainData(:,K_obs,:),traj);
-    [Y_N,U_N,Phi_N,Xi_i] = initialize_RSSID(exp_Ni,...
+    [Y_N,U_N,Phi_N,~] = initialize_RSSID(exp_Ni,...
         nl,sy,mean_std_inp,mean_std_out);
     [Gam_Xi_i,ri] = find_ExObs(Xi_i,cut_off);
     GrDR_N = subspace(Gam_Xi_i,Gam_Xi_R);
@@ -104,10 +104,6 @@ end
 fprintf('RSSID:: Iteration %4d-%4d | sytem order: %3d | Gr Dist: %.2f | check Dist: %.2f  \n', iter,iter+n_stride-1,rr,ct(end,end),check_sub);
 et_RSSID = toc
 
-% s_name = sprintf('part1_%s_job%s_task%s.mat', base_name, job_id, task_id);
-% output_dir = fullfile(pwd, 'results_sandyloam/part1');
-% ws_path = fullfile(output_dir, s_name);
-% save(ws_path,'-v7.3')
 %% Find Koopman Matrices and realizations of latent initial values
 
 opts.max_iter = 5000;

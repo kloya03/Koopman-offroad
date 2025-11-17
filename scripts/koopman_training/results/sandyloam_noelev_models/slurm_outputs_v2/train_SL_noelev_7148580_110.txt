@@ -1,0 +1,36 @@
+Running Task 110 with:
+nB=300, nl=600, sy=400, cut_off=1
+Using parameter file: /scratch/kloya/Koopman-offroad/scripts/koopman_training/results/../params.txt
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+----------------------------------------------
+--- MATLAB Script Running (SLURM Job Info) ---
+----------------------------------------------
+SLURM Job ID:       7148926
+SLURM Array Task ID:110
+Parameter nB:       300
+Parameter nl:       600
+Parameter sy:       400
+Parameter cut_off:  1
+Parameter tag:      sandyloam_nl600_sy400_nB300_c1
+----------------------------------------------
+
+et_initialize =
+
+    2.9792
+
+RSSID:: Iteration   26-  30 | sytem order:   8 | Gr Dist: 1.46 | check Dist: 1.47  
+RSSID:: Iteration   51-  55 | sytem order:   9 | Gr Dist: 1.30 | check Dist: 1.30  
+RSSID:: Iteration   76-  80 | sytem order:   9 | Gr Dist: 1.15 | check Dist: 1.16  
+RSSID:: Iteration  101- 105 | sytem order:   9 | Gr Dist: 1.20 | check Dist: 1.21  
+RSSID:: Iteration  126- 130 | sytem order:   9 | Gr Dist: 1.18 | check Dist: 1.19  
+RSSID:: Iteration  151- 155 | sytem order:   9 | Gr Dist: 1.25 | check Dist: 1.26  
+RSSID:: Iteration  176- 180 | sytem order:   9 | Gr Dist: 0.21 | check Dist: 0.21  

@@ -1,0 +1,44 @@
+Running Task 17 with:
+nB=300, nl=400, sy=200, cut_off=6
+Using parameter file: /scratch/kloya/Koopman-offroad/scripts/koopman_training/results/../params.txt
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2023 The MathWorks, Inc.
+                  R2023b (23.2.0.2365128) 64-bit (glnxa64)
+                              August 23, 2023
+
+ 
+To get started, type doc.
+For product information, visit www.mathworks.com.
+ 
+----------------------------------------------
+--- MATLAB Script Running (SLURM Job Info) ---
+----------------------------------------------
+SLURM Job ID:       7148833
+SLURM Array Task ID:17
+Parameter nB:       300
+Parameter nl:       400
+Parameter sy:       200
+Parameter cut_off:  6
+Parameter tag:      sandyloam_nl400_sy200_nB300_c6
+----------------------------------------------
+
+et_initialize =
+
+    6.6605
+
+RSSID:: Iteration   26-  30 | sytem order:  64 | Gr Dist: 0.91 | check Dist: 0.95  
+RSSID:: Iteration   51-  55 | sytem order:  72 | Gr Dist: 1.46 | check Dist: 1.50  
+RSSID:: Iteration   76-  80 | sytem order:  73 | Gr Dist: 0.24 | check Dist: 0.24  
+RSSID:: Iteration  101- 105 | sytem order:  78 | Gr Dist: 1.17 | check Dist: 1.11  
+RSSID:: Iteration  126- 130 | sytem order:  78 | Gr Dist: 1.50 | check Dist: 1.41  
+RSSID:: Iteration  151- 155 | sytem order:  79 | Gr Dist: 0.89 | check Dist: 0.88  
+RSSID:: Iteration  176- 180 | sytem order:  77 | Gr Dist: 0.98 | check Dist: 0.98  
+RSSID:: Iteration  201- 205 | sytem order:  75 | Gr Dist: 0.55 | check Dist: 0.54  
+RSSID:: Iteration  226- 230 | sytem order:  75 | Gr Dist: 1.30 | check Dist: 1.32  
+RSSID:: Iteration  251- 255 | sytem order:  75 | Gr Dist: 0.94 | check Dist: 0.91  
+RSSID:: Iteration  276- 280 | sytem order:  74 | Gr Dist: 0.93 | check Dist: 0.81  
+RSSID:: Iteration  301- 305 | sytem order:  74 | Gr Dist: 1.31 | check Dist: 1.38  
+RSSID:: Iteration  326- 330 | sytem order:  73 | Gr Dist: 1.37 | check Dist: 1.45  
+RSSID:: Iteration  351- 355 | sytem order:  72 | Gr Dist: 1.36 | check Dist: 1.37  
+RSSID:: Iteration  376- 380 | sytem order:  72 | Gr Dist: 1.48 | check Dist: 1.47  
