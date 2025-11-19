@@ -14,7 +14,7 @@ b.tspan = b.tstart:b.dt:b.tstop;
 b.nt = size(b.tspan);
 ngrid = 1600;
 %% Input values for delta and Fu
-load("../../Datasets/Offroad_InputsSignals.mat")
+load("../../datasets/Offroad_InputsSignals.mat")
 
 parfor traj=batch(1)*ngrid+1:batch(2)*ngrid
     delta_inp = DELTA(:,traj);
