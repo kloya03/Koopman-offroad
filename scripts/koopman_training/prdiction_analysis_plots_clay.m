@@ -1,0 +1,225 @@
+clc;
+clear;
+addpath('../../functions/utility/')
+% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/clay_noelev_models/models/';
+folder = 'results/clay_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(1).name);
+load(filename,"testData");
+% testData = merge(valData,testData);
+test_ntr = size(testData,4);
+refresh = 250; %[25,50,75,100,125,150,175,200,225,250];
+tic
+parfor k = 1:length(files)
+    allErr = []; allY = [];
+    k
+    filename = fullfile(folder, files(k).name);
+    % disp(['Loading: ' filename]);
+
+    model = load(filename,"MDL_fitr","A","B","Bc1","C",...
+        "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
+    model_complexity(k,:) =[model.rr];
+    model_name{k} = model.base_name;
+    for i=1:test_ntr
+        clc;
+        [k,i]
+        [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
+            model.MDL_fitr,model.A,model.B,model.Bc1,...
+            model.C,model.Cc1,model.K_obs,model.mean_std_out,refresh);
+        err = yout - ypred;   % (2001 x 6)
+        allErr = [allErr; err];       % grows to (2001*100) x 6
+        allY = [allY; yout];        % (2001*100)x6
+        % overallRMSE = sqrt(mean(err.^2, 1));    % 1 x 6
+        % total_rmse = total_rmse + overallRMSE;  % make sure time stamp...
+        %  for each traj is same otherwise ...
+        % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
+    end
+    range_y = max(allY) - min(allY);   % 1x6
+    % ---- Metrics across ALL experiments ----
+    RMSE(k,:) = sqrt(mean(allErr.^2, 1));        % 1x6 RMSE per state
+    err_var(k,:) = var(allErr, 1);               % error variance per state (1x6)
+    err_mean(k,:) = mean(allErr, 1);             % bias per state (1x6)
+
+    % ---- Normalized error and variance ----
+    NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
+    Nerr_Var(k,:) = err_var(k,:) ./ (range_y.^2);
+
+    % ---- Total RMSE across everything ----
+    total_rmse(k,:) = sqrt(mean(allErr(:).^2));
+    Total_Nrmse_var(k,:) = [mean(NRMSE(k,:)),...
+        mean(RMSE(k,:)), mean(err_var(k,:)), mean(Nerr_Var(k,:))];
+end
+
+Total_Nrmse_var = [model_complexity,total_rmse,Total_Nrmse_var];
+et_val = toc
+%%
+
+[rmse_val, rmse_ind] = sortrows(Total_Nrmse_var,2);
+[NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
+[RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
+
+save('clay_errors','-v7.3')
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+clc;
+clear all;
+load("sandy_loam_errors.mat")
+% Choosing exp 76 as the best for sandy loam
+% 76: parameters = rr = 52,
+
+%% RMSE VS Model Complexity
+% mm = {'*clay_nl400_sy200_nB200_c*.mat',...
+%     '*clay_nl400_sy200_nB300_c*.mat',...
+%     '*clay_nl400_sy200_nB400_c*.mat',...
+%     '*clay_nl400_sy300_nB200_c*.mat',...
+%     '*clay_nl400_sy300_nB300_c*.mat',...
+%     '*clay_nl400_sy300_nB400_c*.mat'};
+
+mm = {'*clay_nl600_sy200_nB200_c*.mat',...
+    '*clay_nl600_sy200_nB300_c*.mat',...
+    '*clay_nl600_sy200_nB400_c*.mat',...
+    '*clay_nl600_sy300_nB200_c*.mat',...
+    '*clay_nl600_sy300_nB300_c*.mat',...
+    '*clay_nl600_sy300_nB400_c*.mat'...
+    '*clay_nl600_sy400_nB200_c*.mat',...
+    '*clay_nl600_sy400_nB300_c*.mat',...
+    '*clay_nl600_sy400_nB400_c*.mat'};
+for i=7%1:size(mm,2)
+    clc;
+    files_int = dir(fullfile(folder, mm{i}));
+    [nameMatch] = ismember({files.name}, {files_int.name});
+    idx = find(nameMatch==1);
+    mc = [idx.',model_complexity(idx,1)];
+    idxx = [sortrows(mc,2,'ascend')];
+    Nerr = [Total_Nrmse_var(idxx(:,1),2)];
+    Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
+    idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
+    lw = 3;
+    plot(idxx1(:,2),Nerr1(:,1),'-o','linewidth',lw)
+    % for jj=1:size(NRMSE,2)
+    %     plot(idxx(:,2),Nerr(:,jj),'-o','linewidth',lw)
+    %     hold on;
+    % end
+    xlabel('Model Complexity');
+    ylabel('RMSE');
+    % title('Normalized RMSE vs Model Complexity');
+    % legend(testData.OutputName,'Interpreter','latex');
+    hold on;
+    ax = gca;   % Get the current axes handle
+    ax.FontSize = 15; % Set the font size to 14 points
+end
+
+
+%% RMSE VS refresh rate
+clc;
+clear;
+kk = 76;
+folder = 'results/clay_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(kk).name);
+load(filename,"MDL_fitr","A","B","Bc1","C",...
+    "Cc1","K_obs","mean_std_out","rr","base_name","testData");   % load the file
+test_ntr = size(testData,4);
+refresh = [25,50,75,100,125,150,175,200,225,250];
+parfor k=1:size(refresh,2)
+    for i=1:test_ntr
+        allErr = []; allY = [];
+        clc;
+        [k,i]
+        [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
+            MDL_fitr,A,B,Bc1,...
+            C,Cc1,K_obs,mean_std_out,refresh(k));
+        err = yout - ypred;   % (2001 x 6)
+        allErr = [allErr; err];       % grows to (2001*100) x 6
+        allY = [allY; yout];        % (2001*100)x6
+        % overallRMSE = sqrt(mean(err.^2, 1));    % 1 x 6
+        % total_rmse = total_rmse + overallRMSE;  % make sure time stamp...
+        %  for each traj is same otherwise ...
+        % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
+    end
+    range_y = max(allY) - min(allY);   % 1x6
+    % ---- Metrics across ALL experiments ----
+    RMSE(k,:) = sqrt(mean(allErr.^2, 1));        % 1x6 RMSE per state
+    % ---- Normalized error and variance ----
+    NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
+end
+%%
+lw = 3;
+figure(3)
+for jj=K_obs
+    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
+    hold on; grid on;
+end
+xlabel('Refreshing time [s]');
+ylabel('RMSE');
+% title('Normalized RMSE vs Refresh rate');
+legend(testData.OutputName(K_obs),'Interpreter','latex');
+ax = gca;   % Get the current axes handle
+ax.FontSize = 20; % Set the font size to 14 points
+
+hold off;
+
+%% error with time
+kk = 76;
+filename = fullfile(folder, files(kk).name);
+load(filename,"error_with_time","t_hc","K_obs");
+N_err_wTime = error_with_time(:,:,end);
+lw = 2;
+for jj=K_obs
+    plot(t_hc(1:249),N_err_wTime(1:249,jj),'-','linewidth',lw)
+    hold on; grid on;
+end
+xlabel('Time [s]');
+ylabel('RMSE');
+axis([0 2 0 1])
+% title('Normalized RMSE vs time');
+legend(testData.OutputName(K_obs),'Interpreter','latex');
+ax = gca;   % Get the current axes handle
+ax.FontSize = 20; % Set the font size to 14 points
+
+hold off;
+
+%% Random trajectories
+
+clc;
+clear;
+kk = 76;
+folder = 'results/clay_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(kk).name);
+load(filename,"MDL_fitr","A","B","Bc1","C",...
+    "Cc1","K_obs","mean_std_out","rr","base_name","testData","t_hc");   % load the file
+test_ntr = size(testData,4);
+refresh = [25,50,75,100,125,150,175,200,225,250];
+k=10; tstep = 0+(1:249); lw=2;
+trajj = [2,3,5,6,8,25,26,27,49,67,73,76,79,80,84,88,94,97,98,99];
+for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
+    trajj(i)
+    allErr = []; allY = [];
+    [ypred,yout]  = K_RSSID_prediction(getexp(testData,trajj(i)),...
+        MDL_fitr,A,B,Bc1,...
+        C,Cc1,K_obs,mean_std_out,refresh(k));
+    figure(i)
+    subplot(2,2,1)
+    plot(yout(tstep,1),yout(tstep,2),'b','linewidth',lw); hold on;
+    plot(ypred(tstep,1),ypred(tstep,2),'--r','linewidth',lw);grid on;
+    legend('True','K-SSID')
+    xlabel('X')
+    ylabel('Y')
+    ax = gca;   % Get the current axes handle
+    ax.FontSize = 15; % Set the font size to 14 points
+    axis equal
+
+    for jj=K_obs
+        subplot(2,2,jj-2)
+        plot(t_hc(tstep),yout(tstep,jj),'b','linewidth',lw); hold on;
+        plot(t_hc(tstep),ypred(tstep,jj),'--r','linewidth',lw);grid on;
+        ylabel(testData.OutputName(jj),'Interpreter','latex','FontSize',15)
+        xlabel('Time [s]')
+        xlim([0 tstep(end)*0.01])
+        ax = gca;   % Get the current axes handle
+        ax.FontSize = 15; % Set the font size to 14 points
+    end
+   
+
+end
