@@ -223,3 +223,33 @@ for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
    
 
 end
+
+
+%% eigenvalue plot
+clc;
+clear;
+kk = 76;
+folder = 'results/sandyloam_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(kk).name);
+load(filename,"A")
+eigvals = eig(A);     % typically you get them from a matrix
+% Compute magnitudes
+mag = abs(eigvals);
+figure; hold on; axis equal;
+% --- Plot unit circle ---
+theta = linspace(0, 2*pi, 400);
+plot(cos(theta), sin(theta), 'k--', 'LineWidth', 1.5);  % unit circle
+% --- Scatter eigenvalues with color = magnitude ---
+scatter(real(eigvals), imag(eigvals), 80, mag, 'filled');
+% --- Colorbar ---
+cb = colorbar;
+ylabel(cb, 'Eigenvalue Magnitude');
+% --- Formatting ---
+xlabel('Real Part');
+ylabel('Imaginary Part');
+title('Eigenvalues in Complex Plane with Magnitude Colorbar');
+grid on;
+box on;
+xlim([-1.5 1.5]);
+ylim([-1.5 1.5]);

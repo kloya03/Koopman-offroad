@@ -223,3 +223,6 @@ for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
    
 
 end
+
+
+%% 

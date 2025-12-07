@@ -58,7 +58,7 @@ et_val = toc
 [NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
 [RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
 
-save('sandy_loam_errors','-v7.3')
+save('sandy_loam_errors_refresh','-v7.3')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
@@ -147,10 +147,10 @@ end
 lw = 3;
 figure(3)
 for jj=K_obs
-    plot(refresh,RMSE(:,jj),'-o','linewidth',lw)
-    hold on;
+    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
+    hold on; grid on;
 end
-xlabel('Refreshing time');
+xlabel('Refreshing time [s]');
 ylabel('RMSE');
 % title('Normalized RMSE vs Refresh rate');
 legend(testData.OutputName(K_obs),'Interpreter','latex');
@@ -167,7 +167,7 @@ N_err_wTime = error_with_time(:,:,end);
 lw = 2;
 for jj=K_obs
     plot(t_hc(1:249),N_err_wTime(1:249,jj),'-','linewidth',lw)
-    hold on;
+    hold on; grid on;
 end
 xlabel('Time [s]');
 ylabel('RMSE');
@@ -223,3 +223,33 @@ for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
    
 
 end
+
+
+%% eigenvalue plot
+clc;
+clear;
+kk = 76;
+folder = 'results/sandyloam_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(kk).name);
+load(filename,"A")
+eigvals = eig(A);     % typically you get them from a matrix
+% Compute magnitudes
+mag = abs(eigvals);
+figure; hold on; axis equal;
+% --- Plot unit circle ---
+theta = linspace(0, 2*pi, 400);
+plot(cos(theta), sin(theta), 'k--', 'LineWidth', 1.5);  % unit circle
+% --- Scatter eigenvalues with color = magnitude ---
+scatter(real(eigvals), imag(eigvals), 80, mag, 'filled');
+% --- Colorbar ---
+cb = colorbar;
+ylabel(cb, 'Eigenvalue Magnitude');
+% --- Formatting ---
+xlabel('Real Part');
+ylabel('Imaginary Part');
+title('Eigenvalues in Complex Plane with Magnitude Colorbar');
+grid on;
+box on;
+xlim([-1.5 1.5]);
+ylim([-1.5 1.5]);
