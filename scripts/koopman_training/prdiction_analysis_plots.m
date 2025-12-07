@@ -10,7 +10,7 @@ load(filename,"testData");
 test_ntr = size(testData,4);
 refresh = 250; %[25,50,75,100,125,150,175,200,225,250];
 tic
-parfor (k = 1:length(files),16)
+parfor k = 1:length(files)
     allErr = []; allY = [];
     k
     filename = fullfile(folder, files(k).name);
@@ -54,46 +54,63 @@ Total_Nrmse_var = [model_complexity,total_rmse,Total_Nrmse_var];
 et_val = toc
 %%
 
-[rmse_val, rmse_ind] = sortrows(Total_Nrmse_var,3);
-[NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],6);
-[RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],6);
+[rmse_val, rmse_ind] = sortrows(Total_Nrmse_var,2);
+[NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
+[RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
 
-
+save('sandy_loam_errors','-v7.3')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Choosing exp 76 as the best for sandy loam
 % 76: parameters = rr = 52,  600 200 200 8
 
 %% RMSE VS Model Complexity
-kk = 55:3:80;
-mc = model_complexity(kk,1);
-Nerr = NRMSE(kk,:);
-lw = 2;
-for jj=1:size(NRMSE,2)
-    plot(mc,Nerr(:,jj),'-o','linewidth',lw)
-    hold on;
-end
-xlabel('Model Complexity');
-ylabel('Normalized RMSE');
-title('Normalized RMSE vs Model Complexity');
-legend(data.OutputName);
-hold off;
+% kk = 55:3:80;
+% mc = model_complexity(kk,1);
+% Nerr = NRMSE(kk,:);
+% lw = 2;
+% for jj=1:size(NRMSE,2)
+%     plot(mc,Nerr(:,jj),'-o','linewidth',lw)
+%     hold on;
+% end
+% xlabel('Model Complexity');
+% ylabel('Normalized RMSE');
+% title('Normalized RMSE vs Model Complexity');
+% legend(data.OutputName);
+% hold off;
 
+%% RMSE VS refresh rate
+% kk = 76;
+% filename = fullfile(folder, files(kk).name);
+% 
+% model = load(filename,"error_with_time");
+% mc = model_complexity(kk,1);
+% Nerr = NRMSE(kk,:);
+% lw = 2;
+% for jj=1:size(NRMSE,2)
+%     plot(mc,Nerr(:,jj),'-o','linewidth',lw)
+%     hold on;
+% end
+% xlabel('Model Complexity');
+% ylabel('Normalized RMSE');
+% title('Normalized RMSE vs Model Complexity');
+% legend(data.OutputName);
+% hold off;
 
 %% RMSE VS Model Complexity
-kk = 76;
-filename = fullfile(folder, files(kk).name);
-
-model = load(filename,"error_with_time");
-mc = model_complexity(kk,1);
-Nerr = NRMSE(kk,:);
-lw = 2;
-for jj=1:size(NRMSE,2)
-    plot(mc,Nerr(:,jj),'-o','linewidth',lw)
-    hold on;
-end
-xlabel('Model Complexity');
-ylabel('Normalized RMSE');
-title('Normalized RMSE vs Model Complexity');
-legend(data.OutputName);
-hold off;
+% kk = 76;
+% filename = fullfile(folder, files(kk).name);
+% 
+% model = load(filename,"error_with_time");
+% mc = model_complexity(kk,1);
+% Nerr = NRMSE(kk,:);
+% lw = 2;
+% for jj=1:size(NRMSE,2)
+%     plot(mc,Nerr(:,jj),'-o','linewidth',lw)
+%     hold on;
+% end
+% xlabel('Model Complexity');
+% ylabel('Normalized RMSE');
+% title('Normalized RMSE vs Model Complexity');
+% legend(data.OutputName);
+% hold off;
