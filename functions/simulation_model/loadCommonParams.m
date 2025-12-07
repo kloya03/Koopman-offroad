@@ -55,9 +55,9 @@ if b.terrain == "_clay"
     b.a0 = 0.43;          % Coefficients for theta_m
     b.a1 = 0.32;          % ''  ''  ''  ''
 
-elseif b.terrain == "_sandyloam"
+elseif b.terrain == "_sandyloam"else
     % % Terrain parameters [Sandy Loam]
-    b.kc = 5300;          % Cohesive modulus [N/m^{n+1}]
+    b.kc = 5300;          % Cohesive modulus [N/m^{n+1}]else
     b.kphi = 1515000;     % Frictional modulus [N/m^{n+2}]
     b.n = 0.7;
     b.kx = 0.025;          % Shear deformation modulus [m]
