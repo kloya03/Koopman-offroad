@@ -63,7 +63,7 @@ save('clay_errors','-v7.3')
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 clear all;
-load("sandy_loam_errors.mat")
+load("clay_errors.mat")
 % Choosing exp 76 as the best for sandy loam
 % 76: parameters = rr = 52,
 
@@ -84,7 +84,7 @@ mm = {'*clay_nl600_sy200_nB200_c*.mat',...
     '*clay_nl600_sy400_nB200_c*.mat',...
     '*clay_nl600_sy400_nB300_c*.mat',...
     '*clay_nl600_sy400_nB400_c*.mat'};
-for i=7%1:size(mm,2)
+for i=1:size(mm,2)
     clc;
     files_int = dir(fullfile(folder, mm{i}));
     [nameMatch] = ismember({files.name}, {files_int.name});
@@ -92,10 +92,9 @@ for i=7%1:size(mm,2)
     mc = [idx.',model_complexity(idx,1)];
     idxx = [sortrows(mc,2,'ascend')];
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
-    Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
-    idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
+    
     lw = 3;
-    plot(idxx1(:,2),Nerr1(:,1),'-o','linewidth',lw)
+    plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw)
     % for jj=1:size(NRMSE,2)
     %     plot(idxx(:,2),Nerr(:,jj),'-o','linewidth',lw)
     %     hold on;
@@ -143,6 +142,7 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
+save('clay_errors_refresh','-v7.3')
 %%
 lw = 3;
 figure(3)
