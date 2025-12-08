@@ -19,12 +19,15 @@ err_mean = zeros(size(refresh,2),ny,length(files)); % --"--
 NRMSE = zeros(size(refresh,2),ny,length(files)); % --"--
 Nerr_Var = zeros(size(refresh,2),ny,length(files)); % --"--
 total_rmse = zeros(size(refresh,2),1,length(files)); % 10x1x135
-Total_Nrmse_var = zeros(size(refresh,2),4,length(files)); % 10x4x135
+Total_Nrmse_var = zeros(size(refresh,2),6,length(files)); % 10x6x135
 model_complexity = zeros(size(refresh,2),1,length(files)); %10x1x135
 
 tic
 for k = 1:length(refresh)
-    parfor jj = 1:length(files)
+    clc;
+    k
+    parfor (jj = 1:length(files),50)
+        [k,jj]
         allErr = []; allY = [];
         filename = fullfile(folder, files(jj).name);
         model = load(filename,"MDL_fitr","A","B","Bc1","C",...
@@ -50,19 +53,19 @@ for k = 1:length(refresh)
     
         % ---- Total RMSE across everything ----
         total_rmse(jj,:,k) = sqrt(mean(allErr(:).^2));
-        Total_Nrmse_var(jj,:,k) = [mean(NRMSE(jj,:,k)), ...
+        Total_Nrmse_var(jj,:,k) = [model_complexity(jj,:,k),...
+                                    total_rmse(jj,:,k),...
+                                   mean(NRMSE(jj,:,k)), ...
                                    mean(RMSE(jj,:,k)), ...
                                    mean(err_var(jj,:,k)), ...
                                    mean(Nerr_Var(jj,:,k))];
     end
 end
-Total_Nrmse_var = [model_complexity,total_rmse,Total_Nrmse_var];
 et_val = toc
-%%
 
-[rmse_val, rmse_ind] = sortrows(Total_Nrmse_var,2);
-[NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
-[RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
+[rmse_val, rmse_ind] = sortrows(Total_Nrmse_var(:,:,end),2);
+[NRMSE_val, NRMSE_ind] = sortrows([model_complexity(:,:,end),NRMSE(:,:,end)],5);
+[RMSE_val, RMSE_ind] = sortrows([model_complexity(:,:,end),RMSE(:,:,end)],5);
 
 save('clay_errors_all','-v7.3')
 
