@@ -1,8 +1,8 @@
 clc;
 clear;
 addpath('../../functions/utility/')
-% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/sandyloam_noelev_models/models/';
-folder = 'results/sandyloam_noelev_models/models_with_error/';
+% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/clay_noelev_models/models/';
+folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(1).name);
 load(filename,"testData");
@@ -58,67 +58,76 @@ et_val = toc
 [NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
 [RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
 
-save('sandy_loam_errors_refresh','-v7.3')
+save('clay_errors','-v7.3')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 clear all;
-load("sandy_loam_errors.mat")
+load("clay_errors.mat")
 % Choosing exp 76 as the best for sandy loam
 % 76: parameters = rr = 52,
 
 %% RMSE VS Model Complexity
-% mm = {'*sandyloam_nl400_sy200_nB200_c*.mat',...
-%     '*sandyloam_nl400_sy200_nB300_c*.mat',...
-%     '*sandyloam_nl400_sy200_nB400_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB200_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB300_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB400_c*.mat'};
+% mm = {'*clay_nl400_sy200_nB200_c*.mat',...
+%     '*clay_nl400_sy200_nB300_c*.mat',...
+%     '*clay_nl400_sy200_nB400_c*.mat',...
+%     '*clay_nl400_sy300_nB200_c*.mat',...
+%     '*clay_nl400_sy300_nB300_c*.mat',...
+%     '*clay_nl400_sy300_nB400_c*.mat'};
 
-mm = {'*sandyloam_nl600_sy200_nB200_c*.mat',...
-    '*sandyloam_nl600_sy200_nB300_c*.mat',...
-    '*sandyloam_nl600_sy200_nB400_c*.mat',...
-    '*sandyloam_nl600_sy300_nB200_c*.mat',...
-    '*sandyloam_nl600_sy300_nB300_c*.mat',...
-    '*sandyloam_nl600_sy300_nB400_c*.mat'...
-    '*sandyloam_nl600_sy400_nB200_c*.mat',...
-    '*sandyloam_nl600_sy400_nB300_c*.mat',...
-    '*sandyloam_nl600_sy400_nB400_c*.mat'};
-for i=7%1:size(mm,2)
+% mm = {'*clay_nl600_sy200_nB200_c*.mat',...
+%     '*clay_nl600_sy200_nB300_c*.mat',...
+%     '*clay_nl600_sy200_nB400_c*.mat',...
+%     '*clay_nl600_sy300_nB200_c*.mat',...
+%     '*clay_nl600_sy300_nB300_c*.mat',...
+%     '*clay_nl600_sy300_nB400_c*.mat'...
+%     '*clay_nl600_sy400_nB200_c*.mat',...
+%     '*clay_nl600_sy400_nB300_c*.mat',...
+%     '*clay_nl600_sy400_nB400_c*.mat'};
+mm = {'*clay_nl600_sy400_nB200_c*.mat'};
+folders = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
+
+for i=1:size(mm,2)
     clc;
-    files_int = dir(fullfile(folder, mm{i}));
+    files_int = dir(fullfile(folders, mm{i}));
     [nameMatch] = ismember({files.name}, {files_int.name});
     idx = find(nameMatch==1);
     mc = [idx.',model_complexity(idx,1)];
     idxx = [sortrows(mc,2,'ascend')];
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
-    Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
-    idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
-    lw = 3;
-    plot(idxx1(:,2),Nerr1(:,1),'-o','linewidth',lw)
-    % for jj=1:size(NRMSE,2)
-    %     plot(idxx(:,2),Nerr(:,jj),'-o','linewidth',lw)
-    %     hold on;
-    % end
-    xlabel('Model Complexity');
-    ylabel('RMSE');
-    % title('Normalized RMSE vs Model Complexity');
-    % legend(testData.OutputName,'Interpreter','latex');
-    hold on;
-    ax = gca;   % Get the current axes handle
-    ax.FontSize = 15; % Set the font size to 14 points
+    Nrmse = [NRMSE(idxx(:,1),:)];
+    if nnz(Nrmse(:,4:6)>2)>0
+        continue;
+    else
+        figure(i+6)
+        lw = 3;
+        % plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw);
+        for jj=4:6
+            plot(idxx(:,2),Nrmse(:,jj),'-o','linewidth',lw);
+            hold on;
+        end
+        xlabel('Model Complexity');
+        ylabel('RMSE');
+        grid on;
+        legend(testData.OutputName(4:6),'Interpreter','latex');
+        ax = gca;   % Get the current axes handle
+        ax.FontSize = 25; % Set the font size to 14 points
+    end
+
 end
 
 
 %% RMSE VS refresh rate
 clc;
 clear;
-kk = 76;
-folder = 'results/sandyloam_noelev_models/models_with_error/';
+kk = 41;
+addpath('../../functions/utility/')
+folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr","base_name","testData");   % load the file
+base_name
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
@@ -143,9 +152,14 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
+save('clay_errors_refresh_41','-v7.3')
 %%
+clc;
+clear;
+
+load('clay_errors_refresh_24.mat')
 lw = 3;
-figure(3)
+figure
 for jj=K_obs
     plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
     hold on; grid on;
@@ -184,7 +198,7 @@ hold off;
 clc;
 clear;
 kk = 76;
-folder = 'results/sandyloam_noelev_models/models_with_error/';
+folder = 'results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
@@ -225,31 +239,4 @@ for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
 end
 
 
-%% eigenvalue plot
-clc;
-clear;
-kk = 76;
-folder = 'results/sandyloam_noelev_models/models_with_error/';
-files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
-filename = fullfile(folder, files(kk).name);
-load(filename,"A")
-eigvals = eig(A);     % typically you get them from a matrix
-% Compute magnitudes
-mag = abs(eigvals);
-figure; hold on; axis equal;
-% --- Plot unit circle ---
-theta = linspace(0, 2*pi, 400);
-plot(cos(theta), sin(theta), 'k--', 'LineWidth', 1.5);  % unit circle
-% --- Scatter eigenvalues with color = magnitude ---
-scatter(real(eigvals), imag(eigvals), 80, mag, 'filled');
-% --- Colorbar ---
-cb = colorbar;
-ylabel(cb, 'Eigenvalue Magnitude');
-% --- Formatting ---
-xlabel('Real Part');
-ylabel('Imaginary Part');
-title('Eigenvalues in Complex Plane with Magnitude Colorbar');
-grid on;
-box on;
-xlim([-1.5 1.5]);
-ylim([-1.5 1.5]);
+%% 

@@ -16,8 +16,8 @@ SLURM_DIR="$SLURM_SUBMIT_DIR"
 # MATLAB script directory:
 MATLAB_DIR="$SLURM_DIR/.."
 PARAM_FILE="$MATLAB_DIR/params.txt"
-DATA_FILE="$MATLAB_DIR/../../datasets/clay_100hz_no_elev_experiment_1472.mat"
-FUNCTIONS_FILE="$MATLAB_DIR/../../functions/utility"
+DATA_FILE="$MATLAB_DIR/../datasets/clay_100hz_no_elev_experiment_1472.mat"
+FUNCTIONS_FILE="$MATLAB_DIR/../functions/utility"
 
 # Move to MATLAB script directory so it can find the .m file properly:
 cd "$MATLAB_DIR"
