@@ -1,61 +1,55 @@
 clc;
 clear;
-
-
 addpath('../../functions/utility/')
-% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/clay_noelev_models/models/';
-folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
+% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/sandyloam_noelev_models/models/';
+folder = 'results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(1).name);
 load(filename,"testData");
+% testData = merge(valData,testData);
 test_ntr = size(testData,4);
-refresh = [25,50,75,100,125,150,175,200,225,250];
-ny = length(testData.OutputName);
-% Initialize
-range_y = zeros(size(refresh,2),ny,length(files)); % 10x6x135
-RMSE = zeros(size(refresh,2),ny,length(files)); % --"--
-err_var = zeros(size(refresh,2),ny,length(files)); % --"--
-err_mean = zeros(size(refresh,2),ny,length(files)); % --"--
-NRMSE = zeros(size(refresh,2),ny,length(files)); % --"--
-Nerr_Var = zeros(size(refresh,2),ny,length(files)); % --"--
-total_rmse = zeros(size(refresh,2),1,length(files)); % 10x1x135
-Total_Nrmse_var = zeros(size(refresh,2),4,length(files)); % 10x4x135
-model_complexity = zeros(size(refresh,2),1,length(files)); %10x1x135
-
+refresh = 250; %[25,50,75,100,125,150,175,200,225,250];
 tic
-for k = 1:length(refresh)
-    parfor jj = 1:length(files)
-        allErr = []; allY = [];
-        filename = fullfile(folder, files(k).name);
-        model = load(filename,"MDL_fitr","A","B","Bc1","C",...
-            "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
-        model_complexity(jj,:,k) =model.rr;
-        for i=1:test_ntr
-            [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
-                model.MDL_fitr,model.A,model.B,model.Bc1,...
-                model.C,model.Cc1,model.K_obs,model.mean_std_out,refresh(jj));
-            err = yout - ypred;   % (2001 x 6)
-            allErr = [allErr; err];       % grows to (2001*100) x 6
-            allY = [allY; yout];        % (2001*100)x6
-        end
-        range_y(jj,:,k) = max(allY) - min(allY);   % 1x6
-        % ---- Metrics across ALL experiments ----
-        RMSE(jj,:,k) = sqrt(mean(allErr.^2, 1));        % 1x6 RMSE per state
-        err_var(jj,:,k) = var(allErr, 1);               % error variance per state (1x6)
-        err_mean(jj,:,k) = mean(allErr, 1);             % bias per state (1x6)
-    
-        % ---- Normalized error and variance ----
-        NRMSE(jj,:,k) = RMSE(jj,:,k) ./ range_y(jj,:,k);           % normalized RMSE
-        Nerr_Var(jj,:,k) = err_var(jj,:,k) ./ (range_y(jj,:,k).^2);
-    
-        % ---- Total RMSE across everything ----
-        total_rmse(jj,:,k) = sqrt(mean(allErr(:).^2));
-        Total_Nrmse_var(jj,:,k) = [mean(NRMSE(jj,:,k)), ...
-                                   mean(RMSE(jj,:,k)), ...
-                                   mean(err_var(jj,:,k)), ...
-                                   mean(Nerr_Var(jj,:,k))];
+parfor k = 1:length(files)
+    allErr = []; allY = [];
+    k
+    filename = fullfile(folder, files(k).name);
+    % disp(['Loading: ' filename]);
+
+    model = load(filename,"MDL_fitr","A","B","Bc1","C",...
+        "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
+    model_complexity(k,:) =[model.rr];
+    model_name{k} = model.base_name;
+    for i=1:test_ntr
+        clc;
+        [k,i]
+        [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
+            model.MDL_fitr,model.A,model.B,model.Bc1,...
+            model.C,model.Cc1,model.K_obs,model.mean_std_out,refresh);
+        err = yout - ypred;   % (2001 x 6)
+        allErr = [allErr; err];       % grows to (2001*100) x 6
+        allY = [allY; yout];        % (2001*100)x6
+        % overallRMSE = sqrt(mean(err.^2, 1));    % 1 x 6
+        % total_rmse = total_rmse + overallRMSE;  % make sure time stamp...
+        %  for each traj is same otherwise ...
+        % rmse = (n1*rmse1+ n2*rmse2)/(n1+n2)
     end
+    range_y = max(allY) - min(allY);   % 1x6
+    % ---- Metrics across ALL experiments ----
+    RMSE(k,:) = sqrt(mean(allErr.^2, 1));        % 1x6 RMSE per state
+    err_var(k,:) = var(allErr, 1);               % error variance per state (1x6)
+    err_mean(k,:) = mean(allErr, 1);             % bias per state (1x6)
+
+    % ---- Normalized error and variance ----
+    NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
+    Nerr_Var(k,:) = err_var(k,:) ./ (range_y.^2);
+
+    % ---- Total RMSE across everything ----
+    total_rmse(k,:) = sqrt(mean(allErr(:).^2));
+    Total_Nrmse_var(k,:) = [mean(NRMSE(k,:)),...
+        mean(RMSE(k,:)), mean(err_var(k,:)), mean(Nerr_Var(k,:))];
 end
+
 Total_Nrmse_var = [model_complexity,total_rmse,Total_Nrmse_var];
 et_val = toc
 %%
@@ -64,44 +58,48 @@ et_val = toc
 [NRMSE_val, NRMSE_ind] = sortrows([model_complexity,NRMSE],5);
 [RMSE_val, RMSE_ind] = sortrows([model_complexity,RMSE],5);
 
-save('clay_errors','-v7.3')
+save('sandy_loam_errors_refresh','-v7.3')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
 clear all;
-load("clay_errors.mat")
+load("sandy_loam_errors.mat")
 % Choosing exp 76 as the best for sandy loam
 % 76: parameters = rr = 52,
 
 %% RMSE VS Model Complexity
-% mm = {'*clay_nl400_sy200_nB200_c*.mat',...
-%     '*clay_nl400_sy200_nB300_c*.mat',...
-%     '*clay_nl400_sy200_nB400_c*.mat',...
-%     '*clay_nl400_sy300_nB200_c*.mat',...
-%     '*clay_nl400_sy300_nB300_c*.mat',...
-%     '*clay_nl400_sy300_nB400_c*.mat'};
+% mm = {'*sandyloam_nl400_sy200_nB200_c*.mat',...
+%     '*sandyloam_nl400_sy200_nB300_c*.mat',...
+%     '*sandyloam_nl400_sy200_nB400_c*.mat',...
+%     '*sandyloam_nl400_sy300_nB200_c*.mat',...
+%     '*sandyloam_nl400_sy300_nB300_c*.mat',...
+%     '*sandyloam_nl400_sy300_nB400_c*.mat'};
 
-% mm = {'*clay_nl600_sy200_nB200_c*.mat',...
-%     '*clay_nl600_sy200_nB300_c*.mat',...
-%     '*clay_nl600_sy200_nB400_c*.mat',...
-%     '*clay_nl600_sy300_nB200_c*.mat',...
-%     '*clay_nl600_sy300_nB300_c*.mat',...
-%     '*clay_nl600_sy300_nB400_c*.mat'...
-%     '*clay_nl600_sy400_nB200_c*.mat',...
-%     '*clay_nl600_sy400_nB300_c*.mat',...
-%     '*clay_nl600_sy400_nB400_c*.mat'};
-mm = {'*clay_nl600_sy400_nB200_c*.mat'...
-    '*clay_nl400_sy200_nB300_c*.mat'};
-folders = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
+% mm = {'*sandyloam_nl600_sy200_nB200_c*.mat',...
+%     '*sandyloam_nl600_sy200_nB300_c*.mat',...
+%     '*sandyloam_nl600_sy200_nB400_c*.mat',...
+%     '*sandyloam_nl600_sy300_nB200_c*.mat',...
+%     '*sandyloam_nl600_sy300_nB300_c*.mat',...
+%     '*sandyloam_nl600_sy300_nB400_c*.mat'...
+%     '*sandyloam_nl600_sy400_nB200_c*.mat',...
+%     '*sandyloam_nl600_sy400_nB300_c*.mat',...
+%     '*sandyloam_nl600_sy400_nB400_c*.mat'};
+mm = '*sandyloam_nl400_sy300_nB200_c*.mat',
+addpath('../../functions/utility/')
+% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/clay_noelev_models/models/';
+folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 
-for i=1:size(mm,2)
+for i=7%1:size(mm,2)
     clc;
-    files_int = dir(fullfile(folders, mm{i}));
+    files_int = dir(fullfile(folder, mm{i}));
     [nameMatch] = ismember({files.name}, {files_int.name});
     idx = find(nameMatch==1);
     mc = [idx.',model_complexity(idx,1)];
     idxx = [sortrows(mc,2,'ascend')];
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
+    Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
+    idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
     Nrmse = [NRMSE(idxx(:,1),:)];
     if nnz(Nrmse(:,4:6)>2)>0
         continue;
@@ -127,14 +125,12 @@ end
 %% RMSE VS refresh rate
 clc;
 clear;
-kk = 41;
-addpath('../../functions/utility/')
-folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
+kk = 76;
+folder = 'results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr","base_name","testData");   % load the file
-base_name
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
@@ -159,15 +155,11 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
-save('clay_errors_refresh_41','-v7.3')
 %%
-clc;
-clear;
-load('clay_errors_refresh_41.mat')
 lw = 3;
-figure(2)
+figure(3)
 for jj=K_obs
-    plot(0.01*refresh,NRMSE(:,jj),'-o','linewidth',lw)
+    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
     hold on; grid on;
 end
 xlabel('Refreshing time [s]');
@@ -204,7 +196,7 @@ hold off;
 clc;
 clear;
 kk = 76;
-folder = 'results/clay_noelev_models/models_with_error/';
+folder = 'results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
@@ -245,4 +237,31 @@ for i=10%randi(size(trajj,2))%2:2:size(trajj,2)
 end
 
 
-%% 
+%% eigenvalue plot
+clc;
+clear;
+kk = 76;
+folder = 'results/sandyloam_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+filename = fullfile(folder, files(kk).name);
+load(filename,"A")
+eigvals = eig(A);     % typically you get them from a matrix
+% Compute magnitudes
+mag = abs(eigvals);
+figure; hold on; axis equal;
+% --- Plot unit circle ---
+theta = linspace(0, 2*pi, 400);
+plot(cos(theta), sin(theta), 'k--', 'LineWidth', 1.5);  % unit circle
+% --- Scatter eigenvalues with color = magnitude ---
+scatter(real(eigvals), imag(eigvals), 80, mag, 'filled');
+% --- Colorbar ---
+cb = colorbar;
+ylabel(cb, 'Eigenvalue Magnitude');
+% --- Formatting ---
+xlabel('Real Part');
+ylabel('Imaginary Part');
+title('Eigenvalues in Complex Plane with Magnitude Colorbar');
+grid on;
+box on;
+xlim([-1.5 1.5]);
+ylim([-1.5 1.5]);

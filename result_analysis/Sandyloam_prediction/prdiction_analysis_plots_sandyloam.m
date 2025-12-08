@@ -68,14 +68,13 @@ load("sandy_loam_errors.mat")
 % 76: parameters = rr = 52,
 
 %% RMSE VS Model Complexity
-% mm = {'*sandyloam_nl400_sy200_nB200_c*.mat',...
-%     '*sandyloam_nl400_sy200_nB300_c*.mat',...
-%     '*sandyloam_nl400_sy200_nB400_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB200_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB300_c*.mat',...
-%     '*sandyloam_nl400_sy300_nB400_c*.mat'};
-
-mm = {'*sandyloam_nl600_sy200_nB200_c*.mat',...
+mm = {'*sandyloam_nl400_sy200_nB200_c*.mat',...
+    '*sandyloam_nl400_sy200_nB300_c*.mat',...
+    '*sandyloam_nl400_sy200_nB400_c*.mat',...
+    '*sandyloam_nl400_sy300_nB200_c*.mat',...
+    '*sandyloam_nl400_sy300_nB300_c*.mat',...
+    '*sandyloam_nl400_sy300_nB400_c*.mat'...
+    '*sandyloam_nl600_sy200_nB200_c*.mat',...
     '*sandyloam_nl600_sy200_nB300_c*.mat',...
     '*sandyloam_nl600_sy200_nB400_c*.mat',...
     '*sandyloam_nl600_sy300_nB200_c*.mat',...
@@ -84,7 +83,13 @@ mm = {'*sandyloam_nl600_sy200_nB200_c*.mat',...
     '*sandyloam_nl600_sy400_nB200_c*.mat',...
     '*sandyloam_nl600_sy400_nB300_c*.mat',...
     '*sandyloam_nl600_sy400_nB400_c*.mat'};
-for i=7%1:size(mm,2)
+% mm = {'*sandyloam_nl400_sy300_nB200_c*.mat'};
+addpath('../../functions/utility/')
+% folder = '/scratch/kloya/Koopman-offroad/scripts/koopman_training/results/clay_noelev_models/models/';
+folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
+files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+
+for i=1:size(mm,2)
     clc;
     files_int = dir(fullfile(folder, mm{i}));
     [nameMatch] = ismember({files.name}, {files_int.name});
@@ -94,19 +99,25 @@ for i=7%1:size(mm,2)
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
     Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
     idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
-    lw = 3;
-    plot(idxx1(:,2),Nerr1(:,1),'-o','linewidth',lw)
-    % for jj=1:size(NRMSE,2)
-    %     plot(idxx(:,2),Nerr(:,jj),'-o','linewidth',lw)
-    %     hold on;
-    % end
-    xlabel('Model Complexity');
-    ylabel('RMSE');
-    % title('Normalized RMSE vs Model Complexity');
-    % legend(testData.OutputName,'Interpreter','latex');
-    hold on;
-    ax = gca;   % Get the current axes handle
-    ax.FontSize = 15; % Set the font size to 14 points
+    Nrmse = [NRMSE(idxx(:,1),:)];
+    if nnz(Nrmse(:,4:6)>2)>0
+        continue;
+    else
+        figure(i+6)
+        lw = 3;
+        % plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw);
+        for jj=4:6
+            plot(idxx(:,2),Nrmse(:,jj),'-o','linewidth',lw);
+            hold on;
+        end
+        xlabel('Model Complexity');
+        ylabel('RMSE');
+        grid on;
+        legend(testData.OutputName(4:6),'Interpreter','latex');
+        ax = gca;   % Get the current axes handle
+        ax.FontSize = 25; % Set the font size to 14 points
+    end
+
 end
 
 
