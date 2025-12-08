@@ -125,6 +125,7 @@ end
 clc;
 clear;
 kk = 76;
+addpath('../../functions/utility/')
 folder = 'results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
@@ -133,8 +134,8 @@ load(filename,"MDL_fitr","A","B","Bc1","C",...
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
+    allErr = []; allY = [];
     for i=1:test_ntr
-        allErr = []; allY = [];
         clc;
         [k,i]
         [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...

@@ -11,32 +11,35 @@ load(filename,"testData");
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 ny = length(testData.OutputName);
+nf = 1;%length(files);
 % Initialize
-range_y = zeros(size(refresh,2),ny,length(files)); % 10x6x135
-RMSE = zeros(size(refresh,2),ny,length(files)); % --"--
-err_var = zeros(size(refresh,2),ny,length(files)); % --"--
-err_mean = zeros(size(refresh,2),ny,length(files)); % --"--
-NRMSE = zeros(size(refresh,2),ny,length(files)); % --"--
-Nerr_Var = zeros(size(refresh,2),ny,length(files)); % --"--
-total_rmse = zeros(size(refresh,2),1,length(files)); % 10x1x135
-Total_Nrmse_var = zeros(size(refresh,2),6,length(files)); % 10x6x135
-model_complexity = zeros(size(refresh,2),1,length(files)); %10x1x135
+range_y = zeros(size(refresh,2),ny,nf); % 10x6x135
+RMSE = zeros(size(refresh,2),ny,nf); % --"--
+err_var = zeros(size(refresh,2),ny,nf); % --"--
+err_mean = zeros(size(refresh,2),ny,nf); % --"--
+NRMSE = zeros(size(refresh,2),ny,nf); % --"--
+Nerr_Var = zeros(size(refresh,2),ny,nf); % --"--
+total_rmse = zeros(size(refresh,2),1,nf); % 10x1x135
+Total_Nrmse_var = zeros(size(refresh,2),6,nf); % 10x6x135
+model_complexity = zeros(size(refresh,2),1,nf); %10x1x135
 
 tic
-for k = 1:length(refresh)
+k=41;
+parfor jj = 1:length(refresh)
     clc;
     k
-    parfor (jj = 1:length(files),30)
+    % for jj = 1%1:length(files)
+
         [k,jj]
         allErr = []; allY = [];
-        filename = fullfile(folder, files(jj).name);
+        filename = fullfile(folder, files(k).name);
         model = load(filename,"MDL_fitr","A","B","Bc1","C",...
             "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
         model_complexity(jj,:,k) =model.rr;
         for i=1:test_ntr
             [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
                 model.MDL_fitr,model.A,model.B,model.Bc1,...
-                model.C,model.Cc1,model.K_obs,model.mean_std_out,refresh(k));
+                model.C,model.Cc1,model.K_obs,model.mean_std_out,refresh(jj));
             err = yout - ypred;   % (2001 x 6)
             allErr = [allErr; err];       % grows to (2001*100) x 6
             allY = [allY; yout];        % (2001*100)x6
@@ -59,7 +62,7 @@ for k = 1:length(refresh)
                                    mean(RMSE(jj,:,k)), ...
                                    mean(err_var(jj,:,k)), ...
                                    mean(Nerr_Var(jj,:,k))];
-    end
+    % end
 end
 et_val = toc
 
@@ -67,7 +70,7 @@ et_val = toc
 [NRMSE_val, NRMSE_ind] = sortrows([model_complexity(:,:,end),NRMSE(:,:,end)],5);
 [RMSE_val, RMSE_ind] = sortrows([model_complexity(:,:,end),RMSE(:,:,end)],5);
 
-save('clay_errors_all','-v7.3')
+save('clay_errors_41','-v7.3')
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clc;
@@ -93,8 +96,8 @@ load("clay_errors.mat")
 %     '*clay_nl600_sy400_nB200_c*.mat',...
 %     '*clay_nl600_sy400_nB300_c*.mat',...
 %     '*clay_nl600_sy400_nB400_c*.mat'};
-mm = {'*clay_nl600_sy400_nB200_c*.mat'...
-    '*clay_nl400_sy200_nB300_c*.mat'};
+mm = {'*clay_nl600_sy400_nB200_c*.mat'}%...
+    % '*clay_nl400_sy200_nB300_c*.mat'};
 folders = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 
 for i=1:size(mm,2)
@@ -106,12 +109,13 @@ for i=1:size(mm,2)
     idxx = [sortrows(mc,2,'ascend')];
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
     Nrmse = [NRMSE(idxx(:,1),:)];
+    idxx1 = []
     if nnz(Nrmse(:,4:6)>2)>0
         continue;
     else
         figure(i+6)
         lw = 3;
-        % plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw);
+        % plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw); hold on;
         for jj=4:6
             plot(idxx(:,2),Nrmse(:,jj),'-o','linewidth',lw);
             hold on;
@@ -130,7 +134,7 @@ end
 %% RMSE VS refresh rate
 clc;
 clear;
-kk = 41;
+kk = 24;
 addpath('../../functions/utility/')
 folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
@@ -140,9 +144,9 @@ load(filename,"MDL_fitr","A","B","Bc1","C",...
 base_name
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
-parfor k=1:size(refresh,2)
+parfor k=1:size(refresh,2)        
+    allErr = []; allY = [];
     for i=1:test_ntr
-        allErr = []; allY = [];
         clc;
         [k,i]
         [ypred,yout]  = K_RSSID_prediction(getexp(testData,i),...
@@ -170,7 +174,7 @@ load('clay_errors_refresh_41.mat')
 lw = 3;
 figure(2)
 for jj=K_obs
-    plot(0.01*refresh,NRMSE(:,jj),'-o','linewidth',lw)
+    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
     hold on; grid on;
 end
 xlabel('Refreshing time [s]');
