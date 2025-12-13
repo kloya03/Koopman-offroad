@@ -34,7 +34,7 @@ for iter=startIndex:endIndex
     elseif size(t_hc,1) == 2001
         i=1;
         ct = ct+1;
-        % plotFigures(i,Z_hc,t_hc,fv,"complete")
+        plotFigures(i,Z_hc,t_hc,fv,"complete")
         Data_states = Z_hc(:,1:12);
         % Data_observables = [dZdt(:,4:5), dZdt(:,8), dZdt(:,3), dZdt(:,9)];
         Data_observables = [Z_hc(:,1:6)];%,Z_hc(:,4:5), Z_hc(:,6)];
@@ -115,13 +115,13 @@ train_xy = reshape(cell2mat(trainData(:,[1,2]).OutputData),...
     size(trainData.OutputData{1},1),2,size(trainData.OutputData,2));
 
 %% Save all
-save('../../datasets/clay_100hz_no_elev_experiment_1572.mat',...
-    "exp_x_incomp","exp_t_incomp","exp_y_incomp","exp_u_incomp","incomp",...
-    "exp_x","exp_y","exp_u","missingFiles","b","t_hc","exp_sig_tau_incomp",...
-    "exp_fv_incomp","fails","exp_dZdt_incomp","exp_bekk_h_incomp",...
-    "exp_sig_tau","exp_fv","exp_dZdt","exp_bekk_h","ind_ref","numTraj",...
-    "numVal","numTrain","numTest","comp","allindices","trainData",...
-    "testData","valData","test_xy","train_xy","val_xy",'-v7.3');
+% save('../../datasets/clay_100hz_no_elev_experiment_1572.mat',...
+%     "exp_x_incomp","exp_t_incomp","exp_y_incomp","exp_u_incomp","incomp",...
+%     "exp_x","exp_y","exp_u","missingFiles","b","t_hc","exp_sig_tau_incomp",...
+%     "exp_fv_incomp","fails","exp_dZdt_incomp","exp_bekk_h_incomp",...
+%     "exp_sig_tau","exp_fv","exp_dZdt","exp_bekk_h","ind_ref","numTraj",...
+%     "numVal","numTrain","numTest","comp","allindices","trainData",...
+%     "testData","valData","test_xy","train_xy","val_xy",'-v7.3');
 
 
 %% plot training validation and testing data
@@ -182,41 +182,41 @@ title(plot_title)
 axis equal;
 
 % Velocities
-figure(i+1);
-ylabs = {'$\psi$', '$u$', '$v$', '$\dot{\psi}$'};
-for jj = 3:6
-    subplot(2, 2, jj-2);
-    hold on;
-    grid on;
-    plot(t_hc, Z_hc(:,jj), 'linewidth', 1.5);
-    ylabel(ylabs{jj-2}, 'fontsize', 20, 'interpreter', 'latex');
-    grid on;
-end
-title(plot_title)
+% figure(i+1);
+% ylabs = {'$\psi$', '$u$', '$v$', '$\dot{\psi}$'};
+% for jj = 3:6
+%     subplot(2, 2, jj-2);
+%     hold on;
+%     grid on;
+%     plot(t_hc, Z_hc(:,jj), 'linewidth', 1.5);
+%     ylabel(ylabs{jj-2}, 'fontsize', 20, 'interpreter', 'latex');
+%     grid on;
+% end
+% title(plot_title)
 
 % Inputs
-figure(i+2);
-subplot(2, 1, 1);
-stairs(t_hc, fv(:,12), 'linewidth', 1.5);
-hold on;
-ylabel('$\delta$', 'fontsize', 20, 'Interpreter', 'latex');
-grid on;
-subplot(2, 1, 2);
-stairs(t_hc, fv(:,11), 'linewidth', 1.5);
-hold on;
-ylabel('$\tau$', 'fontsize', 20, 'Interpreter', 'latex');
-grid on;
-title(plot_title)
+% figure(i+2);
+% subplot(2, 1, 1);
+% stairs(t_hc, fv(:,12), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\delta$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% subplot(2, 1, 2);
+% stairs(t_hc, fv(:,11), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\tau$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% title(plot_title)
 
 % % Observables
-figure(i+3)
-hold on;
-hold on; grid on;
-scatter3(Z_hc(:,4),Z_hc(:,5),Z_hc(:,6),'b','filled','MarkerFaceAlpha',0.1,'MarkerEdgeColor','none')
-xlabel('$u$','fontsize',20,'interpreter','latex')
-ylabel('$v$','fontsize',20,'interpreter','latex')
-zlabel('$\dot{\psi}$','fontsize',20,'interpreter','latex')
-title(plot_title)
+% figure(i+3)
+% hold on;
+% hold on; grid on;
+% scatter3(Z_hc(:,4),Z_hc(:,5),Z_hc(:,6),'b','filled','MarkerFaceAlpha',0.1,'MarkerEdgeColor','none')
+% xlabel('$u$','fontsize',20,'interpreter','latex')
+% ylabel('$v$','fontsize',20,'interpreter','latex')
+% zlabel('$\dot{\psi}$','fontsize',20,'interpreter','latex')
+% title(plot_title)
 
 end
 

@@ -55,7 +55,7 @@ if b.terrain == "_clay"
     b.a0 = 0.43;          % Coefficients for theta_m
     b.a1 = 0.32;          % ''  ''  ''  ''
 
-elseif b.terrain == "_sandyloam"else
+elseif b.terrain == "_sandyloam"
     % % Terrain parameters [Sandy Loam]
     b.kc = 5300;          % Cohesive modulus [N/m^{n+1}]else
     b.kphi = 1515000;     % Frictional modulus [N/m^{n+2}]
@@ -118,7 +118,7 @@ b.Lx = 50;          % Domain size in x (m)
 b.Ly = 50;          % Domain size in y (m)
 b.N = 4;            % Number of Fourier modes per axis (low = smoother)
 % Random coefficients for cosine and sine terms
-rng(42);  % for reproducibility
+% rng(42);  % for reproducibility
 A = randn(b.N,b.N);
 B = randn(b.N,b.N);
 C = randn(b.N,b.N);
@@ -187,7 +187,7 @@ b.ddh_xy = @(x, y) b.H/ zmax * arrayfun(@(xi, yi) ...
 % [xq, yq] = meshgrid(linspace(-1, b.Lx, 200), linspace(-1, b.Ly, 200));
 % [xq, yq] = meshgrid(linspace(-1, 200, 200), linspace(-1, 200, 200));
 % zq = arrayfun(b.h, xq, yq);
-% surf(xq, yq, zq); shading interp; colormap jet;
+% surf(xq, yq, 10*zq); shading interp; colormap parula;
 % xlabel('x (m)'); ylabel('y (m)'); zlabel('Height (m)');
 % title('Smooth Random Terrain via Low-Frequency Fourier Series');
 % axis equal

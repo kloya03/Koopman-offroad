@@ -36,6 +36,9 @@ for i = 2:size(tspan,1)
         end
         
     else
+        % dx = Ymean(1,1).*cos(pos0(3,1)) - Ymean(2,1).*sin(pos0(3,1));
+        % dy = Ymean(1,1).*sin(pos0(3,1)) + Ymean(2,1).*cos(pos0(3,1));
+        % pos_cur = pos0+[dx;dy;Ymean(3,end)].*ts;
         Z_Gpr(:,1) = A*Z_Gpr(:,1) + B*u_in(:,i-1) + Bc1;  % added normalized terms for unnormalized
         Z_Gpr(:,2) = diag(A*diag(Z_Gpr(:,2))*A.');
         Y_cov(:,i) = diag(C*diag(Z_Gpr(:,2))*C.');
@@ -43,6 +46,7 @@ for i = 2:size(tspan,1)
         dx = Ymean(1,1).*cos(pos0(3,1)) - Ymean(2,1).*sin(pos0(3,1));
         dy = Ymean(1,1).*sin(pos0(3,1)) + Ymean(2,1).*cos(pos0(3,1));
         pos_cur = pos0+[dx;dy;Ymean(3,end)].*ts;
+        
     end
     pos0 = pos_cur;
     Y_pred(i,:) =  [pos0.', Ymean.'];  
