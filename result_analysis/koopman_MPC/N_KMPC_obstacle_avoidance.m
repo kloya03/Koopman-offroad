@@ -7,27 +7,35 @@
 %  - Control horizon = 1 sec      (10 steps)
 % ================================================================
 
-import casadi.*
-
+clc;
+clear;
+addpath('/home/kloya/Documents/casadi-3.7.2-linux64-matlab2018b/')
+folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
+    files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
+    filename = fullfile(folder, files(123).name);
+    model = load(filename,"MDL_fitr","A","B","Bc1","C",...
+        "Cc1","K_obs","mean_std_out","rr","b","valData"); % load the file
 %% USER INPUTS (plug in your Koopman matrices)
-K = ...;     % r x r
-B = ...;     % r x m
-C = ...;     % p x r   -> must output [x;y;psi;v]
+K = model.A;     % r x r
+B = model.B;     % r x m
+C = model.C;     % p x r   -> must output [x;y;psi;v]
+Cc1 = model.Cc1;
+Bc1 = model.Bc1;
 
 r = size(K,1);
 m = size(B,2);
 
-dt   = 0.1;      % sampling time = 10Hz
-Np   = 20;       % prediction horizon (2 sec)
-Nc   = 10;       % control horizon (1 sec)
+dt   = 0.01;      % sampling time = 10Hz
+Np   = 200;       % prediction horizon (2 sec)
+Nc   = 50;       % control horizon (1 sec)
 
 % Control bounds
-u_min = [-0.5; -1.0];
-u_max = [ 0.5;  1.0];
+u_min = [-0.35; 0];
+u_max = [ 0.35;  135.0];
 
-goal = [5;5];    % example goal (x_goal,y_goal)
+goal = [50;50];    % example goal (x_goal,y_goal)
 
-obstacles = [2 2 0.5;  3 4 0.6];  
+obstacles = [20 20 5;  30 20 2];  
 % each row: [xo, yo, radius]
 
 %% COST WEIGHTS
@@ -43,13 +51,13 @@ opti = Opti();
 % Decision variables
 Z  = opti.variable(r, Np+1);    % lifted state trajectory
 U  = opti.variable(m, Np);      % control sequence
-
+Xcart = opti.variable(3,Np+1);
 %% Cost
 J = 0;
 
 for k = 1:Np
     % Koopman output
-    yk = C * Z(:,k);
+    yk = C * Z(:,k) + Cc1;
     xk = yk(1);
     ykpos = yk(2);
 
@@ -88,7 +96,7 @@ for k = 1:Np
     end
 
     % Koopman linear propagation
-    opti.subject_to(Z(:,k+1) == K*Z(:,k) + B*uk);
+    opti.subject_to(Z(:,k+1) == K*Z(:,k) + B*uk + Bc1);
 end
 
 %% CONTROL BOUNDS

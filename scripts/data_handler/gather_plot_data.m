@@ -6,7 +6,8 @@ close all;
 startIndex = 1;  % Starting index
 endIndex = 1600; % Ending index
 missingFiles=[];
-foldername = '../../datasets/clay_noElev_dataset_100hz';
+foldername = '../../datasets/sandyloam_noElev_dataset_100hz';
+load('../../datasets/Offroad_InputsSignals','traj_name')
 fails=[]; incomp =[]; comp = [];
 exp_u_incomp = [];exp_y_incomp = {};
 exp_x_incomp = {};exp_t_incomp = {};
@@ -47,6 +48,7 @@ for iter=startIndex:endIndex
         exp_fv{1,ct} = fv;
         exp_sig_tau{1,ct} = sig_tau;
         comp = [comp, iter];
+        exp_name{1,ct} = traj_name(:,iter);
 
     else
         clc;
@@ -84,6 +86,7 @@ numTest = 100;
 numVal = 50;
 numTrain = numTraj-numVal-numTest;
 allindices = randperm(numTraj);
+expt_name = exp_name(:,allindices);
 % training Data
 trainData = iddata(exp_y(:, allindices(1:numTrain)),...
     exp_u(:, allindices(1:numTrain)), b.dt);

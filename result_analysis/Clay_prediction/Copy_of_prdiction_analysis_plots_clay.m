@@ -104,6 +104,8 @@ for i=11%1:size(mm,2)
     Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
     idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
     Nrmse = [NRMSE(idxx(:,1),:)];
+    Nrmse = Nrmse./max(Nrmse);
+    MNrmse = mean(Nrmse,2);
     % if nnz(Nrmse(:,4:6)>5)<0
     %     continue;
     % else
@@ -114,8 +116,9 @@ for i=11%1:size(mm,2)
         plot(idxx(:,2),Nrmse(:,jj),'-o','linewidth',lw);
         hold on;
     end
+    plot(idxx(:,2)-4,MNrmse,'--k','linewidth',lw); hold on;
     xlabel('Model Order (r)');
-    ylabel('NRMSE');
+    ylabel('N-RMSE');
     grid on; box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
@@ -128,13 +131,14 @@ end
 %% RMSE VS refresh rate
 clc;
 clear;
-kk = 123;
+kk = 124;
 addpath('../../functions/utility/')
-folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
+folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
-    "Cc1","K_obs","mean_std_out","rr","base_name","testData");   % load the file
+    "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
+load('../../datasets/clay_100hz_elev_experiment_1524.mat','testData','b');
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
@@ -159,27 +163,40 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
-save('clay_errors_refresh_123','-v7.3')
+save('sandyloam_on_clay_elev_errors_refresh_124','-v7.3')
 %%
 clc;
 clear;
-load('clay_errors_refresh_123.mat')
-lw = 5;
-figure(3)
-for jj=K_obs
-    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
-    hold on; grid on;
+% load('clay_errors_refresh_123.mat')
+models = {'clay_errors_refresh_123.mat','clay_elev_errors_refresh_123.mat'}
+for jk=2
+    load(models{jk})
+    lw = 5;
+    figure(jk)
+    for jj=K_obs
+        plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
+        hold on; grid on;
+    end
+    xlabel('Refreshing time [s]');
+    ylabel('RMSE');
+    % title('Normalized RMSE vs Refresh rate');
+    box on;
+    set(gca, 'LineWidth', 1.5)
+    ax = gca;   % Get the current axes handle
+    ax.FontSize = 35; % Set the font size to 14 points
+    legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
+    hold off;
 end
-xlabel('Refreshing time [s]');
-ylabel('RMSE');
-% title('Normalized RMSE vs Refresh rate');
-box on;
-set(gca, 'LineWidth', 1.5)
-ax = gca;   % Get the current axes handle
-ax.FontSize = 35; % Set the font size to 14 points
-legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
-hold off;
 
+%%
+clc;
+clear;
+models = {'clay_errors_refresh_123.mat', 'clay_elev_errors_refresh_123.mat'}
+noelev = load(models{1},'NRMSE','refresh');
+elev = load(models{2},'NRMSE');
+perc = 100*(elev.NRMSE-noelev.NRMSE)./noelev.NRMSE;
+AA = perc(:,4:6)
+mean(AA)
 %% error with time
 kk = 123;
 addpath('../../functions/utility/')
@@ -304,3 +321,5 @@ xlim([-1.05 1.05]);
 ylim([-1.05 1.05]);
 ax = gca;   % Get the current axes handle
 ax.FontSize = 30; % Set the font size to 14 points
+
+%%

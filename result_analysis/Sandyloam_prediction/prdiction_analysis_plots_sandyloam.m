@@ -100,29 +100,34 @@ for i=6%1:size(mm,2)
     idx = find(nameMatch==1);
     mc = [idx.',model_complexity(idx,1)];
     idxx = [sortrows(mc,2,'ascend')];
-    Nerr = [Total_Nrmse_var(idxx(:,1),2)];
-    Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
+    % Nerr = [Total_Nrmse_var(idxx(:,1),2)];
+    % Nerr1 = [Nerr(1:5,1);0.212;Nerr(6:end,1)];
     idxx1 = [idxx(1:5,:);[76,52];idxx(6:end,:)];
     Nrmse = [NRMSE(idxx(:,1),:)];
+    Nrmse = Nrmse./max(Nrmse);
+    MNrmse = mean(Nrmse,2);
     % Nrmse(7,4) = 0.051;
     % idxx(3:4,2) = idxx(3:4,2)-18;
     % if nnz(Nrmse(:,4:6)>5)<0
     %     continue;
     % else
-    figure(i+1)
+    figure(1)
     lw = 5;
+    
     % plot(idxx(:,2),Nerr(:,1),'-o','linewidth',lw); hold on;
     for jj=4:6
         plot(idxx(:,2)-4,Nrmse(:,jj),'-o','linewidth',lw);
         hold on;
     end
+    plot(idxx(:,2)-4,MNrmse,'--k','linewidth',lw); hold on;
     xlabel('Model Order (r)' );
     ylabel('N-RMSE');
     grid on; box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
     ax.FontSize = 30; % Set the font size to 14 points
-    legend(testData.OutputName(4:6),'Interpreter','latex','FontSize',35);
+    % labels = [testData.OutputName{4:6},{'mean'}]
+    legend(testData.OutputName{4:6},'Interpreter','latex','FontSize',35);
 
     % end
 
@@ -138,7 +143,8 @@ folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
-    "Cc1","K_obs","mean_std_out","rr","base_name","testData");   % load the file
+    "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
+load('../../datasets/sandyloam_100hz_elev_experiment_1572.mat','testData','b');
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
@@ -163,27 +169,39 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
-save('sandyloam_errors_refresh_124','-v7.3')
+save('sandyloam_errors_elev_refresh_124','-v7.3')
+%%
+% clc;
+% clear;
+models = {'sandyloam_errors_refresh_124.mat', 'sandyloam_errors_elev_refresh_124.mat'}
+for jk=1:2
+    load(models{jk})
+    lw = 5;
+    figure(jk)
+    for jj=K_obs
+        plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
+        hold on; grid on;
+    end
+    xlabel('Refreshing time [s]');
+    ylabel('RMSE');
+    % title('Normalized RMSE vs Refresh rate');
+    box on;
+    set(gca, 'LineWidth', 1.5)
+    ax = gca;   % Get the current axes handle
+    ax.FontSize = 30; % Set the font size to 14 points
+    legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
+    hold off;
+end
+
 %%
 clc;
 clear;
-load('sandyloam_errors_refresh_124.mat')
-lw = 5;
-figure(3)
-for jj=K_obs
-    plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
-    hold on; grid on;
-end
-xlabel('Refreshing time [s]');
-ylabel('RMSE');
-% title('Normalized RMSE vs Refresh rate');
-box on;
-set(gca, 'LineWidth', 1.5)
-ax = gca;   % Get the current axes handle
-ax.FontSize = 30; % Set the font size to 14 points
-legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
-hold off;
-
+models = {'sandyloam_errors_refresh_124.mat', 'sandyloam_errors_elev_refresh_124.mat'}
+noelev = load(models{1},'NRMSE','refresh','mean_std_out');
+elev = load(models{2},'NRMSE');
+perc = 100*(elev.NRMSE-noelev.NRMSE)./noelev.NRMSE;
+AA = perc(:,4:6)
+mean(AA)
 %% error with time
 kk = 124;
 addpath('../../functions/utility/')

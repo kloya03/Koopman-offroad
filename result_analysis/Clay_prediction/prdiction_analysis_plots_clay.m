@@ -106,6 +106,8 @@ for i=1:size(mm,2)
     idxx = [sortrows(mc,2,'ascend')];
     Nerr = [Total_Nrmse_var(idxx(:,1),2)];
     Nrmse = [NRMSE(idxx(:,1),:)];
+    Nrmse = Nrmse./max(Nrmse);
+    MNrmse = mean(Nrmse,2);
     if nnz(Nrmse(:,4:6)>2)>0
         continue;
     else
@@ -116,6 +118,7 @@ for i=1:size(mm,2)
             plot(idxx(:,2),Nrmse(:,jj),'-o','linewidth',lw);
             hold on;
         end
+        plot(idxx(:,2)-4,MNrmse,'--k','linewidth',lw); hold on;
         xlabel('Model Complexity');
         ylabel('RMSE');
         grid on;
