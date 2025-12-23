@@ -138,7 +138,7 @@ files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
-load('../../datasets/clay_100hz_elev_experiment_1524.mat','testData','b');
+load('../../datasets/clay_100hz_no_elev_experiment_1472.mat','testData','b');
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 parfor k=1:size(refresh,2)
@@ -163,18 +163,19 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
-save('sandyloam_on_clay_elev_errors_refresh_124','-v7.3')
+save('sandyloam_on_clay_noelev_errors_refresh_124','-v7.3')
 %%
-clc;
-clear;
-% load('clay_errors_refresh_123.mat')
-models = {'clay_errors_refresh_123.mat','clay_elev_errors_refresh_123.mat'}
+% clc;
+% clear;
+% % load('clay_errors_refresh_123.mat')
+% models = {'clay_errors_refresh_123.mat','clay_elev_errors_refresh_123.mat'}
 for jk=2
     load(models{jk})
     lw = 5;
-    figure(jk)
+    figure(3)
+    lw = 5;
     for jj=K_obs
-        plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
+        plot(0.01*refresh,NRMSE(:,jj),'-o','linewidth',lw)
         hold on; grid on;
     end
     xlabel('Refreshing time [s]');
@@ -185,6 +186,7 @@ for jk=2
     ax = gca;   % Get the current axes handle
     ax.FontSize = 35; % Set the font size to 14 points
     legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
+    axis([0 3 0 0.15])
     hold off;
 end
 
@@ -212,10 +214,10 @@ for jj=K_obs
     hold on; grid on;
 end
 xlabel('Time [s]');
-ylabel('RMSE ');
+ylabel('RMSE (t) ');
 box on;
 set(gca, 'LineWidth', 1.5)
-% axis([0 2 0 1])
+axis([0 2.5 0 0.6])
 % title('Normalized RMSE vs time');
 ax = gca;   % Get the current axes handle
 ax.FontSize = 35; % Set the font size to 14 points
@@ -253,7 +255,7 @@ for i=23%randi(size(trajj,2))%2:2:size(trajj,2)
     box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
-    ax.FontSize = 30; % Set the font size to 14 points
+    ax.FontSize = 35; % Set the font size to 14 points
     hold off;
 
     for jj=K_obs
@@ -268,7 +270,7 @@ for i=23%randi(size(trajj,2))%2:2:size(trajj,2)
         xlabel('Time [s]')
         xlim([0 tstep(end)*0.01])
         ax = gca;   % Get the current axes handle
-        ax.FontSize = 30; % Set the font size to 14 points
+        ax.FontSize = 35; % Set the font size to 14 points
         grid on; box on;
         set(gca, 'LineWidth', 1.5)
         ylabel(testData.OutputName(jj),'Interpreter','latex','FontSize',35)

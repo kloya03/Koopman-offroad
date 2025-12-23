@@ -175,15 +175,15 @@ out3 = [vec_force_f.',vec_force_r.'];
 
 if b.verbose == true  
     fprintf('Tr = %f==== Time: %4.10f\t ========================================\n',traj,t)
-    fprintf('sf: %3.2f\t, Vf:%3.2f\t, omega_f: %3.2f\t, Vcf: %3.2f\t, beta_f %3.2f\t \n',...
-        sf,vlf,omega_f,vcf,atan2(vcf,vlf));
+    fprintf('sf: %3.2f\t, Vf:%3.2f\t, omega_f: %3.2f\t, Vcf: %3.2f\t, beta_f %3.2f\t, dx %3.2f\t \n',...
+        sf,vlf,omega_f,vcf,atan2(vcf,vlf),dx);
     fprintf('sr: %3.2f\t, Vr:%3.2f\t, omega_r: %3.2f\t, Vcr: %3.2f\t, beta_r %3.2f\t \n',...
         sr,vlr,omega_r,vcr,atan2(vcr,vlr));
     fprintf('Flf: %4.2f\t, Fcf: %4.2f\t, Nf: %7.2f\t, Flr: %4.2f\t, Fcr: %4.2f\t, Nr: %5.2f\t \n',...
         Flf,Fcf,Nf,Flr,Fcr,Nr);
     fprintf('delta: %3.2f\t, tau_r: %3.2f\t, int_tau_r: %3.2f\t, hr: %3.2f\t, int_tau_f: %3.2f\t, hf: %3.2f\t\n',...
         delta_t,tau_t,int_r(2),int_r(end),int_f(2),int_f(end));
-
+    % fprintf('slip = %2.2f',out2(:,21))
 % fprintf('%4.3f\t ddx: %7.2f \n',t,ddx)
 end
 % fprintf('%0.3f\n',dXdt)

@@ -3,7 +3,7 @@ clear;
 
 clay_elev = load("../datasets/clay_100hz_elev_experiment_1524.mat",'valData','b');
 
-i = randi(50)  % 76
+i = 30% randi(50)  % 76
 experiment_clay = getexp(clay_elev.valData,i);
 
 kk = 123;
@@ -33,6 +33,7 @@ plot3(yout(tstep,1),yout(tstep,2),z_out,'k','linewidth',lw); hold on;
 plot3(ypred(tstep,1),ypred(tstep,2),z_pred,'r','linewidth',lw);grid on;
 xlabel('X (m)'); ylabel('Y (m)'); zlabel('H (m)');
 axis([min(xy(:,1)), max(xy(:,1)), min(xy(:,2)), max(xy(:,2))])
+zticks(0)
 % axis equal;
 ax = gca;   % Get the current axes handle
 ax.FontSize = 25; % Set the font size to 14 points
@@ -49,7 +50,7 @@ for jj=model_clay.K_obs
     grid on; box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
-    ax.FontSize = 30; % Set the font size to 14 points
+    ax.FontSize = 35; % Set the font size to 14 points
     
     hold off;
     if jj==4
@@ -64,7 +65,7 @@ legend('True','K-SSID')
 clear;
 % SL_elev = load("../datasets/sandyloam_100hz_no_elev_experiment_1579.mat",'testData','b');
 SL_elev = load("../datasets/sandyloam_100hz_elev_experiment_1572.mat",'valData','b');
-i = randi(50)   %28
+i = 26%randi(50)   %28
 experiment_SL = getexp(SL_elev.valData,i);
 kk = 124;
 folder = '../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
@@ -97,6 +98,7 @@ xlabel('X (m)'); ylabel('Y (m)'); zlabel('H (m)');
 axis([min(xy(:,1)), max(xy(:,1)), min(xy(:,2)), max(xy(:,2))])
 ax = gca;   % Get the current axes handle
 ax.FontSize = 25; % Set the font size to 14 points
+zticks(0)
 hold off;
 for jj=model_sandyloam.K_obs
     subplot(2,2,jj-2)
@@ -110,7 +112,7 @@ for jj=model_sandyloam.K_obs
     grid on; box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
-    ax.FontSize = 30; % Set the font size to 14 points
+    ax.FontSize = 35; % Set the font size to 14 points
     hold off;
     if jj==4
         ylim([min(yout(tstep,jj))-2 2+max(yout(tstep,jj))])

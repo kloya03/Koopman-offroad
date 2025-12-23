@@ -3,25 +3,26 @@ clear;
 addpath('/home/kloya/Documents/casadi-3.7.2-linux64-matlab2018b/')
 addpath('../../../functions/utility/')
 addpath('../../../functions/simulation_model')
-
+vid = 0;
 %% === Test Trajectory ===
-b.dt = 0.01;  % model at 100 Hz
-b.tstart = 0;
-b.tstop = 20;
-b.tspan = b.tstart:b.dt:b.tstop;
-b.nt = size(b.tspan);
-b.verbose = true;
-b.hr = nan;
-b.hf = nan;
-b.elev = 0;
-b.terrain="_clay";
-run('loadCommonParams.m');
-% % 
-% [Data,Zhc0] = find_traj(b);
-% save('clay_data_high_u.mat');
-clc;
-clear;
-load("clay_data_high_u.mat")
+% b.dt = 0.01;  % model at 100 Hz
+% b.tstart = 0;
+% b.tstop = 20;
+% b.tspan = b.tstart:b.dt:b.tstop;
+% b.nt = size(b.tspan);
+% b.verbose = true;
+% b.hr = nan;
+% b.hf = nan;
+% b.elev = 0;
+% b.traj = 102;
+% b.terrain="_sandyloam";
+% run('loadCommonParams.m');
+
+% [Data,Zhc0,events] = find_traj(b);
+% save('sandy_data_102.mat');
+% clc;
+% clear;
+load("sandy_102_v2.mat")
 %% Model prediction
 
 folder = '../../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
@@ -36,26 +37,26 @@ filename = fullfile(folder, files(123).name);
 models{2} = load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr"); % load the file
 clearvars filename files folder
-models{1}.filename = "Ksandy_on_clay_MPC_20_3.avi";
-models{2}.filename = "Kclay_on_clay_MPC_20_3.avi";
+models{1}.filename = "F_Ksandy_on_sandy_MPC_20_1_track.avi";
+models{2}.filename = "Kclay_on_sandy_MPC_20_1_v2.avi";
 
 
-for i=1:length(models)
-    ig1 = figure(1);
-    ig1.WindowState = 'maximized';   % (newer MATLAB versions)
-    [ypred,yout]  = K_RSSID_prediction(getexp(Data,1),...
-        models{i}.MDL_fitr,models{i}.A,models{i}.B,models{i}.Bc1,...
-        models{i}.C,models{i}.Cc1,models{i}.K_obs,models{i}.mean_std_out,200);
-    plot(ypred(:,1),ypred(:,2),'LineWidth',4); hold on;
-    clearvars model
-end
-plot(yout(:,1),yout(:,2),'k','LineWidth',4); grid on;
-legend('K-SSID sandy','K-SSID clay','True')
+% for i=1:length(models)
+%     ig1 = figure(1);
+%     ig1.WindowState = 'maximized';   % (newer MATLAB versions)
+%     [ypred,yout]  = K_RSSID_prediction(getexp(Data,1),...
+%         models{i}.MDL_fitr,models{i}.A,models{i}.B,models{i}.Bc1,...
+%         models{i}.C,models{i}.Cc1,models{i}.K_obs,models{i}.mean_std_out,200);
+%     plot(ypred(:,1),ypred(:,2),'LineWidth',4); hold on;
+%     clearvars model
+% end
+% plot(yout(:,1),yout(:,2),'k','LineWidth',4); grid on;
+% legend('K-SSID sandy','K-SSID clay','True')
 %% MPC parameters
 dt_mpc   = 0.1;      % MPC step (10Hz)
 Np   = 20;        % prediction horizon
 Nc   = 20;        % control horizon
-block = 3;
+block = 1;
 inner = dt_mpc / b.dt; % =10 Koopman steps per MPC step  100 Hz model -->10 Hz MPC
 yref = Data.OutputData;   % @ 10hz
 x0 = yref(1:6,:).';
@@ -63,7 +64,7 @@ yref_nHz = yref(1:inner:end, :);   % size ~201 x 6
 TotalSteps = size(yref_nHz, 1);            % number of 10Hz samples
 tspan = b.tstart:dt_mpc:Data.SamplingInstants(end,1);
 
-for model_iter = length(models)
+for model_iter = 1%:length(models)
     x_real = []; usol = []; xsol = [];
     %% === USER SUPPLIED MATRICES ===
     K = models{model_iter}.A;     % r x r
@@ -97,9 +98,9 @@ for model_iter = length(models)
     U0prev = opti.parameter(m,1);
     % Uref = opti.parameter(2,Np);
     % === COST WEIGHTS ===
-    Q   = diag([10 10 10 1 15 15]);   % tracking cost for [X,Y,psi,u,v,r]
+    Q   = diag([15 15 15 1 15 15]);   % tracking cost for [X,Y,psi,u,v,r]
     Ru  = diag([1e-2 1e-6]);             % input effort
-    Rdu = diag([1000 1]);
+    Rdu = diag([100 1]);
     % R0du = diag([1000 1]);
     % === COST FUNCTION ===
     J_track = 0;   % tracking error
@@ -173,27 +174,21 @@ for model_iter = length(models)
     %                  REAL-TIME EXECUTION LOOP
     % ================================================================
     % Initial real nonlinear state
-
-    outputfilename = models{model_iter}.filename;
-    v = VideoWriter(outputfilename,'Motion JPEG AVI'); %
-    v.FrameRate = round(length(1:block:TotalSteps)/20); % Define the frame rate (FPS)
-    open(v);
-
-    % (1) Lift to Koopman state via GP
-    z0 = zeros(models{model_iter}.rr,1);
-    for i = 1:models{model_iter}.rr
-        X0n = (x0(1,models{model_iter}.K_obs) - models{model_iter}.mean_std_out(1,:))./models{model_iter}.mean_std_out(2,:);  % normalize back for GP
-        Zi_mean = predict(models{model_iter}.MDL_fitr(i).gprMDL,X0n);
-        z0(i,:) = Zi_mean;
+    if vid==1
+        outputfilename = models{model_iter}.filename;
+        v = VideoWriter(outputfilename,'Motion JPEG AVI'); %
+        v.FrameRate = round(length(1:block:TotalSteps)/20); % Define the frame rate (FPS)
+        open(v);
     end
-    ytest(:,i) = x0(1,models{model_iter}.K_obs).' - C*z0 - Cc1;
+
+
     x_real = Zhc0;    % real nonlinear state [X,Y,psi,u,v,r]
     xsol = x_real.';
-    b.verbose = true;
-    usol = []; 
+    b.verbose = false;
+    usol = []; slip_r=[];
     u_last = Data.InputData(1,:).';
     Jval = 0;
-    tic; et_realsim = [];sol_time=0;
+    tic; et_realsim = [];sol_time=[];
 
     refresh = 1; t_mpc_start = 0;
     for MPC_iter = 1:block:TotalSteps
@@ -202,9 +197,18 @@ for model_iter = length(models)
         per_rows_idx = MPC_iter + (0:Np);
         % clamp all indices to T10 so we don't go out of bounds
         rows_idx(rows_idx > TotalSteps) = TotalSteps;
+        
+        sol1 =toc;
+        % (1) Lift to Koopman state via GP
+        z0 = zeros(models{model_iter}.rr,1);
+        for i = 1:models{model_iter}.rr
+            X0n = (x0(1,models{model_iter}.K_obs) - ...
+                models{model_iter}.mean_std_out(1,:))./models{model_iter}.mean_std_out(2,:);  % normalize back for GP
+            Zi_mean = predict(models{model_iter}.MDL_fitr(i).gprMDL,X0n);
+            z0(i,:) = Zi_mean;
+        end
 
-        % (2) Provide the reference trajectory for next Np steps and initial
-        % condition
+        % (2) Provide the reference trajectory for next Np steps and initial condition
         Yref_val = yref_nHz(rows_idx(1:end-1),:).';
         opti.set_value(Yref, Yref_val);
         opti.set_value(Z0par, z0);
@@ -215,10 +219,10 @@ for model_iter = length(models)
             Data.InputData(rows_idx(1:end-1),2).']);
         % opti.set_initial(Xcart, Z_hc(rows_idx,1:3).');
         % (3) Solve MPC
-        sol1 =toc;
+        
         sol = opti.solve();   % actual solve
         sol2 = toc;
-        sol_time = sol_time + sol2-sol1;
+        sol_time(MPC_iter) = sol2-sol1;
         % ---- evaluate cost at solution ----
         J_val       = sol.value(J);
         J_track_val = sol.value(J_track);
@@ -243,21 +247,23 @@ for model_iter = length(models)
         t_mpc =  t_mpc_start + (0:block) * dt_mpc;
 
         wrappedEventFcn = @(t, x) HalfCar_EventsFcn(t, x, b,delta_mpc,tau_mpc,0);
-        opts = odeset('Reltol',1e-5,'AbsTol',1e-6,'Events', wrappedEventFcn);
-        [t_hc,X_real,te,xe,ie] = ode113(@(t,Z) HalfCarBekker_F3(t,Z,b,...
+        opts = odeset('RelTol',1e-5,'AbsTol',1e-6,'Events', wrappedEventFcn);
+        sol_ode = ode113(@(t,Z) HalfCarBekker_F3(t,Z,b,...
             delta_mpc,tau_mpc,0),t_mpc,x_real,opts);
-        events = [te,xe,ie];
+        events = [sol_ode.xe,sol_ode.ye.',sol_ode.ie];
+        if ~isempty(events)
+            TotalSteps_break = length(usol);
+            break
+        end
+        X_real = deval(sol_ode, t_mpc).';   % (length(t_mpc) x nStates)
+        t_hc   = t_mpc(:);
+        [~,~,fv,~] = cellfun(@(t,Z) HalfCarBekker_F3(t,Z.',b,delta_mpc,tau_mpc,0),...
+            num2cell(t_hc),num2cell(X_real,2),'uni',0);
+        fv = cell2mat(fv);
+        slip_r = [slip_r, fv(1:end-1,21).'];
+
         x_real = X_real(end,:);    % real nonlinear state [X,Y,psi,u,v,psi_dot,z,dz,theta,dtheta,w_f,w_r]
         x0 = X_real(end,1:6);
-
-        % (1) Lift to Koopman state via GP
-        z0 = zeros(models{model_iter}.rr,1);
-        for i = 1:models{model_iter}.rr
-            X0n = (x0(1,models{model_iter}.K_obs) - ...
-                models{model_iter}.mean_std_out(1,:))./models{model_iter}.mean_std_out(2,:);  % normalize back for GP
-            Zi_mean = predict(models{model_iter}.MDL_fitr(i).gprMDL,X0n);
-            z0(i,:) = Zi_mean;
-        end
 
         et_2 = toc;
         et_realsim = [et_realsim, et_2-et_1];
@@ -274,8 +280,11 @@ for model_iter = length(models)
             stats.iter_count, stats.return_status, b.terrain,models{model_iter}.rr);
 
         % reconstruction prediction plot  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         ig = figure(model_iter+1); clf
-        ig.WindowState = 'maximized';   % (newer MATLAB versions)
+        set(ig, 'Units','pixels', 'Position',[100 100 1074 647]);  % pick a fixed size
+        set(ig, 'Resize','off');
+        % ig.WindowState = 'maximized';   % (newer MATLAB versions)
         lw = 5;
         axTraj = subplot(2,2,[1 3]);   % big trajectory plot (left)
         axU1   = subplot(2,2,2);       % control 1 (top-right)
@@ -288,22 +297,41 @@ for model_iter = length(models)
             rows_idx, dt_mpc, sol.value(U), ...
             usol, lw);
         % --- inside your loop ---
-        plotTrajWithCar(axTraj, Data.OutputData, yfull, x0, xsol, 9, 4);
+        plotTrajWithCar(axTraj, Data.OutputData, yfull, x0, xsol, 6, 3);
 
-        frame = getframe(gcf); % gcf gets the current figure
-        writeVideo(v, frame);
+        if vid==1
+            frame = getframe(gcf); % gcf gets the current figure
+            writeVideo(v, frame);
+        end
+
     end
+    if vid==1
+        close(v);
+    end
+
     et_mpc1 = toc;
     et_mpc = et_mpc1 - sum(et_realsim);
-    close(v);
-    models{model_iter}.usol = usol(:,1:TotalSteps);
-    models{model_iter}.xsol = xsol(1:TotalSteps,:);
-    models{model_iter}.Jval = Jval./TotalSteps;
-    models{model_iter}.sol_time = [sol_time, et_mpc, et_mpc1];
+    
+    if ~isempty(events)
+        models{model_iter}.tspan = b.tstart:dt_mpc:events(1,1);
+        models{model_iter}.usol = usol;
+        models{model_iter}.xsol = xsol;
+        models{model_iter}.Jval = Jval./MPC_iter;
+        models{model_iter}.slip_r = slip_r;
+    else
+        models{model_iter}.tspan = tspan;
+        models{model_iter}.usol = usol(:,1:TotalSteps);
+        models{model_iter}.xsol = xsol(1:TotalSteps,:);
+        models{model_iter}.Jval = Jval./TotalSteps;
+        models{model_iter}.slip_r = slip_r(:,1:TotalSteps);
+    end
+    SolTime = sum(sol_time);
+
+    models{model_iter}.sol_time = [SolTime, mean(sol_time),et_mpc, et_mpc1];
     % clearvars usol xsol et_mpc sol_time J_val
 end
 
-save('MPC_onclay_20_3.mat','-v7.3')
+save('MPC_onsandy_20_1_v2.mat','-v7.3')
 
 %% Plotting
 cc = {'b','r'};
@@ -312,8 +340,9 @@ figure(4)
 subplot(2,2,1)
 hold on;
 plot(Data.OutputData(:,1),Data.OutputData(:,2),'k','LineWidth',lw);   hold on;
-plot(models{1}.xsol(:,1),models{1}.xsol(:,2),cc{1},'LineWidth',lw-1); hold on;
-plot(models{2}.xsol(:,1),models{2}.xsol(:,2),cc{2},'LineWidth',lw-1); grid on;
+plot(models{2}.xsol(:,1),models{2}.xsol(:,2),cc{2},'LineWidth',lw-1); hold on;
+plot(models{1}.xsol(:,1),models{1}.xsol(:,2),cc{1},'LineWidth',lw-1); 
+grid on;
 xlabel('X')
 ylabel('Y')
 box on;
@@ -321,14 +350,16 @@ set(gca, 'LineWidth', 1.5)
 ax = gca;   % Get the current axes handle
 ax.FontSize = 30; % Set the font size to 14 points
 legend('$y_{ref}$','K-MPC sandy loam','K-MPC clay','interpreter','latex','fontsize',20)
-
+% axis equal 
+axis([-15 15 0 40 ])
 for jj=1:3
     subplot(2,2,jj+1)
     nk = models{1}.K_obs(jj);
     hold on;
     plot(b.tspan,Data.OutputData(:,nk),'k','LineWidth',lw); hold on;
-    plot(tspan,models{1}.xsol(:,nk),cc{1},'LineWidth',lw); hold on;
-    plot(tspan,models{2}.xsol(:,nk),cc{2},'LineWidth',lw); grid on;
+    plot(models{2}.tspan,models{2}.xsol(:,nk),cc{2},'LineWidth',lw); hold on;
+    plot(models{1}.tspan,models{1}.xsol(:,nk),cc{1},'LineWidth',lw); 
+    grid on;
     xlabel('Time [s]')
     ylabel(Data.OutputName{models{model_iter}.K_obs(jj)},'Interpreter','latex')
     box on;
@@ -341,11 +372,12 @@ end
 
 figure(5)
 for jj=1:2
-    subplot(1,2,jj)
+    subplot(2,2,jj)
     % hold on;
-    % plot(0,0,'LineWidth',lw-3);
-    plot(tspan,models{1}.usol(jj,:),cc{1},'LineWidth',lw); hold on;
-    plot(tspan,models{2}.usol(jj,:),cc{2},'LineWidth',lw); grid on;
+    plot(0,0,'LineWidth',lw-3);
+    plot(models{2}.tspan,models{1}.usol(jj,:),cc{2},'LineWidth',lw); hold on;
+    plot(models{1}.tspan(2:end),models{1}.usol(jj,:),cc{1},'LineWidth',lw);
+    grid on;
     xlabel('Time [s]')
     ylabel(Data.InputName{jj},'Interpreter','latex')
     box on;
@@ -354,16 +386,30 @@ for jj=1:2
     ax.FontSize = 30; % Set the font size to 14 points
     hold on;
 end
+
+% plot(0,0,'LineWidth',lw-3);
+figure(6)
+plot(models{2}.tspan,models{2}.slip_r,cc{2},'LineWidth',lw); hold on;
+plot(models{1}.tspan(2:end),models{1}.slip_r,cc{1},'LineWidth',lw); grid on;
+xlabel('Time [s]')
+ylabel('slip_r','Interpreter','latex')
+box on;
+set(gca, 'LineWidth', 1.5)
+ax = gca;   % Get the current axes handle
+ax.FontSize = 30; % Set the font size to 14 points
+hold on;
 %%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [Data,Zhc0,events] = find_traj(b)
+function [Data,Zhc0,fv,events] = find_traj(b)
 % Trajectory Simulation for tracking
-% load("../../../datasets/Offroad_InputsSignals.mat")
-delta_inp = 0.35*sin(2*b.tspan); % DELTA(:,traj);
-tau_inp = 100 + 20*sin(-b.tspan); %TAU(:,traj);
+load("../../../datasets/Offroad_InputsSignals.mat")
+delta_inp =  DELTA(:,b.traj);
+tau_inp = TAU(:,b.traj);
+% delta_inp = 0.35*sin(2*b.tspan); % DELTA(:,traj);
+% tau_inp = 100 + 20*sin(-b.tspan); %TAU(:,traj);
 delta = @(t) zoh1d_scalar(t, 0, b.dt, delta_inp, 2001);
 tau   = @(t) zoh1d_scalar(t, 0, b.dt, tau_inp, 2001);
 xd = 7;
@@ -379,14 +425,17 @@ Zhc0 = [0;            % X        [1]
     0;              % dtheta  [10]
     (1 + 0.1) * xd / b.R;% omega_f [11]
     (1 + 0.1) * xd / b.R];% omega_r [12]
-wrappedEventFcn = @(t, x) HalfCar_EventsFcn(t, x, b,delta,tau,0);
+wrappedEventFcn = @(t, x) HalfCar_EventsFcn(t, x, b,delta,tau,b.traj);
 opts = odeset('Reltol',1e-5,'AbsTol',1e-6,'Events', wrappedEventFcn);
-[t_hc,Z_hc,te,xe,ie] = ode113(@(t,Z) HalfCarBekker_F3(t,Z,b,delta,tau,0),...
+[t_hc,Z_hc,te,xe,ie] = ode113(@(t,Z) HalfCarBekker_F3(t,Z,b,delta,tau,b.traj),...
     b.tspan,Zhc0,opts);
-[~,~,fv,~] = cellfun(@(t,Z) HalfCarBekker_F3(t,Z.',b,delta,tau,0),...
+[~,~,fv,~] = cellfun(@(t,Z) HalfCarBekker_F3(t,Z.',b,delta,tau,b.traj),...
     num2cell(t_hc),num2cell(Z_hc,2),'uni',0);
 fv = cell2mat(fv);
-events = [te,xe,ie];
+% if ~isempty(events)
+%     events = [te,xe,ie];
+% end
+
 Data = iddata([Z_hc(:,1:6)],[fv(:,12), fv(:,11)],b.dt);
 Data.OutputName = {'x','y','$\psi$','$u$', '$v$', '$\dot{\psi}$'};%,'$Z$',...
 % '$\dot{Z}$','$\theta$','$\dot{\theta}$','$\omega_f$','$\omega_r$'};
@@ -408,9 +457,9 @@ needCreate = isempty(ud) || ~isstruct(ud) || ...
 if needCreate
     cla(ax); hold(ax,'on')
 
-    ud.p_out   = plot(ax, outXY(:,1), outXY(:,2), 'LineWidth', lw);
-    ud.p_yfull = plot(ax, yfull(:,1), yfull(:,2), 'LineWidth', lw);
+    ud.p_out   = plot(ax, outXY(:,1), outXY(:,2),'k', 'LineWidth', lw);
     ud.p_xsol  = plot(ax, nan, nan, 'LineWidth', lw);
+    ud.p_yfull = plot(ax, yfull(:,1), yfull(:,2), 'LineWidth', lw);
     ud.p_x0    = plot(ax, x0(:,1),  x0(:,2), 'k-o', 'LineWidth', lw-2);
 
     ud.carPatch = patch(ax, nan, nan, 'r', 'FaceAlpha', 0.2, ...
@@ -425,14 +474,14 @@ if needCreate
     ud.leg = legend(ax, [ud.p_out, ud.p_yfull, ud.p_xsol, ud.p_x0, ud.carPatch], ...
         {'$y_{ref}$','K-mpc pred','K-mpc','x0','car'}, ...
         'Interpreter','latex','Location','best');
-    ud.leg.FontSize = 20;
+    ud.leg.FontSize = 15;
 
     ax.UserData = ud;
 end
 
 % --- Update every call ---
-set(ud.p_xsol , 'XData', xsol(:,1), 'YData', xsol(:,2), 'LineWidth', lw-2);
 set(ud.p_yfull, 'XData', yfull(:,1), 'YData', yfull(:,2), 'LineWidth', lw-2);
+set(ud.p_xsol , 'XData', xsol(:,1), 'YData', xsol(:,2), 'LineWidth', lw-2);
 set(ud.p_x0   , 'XData', x0(1,1),    'YData', x0(1,2),    'LineWidth', lw-2);
 
 x   = x0(1,1);
@@ -502,7 +551,7 @@ if needCreate
 
     ud.leg = legend(ax, [ud.l_meas, ud.l_pred, ud.l_model], ...
         {'True','K-mpc pred','K-mpc'}, 'Location','best');
-    ud.leg.FontSize = 20;
+    ud.leg.FontSize = 15;
     ax.UserData = ud;
 end
 
@@ -583,58 +632,58 @@ end
 
 
 % figure(model_iter+3)
-        % lw = 5;
-        % subplot(2,2,1:2)
-        % plot(Data.OutputData(:,1),Data.OutputData(:,2),'LineWidth',lw); hold on;
-        % plot(yfull(:,1),yfull(:,2),'LineWidth',lw); hold on;
-        % plot(models{model_iter}.xsol(:,1),models{model_iter}.xsol(:,2),...
-        %     'LineWidth',lw); hold on;
-        % plot(x0(:,1),x0(:,2),'ok','LineWidth',lw); grid on;
-        % xlabel('X')
-        % ylabel('Y')
-        % box on;
-        % set(gca, 'LineWidth', 1.5)
-        % ax = gca;   % Get the current axes handle
-        % ax.FontSize = 30; % Set the font size to 14 points
-        % grid on;
-        % hold off;
+% lw = 5;
+% subplot(2,2,1:2)
+% plot(Data.OutputData(:,1),Data.OutputData(:,2),'LineWidth',lw); hold on;
+% plot(yfull(:,1),yfull(:,2),'LineWidth',lw); hold on;
+% plot(models{model_iter}.xsol(:,1),models{model_iter}.xsol(:,2),...
+%     'LineWidth',lw); hold on;
+% plot(x0(:,1),x0(:,2),'ok','LineWidth',lw); grid on;
+% xlabel('X')
+% ylabel('Y')
+% box on;
+% set(gca, 'LineWidth', 1.5)
+% ax = gca;   % Get the current axes handle
+% ax.FontSize = 30; % Set the font size to 14 points
+% grid on;
+% hold off;
 
-        % subplot(2,2,2)
-        % plot(b.tspan,Data.InputData(:,2),'LineWidth',lw); hold on;
-        % plot(rows_idx(1:end-1)*dt_mpc,sol.value(U(2,:)),'LineWidth',lw); hold on;
-        % plot((1:size(models{model_iter}.usol,2))*dt_mpc,...
-        %     models{model_iter}.usol(2,:),'LineWidth',lw); grid on;
-        % xlabel('Time [s]')
-        % ylabel('$\tau$','Interpreter','latex')
-        % box on;
-        % set(gca, 'LineWidth', 1.5)
-        % ax = gca;   % Get the current axes handle
-        % ax.FontSize = 30; % Set the font size to 14 points
-        % grid on;
-        % %
-        % subplot(2,2,4)
-        % plot(b.tspan,Data.InputData(:,1),'LineWidth',lw); hold on;
-        % plot(rows_idx(1:end-1)*dt_mpc,sol.value(U(1,:)),'LineWidth',lw); hold on;
-        % plot((1:size(models{model_iter}.usol,2))*dt_mpc,...
-        %     models{model_iter}.usol(1,:),'LineWidth',lw); grid on;
-        % xlabel('Time [s]')
-        % ylabel('$\delta$','Interpreter','latex')
-        % box on;
-        % set(gca, 'LineWidth', 1.5)
-        % ax = gca;   % Get the current axes handle
-        % ax.FontSize = 30; % Set the font size to 14 points
-        % grid on;
+% subplot(2,2,2)
+% plot(b.tspan,Data.InputData(:,2),'LineWidth',lw); hold on;
+% plot(rows_idx(1:end-1)*dt_mpc,sol.value(U(2,:)),'LineWidth',lw); hold on;
+% plot((1:size(models{model_iter}.usol,2))*dt_mpc,...
+%     models{model_iter}.usol(2,:),'LineWidth',lw); grid on;
+% xlabel('Time [s]')
+% ylabel('$\tau$','Interpreter','latex')
+% box on;
+% set(gca, 'LineWidth', 1.5)
+% ax = gca;   % Get the current axes handle
+% ax.FontSize = 30; % Set the font size to 14 points
+% grid on;
+% %
+% subplot(2,2,4)
+% plot(b.tspan,Data.InputData(:,1),'LineWidth',lw); hold on;
+% plot(rows_idx(1:end-1)*dt_mpc,sol.value(U(1,:)),'LineWidth',lw); hold on;
+% plot((1:size(models{model_iter}.usol,2))*dt_mpc,...
+%     models{model_iter}.usol(1,:),'LineWidth',lw); grid on;
+% xlabel('Time [s]')
+% ylabel('$\delta$','Interpreter','latex')
+% box on;
+% set(gca, 'LineWidth', 1.5)
+% ax = gca;   % Get the current axes handle
+% ax.FontSize = 30; % Set the font size to 14 points
+% grid on;
 
-        % for jj=1:3
-        %     subplot(2,2,jj+1)
-        %     plot(b.tspan,Z_hc(:,models{model_iter}.K_obs(jj)),'LineWidth',lw); hold on;
-        %     plot(b.tspan,models{model_iter}.xsol(:,models{model_iter}.K_obs(jj)),'LineWidth',lw); grid on;
-        %     xlabel('Time [s]')
-        %     ylabel(Data.OutputName{models{model_iter}.K_obs(jj)},'Interpreter','latex')
-        %     box on;
-        %     set(gca, 'LineWidth', 1.5)
-        %     ax = gca;   % Get the current axes handle
-        %     ax.FontSize = 30; % Set the font size to 14 points
-        %     grid on;
-        %     hold off;
-        % end
+% for jj=1:3
+%     subplot(2,2,jj+1)
+%     plot(b.tspan,Z_hc(:,models{model_iter}.K_obs(jj)),'LineWidth',lw); hold on;
+%     plot(b.tspan,models{model_iter}.xsol(:,models{model_iter}.K_obs(jj)),'LineWidth',lw); grid on;
+%     xlabel('Time [s]')
+%     ylabel(Data.OutputName{models{model_iter}.K_obs(jj)},'Interpreter','latex')
+%     box on;
+%     set(gca, 'LineWidth', 1.5)
+%     ax = gca;   % Get the current axes handle
+%     ax.FontSize = 30; % Set the font size to 14 points
+%     grid on;
+%     hold off;
+% end

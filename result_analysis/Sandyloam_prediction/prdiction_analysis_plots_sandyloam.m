@@ -137,9 +137,9 @@ end
 %% RMSE VS refresh rate
 clc;
 clear;
-kk = 124;
+kk = 123;
 addpath('../../functions/utility/')
-folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
+folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
 load(filename,"MDL_fitr","A","B","Bc1","C",...
@@ -169,15 +169,15 @@ parfor k=1:size(refresh,2)
     % ---- Normalized error and variance ----
     NRMSE(k,:) = RMSE(k,:) ./ range_y;           % normalized RMSE
 end
-save('sandyloam_errors_elev_refresh_124','-v7.3')
+save('clay_on_sandyloam_errors_noelev_refresh_123','-v7.3')
 %%
 % clc;
 % clear;
-models = {'sandyloam_errors_refresh_124.mat', 'sandyloam_errors_elev_refresh_124.mat'}
+% models = {'sandyloam_errors_refresh_124.mat', 'sandyloam_errors_elev_refresh_124.mat'}
 for jk=1:2
     load(models{jk})
     lw = 5;
-    figure(jk)
+    figure(5)
     for jj=K_obs
         plot(0.01*refresh,RMSE(:,jj),'-o','linewidth',lw)
         hold on; grid on;
@@ -188,8 +188,9 @@ for jk=1:2
     box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
-    ax.FontSize = 30; % Set the font size to 14 points
+    ax.FontSize = 35; % Set the font size to 14 points
     legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
+    axis([0 3 0 0.8])
     hold off;
 end
 
@@ -217,13 +218,13 @@ for jj=K_obs
     hold on; grid on;
 end
 xlabel('Time [s]');
-ylabel('RMSE ');
-% axis([0 2 0 1])
+ylabel('RMSE (t) ');
+axis([0 2.5 0 0.6])
 % title('Normalized RMSE vs time');
 box on;
 set(gca, 'LineWidth', 1.5)
 ax = gca;   % Get the current axes handle
-ax.FontSize = 30; % Set the font size to 14 points
+ax.FontSize = 35; % Set the font size to 14 points
 legend(testData.OutputName(K_obs),'Interpreter','latex','FontSize',35);
 hold off;
 
@@ -250,14 +251,14 @@ for i=4;%randi(size(trajj,2))%2:2:size(trajj,2)
     figure(1)
     subplot(2,2,1)
     plot(yout(tstep,1),yout(tstep,2),'b','linewidth',lw); hold on;
-    plot(ypred(tstep,1),ypred(tstep,2),'r','linewidth',lw);grid on;
+    plot(ypred(tstep,1),ypred(tstep,2),'r','linewidth',lw-1);grid on;
     legend('True','K-SSID')
     xlabel('X')
     ylabel('Y')
     box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
-    ax.FontSize = 30; % Set the font size to 14 points
+    ax.FontSize = 35; % Set the font size to 14 points
     hold off;
 
     for jj=K_obs
@@ -272,7 +273,7 @@ for i=4;%randi(size(trajj,2))%2:2:size(trajj,2)
         box on;
         set(gca, 'LineWidth', 1.5)
         ax = gca;   % Get the current axes handle
-        ax.FontSize = 30; % Set the font size to 14 points
+        ax.FontSize = 35; % Set the font size to 14 points
         grid on;
         hold off;
         if jj==4
