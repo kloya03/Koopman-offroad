@@ -3,7 +3,7 @@ clear;
 addpath('/home/kloya/Documents/casadi-3.7.2-linux64-matlab2018b/')
 addpath('../../../functions/utility/')
 addpath('../../../functions/simulation_model')
-vid = 0;
+vid = 1;
 %% === Test Trajectory ===
 % b.dt = 0.01;  % model at 100 Hz
 % b.tstart = 0;
@@ -22,7 +22,8 @@ vid = 0;
 % save('sandy_data_102.mat');
 % clc;
 % clear;
-load("sandy_102_v2.mat")
+% load("sandy_102_v2.mat")
+load("clay_data_high_u.mat")
 %% Model prediction
 
 folder = '../../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
@@ -37,8 +38,8 @@ filename = fullfile(folder, files(123).name);
 models{2} = load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr"); % load the file
 clearvars filename files folder
-models{1}.filename = "F_Ksandy_on_sandy_MPC_20_1_track.avi";
-models{2}.filename = "Kclay_on_sandy_MPC_20_1_v2.avi";
+models{1}.filename = "F_Ksandy_on_sandy_presen.avi";
+models{2}.filename = "Kclay_on_sandy_present.avi";
 
 
 % for i=1:length(models)
@@ -64,7 +65,7 @@ yref_nHz = yref(1:inner:end, :);   % size ~201 x 6
 TotalSteps = size(yref_nHz, 1);            % number of 10Hz samples
 tspan = b.tstart:dt_mpc:Data.SamplingInstants(end,1);
 
-for model_iter = 1%:length(models)
+for model_iter = 2:length(models)
     x_real = []; usol = []; xsol = [];
     %% === USER SUPPLIED MATRICES ===
     K = models{model_iter}.A;     % r x r
@@ -331,7 +332,7 @@ for model_iter = 1%:length(models)
     % clearvars usol xsol et_mpc sol_time J_val
 end
 
-save('MPC_onsandy_20_1_v2.mat','-v7.3')
+% save('MPC_onsandy_20_1_v2.mat','-v7.3')
 
 %% Plotting
 cc = {'b','r'};
@@ -540,7 +541,7 @@ needCreate = isempty(ud) || ~isstruct(ud) || ~isfield(ud,'l_meas') || ~isgraphic
 if needCreate
     cla(ax); hold(ax,'on');
 
-    ud.l_meas  = plot(ax, nan, nan, 'LineWidth', lw);
+    % ud.l_meas  = plot(ax, nan, nan, 'LineWidth', lw);
     ud.l_pred  = plot(ax, nan, nan, 'LineWidth', lw);
     ud.l_model = plot(ax, nan, nan, 'LineWidth', lw);
 
@@ -550,8 +551,10 @@ if needCreate
 
     set(ax, 'LineWidth', 1.5, 'FontSize', 30);
 
-    ud.leg = legend(ax, [ud.l_meas, ud.l_pred, ud.l_model], ...
-        {'True','K-mpc pred','K-mpc'}, 'Location','best');
+    % ud.leg = legend(ax, [ud.l_meas, ud.l_pred, ud.l_model], ...
+    %     {'True','K-mpc pred','K-mpc'}, 'Location','best');
+    ud.leg = legend(ax, [ ud.l_pred, ud.l_model], ...
+        {'K-mpc pred','K-mpc'}, 'Location','best');
     ud.leg.FontSize = 15;
     ax.UserData = ud;
 end
@@ -561,13 +564,15 @@ t_pred  = rows_idx(1:end-1) * dt_mpc;
 t_model = (1:numel(u_model)) * dt_mpc;
 
 % Update line data (NO hold-on accumulation)
-set(ud.l_meas , 'XData', t_meas , 'YData', u_meas );
+% set(ud.l_meas , 'XData', t_meas , 'YData', u_meas );
 set(ud.l_pred , 'XData', t_pred , 'YData', u_pred );
 set(ud.l_model, 'XData', t_model, 'YData', u_model);
 
 % Optional: keep x-limits sensible
-tmax = max([t_meas(:); t_pred(:); t_model(:)]);
-tmin = min([t_meas(:); t_pred(:); t_model(:)]);
+tmax = max([t_pred(:); t_model(:)]);
+tmin = min([t_pred(:); t_model(:)]);
+% tmax = max([t_meas(:); t_pred(:); t_model(:)]);
+% tmin = min([t_meas(:); t_pred(:); t_model(:)]);
 if isfinite(tmin) && isfinite(tmax) && tmax > tmin
     xlim(ax, [tmin tmax]);
 end

@@ -3,7 +3,7 @@ foldername = "";
 b.terrain = "_clay";
 b.elev = 0;
 run('loadCommonParams.m');
-b.verbose = false;
+b.verbose = true;
 b.hr = nan;
 b.hf = nan;
 
@@ -16,8 +16,9 @@ b.nt = size(b.tspan);
 ngrid = 1600;
 %% Input values for delta and Fu
 load("../../datasets/Offroad_InputsSignals.mat")
+rng(42)
 
-for traj=1
+for traj=10
     delta_inp = DELTA(:,traj);
     tau_inp = TAU(:,traj);
     N = numel(b.tspan);
