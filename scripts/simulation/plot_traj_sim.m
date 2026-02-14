@@ -10,7 +10,7 @@ b.hf = nan;
 %% Time step
 b.dt = 0.01;
 b.tstart = 0;
-b.tstop = 20;
+b.tstop = 10;
 b.tspan = b.tstart:b.dt:b.tstop;
 b.nt = size(b.tspan);
 ngrid = 1600;
@@ -60,30 +60,85 @@ for traj=10
         sig_tau1 =  cat(3,sig_tau{:});
         dZdt = cell2mat(dZdt.').';
 
+        plotFigures(traj,Z_hc,t_hc,fv,"test")
+
         % fv = [Flf, Fcf, Nf, Frr_f, Flr, Fcr, Nr, Frr_r, f_adx, f_ady, b.tau_t, delta,...
         %                         vlf, vcf, omega_f, b.sf, vlr, vcr, omega_r, b.sr]
         % bekk_h = [-int_sig_sin_f, int_tau_cos_f, thf_f, thr_f, thm_f, hf_f,
         %                 -int_sig_sin_r, int_tau_cos_r, thf_r, thr_r, thm_r, hf_r]
         % sig_tau = [sig_f, tau_xf, sig_r, tau_xr]
 
-        m=matfile(sprintf('%s/data_%d.mat',foldername,traj),'writable',true);
-        m.dZdt = dZdt;
-        m.Z_hc = Z_hc;
-        m.t_hc = t_hc;
-        m.Z0 = Z0;
-        m.INN = INN;
-        m.bekk_h = bekk_h;
-        m.sig_tau = sig_tau1;
-        m.suff = suff;
-        m.fv = fv;
-        m.b = b;
-        m.events = [te,xe,ie];
-        m.input = [delta_inp,tau_inp];
-        fprintf('Finished traj %d\n', traj);
+        % m=matfile(sprintf('%s/data_%d.mat',foldername,traj),'writable',true);
+        % m.dZdt = dZdt;
+        % m.Z_hc = Z_hc;
+        % m.t_hc = t_hc;
+        % m.Z0 = Z0;
+        % m.INN = INN;
+        % m.bekk_h = bekk_h;
+        % m.sig_tau = sig_tau1;
+        % m.suff = suff;
+        % m.fv = fv;
+        % m.b = b;
+        % m.events = [te,xe,ie];
+        % m.input = [delta_inp,tau_inp];
+        % fprintf('Finished traj %d\n', traj);
 
     catch ME
         warning('Error in traj %d: %s', traj, ME.message);
         % Optional: log error to file or display full stack trace
         % disp(getReport(ME));
     end
+end
+
+
+function plotFigures(i,Z_hc, t_hc, fv, plot_title)
+
+% XY trajectory
+figure(i);
+hold on;
+grid on;
+plot(Z_hc(:,1), Z_hc(:,2), 'linewidth', 1.5);
+plot(Z_hc(1,1), Z_hc(1,2), 'ok', 'linewidth', 3);
+xlabel('$X$', 'fontsize', 20, 'interpreter', 'latex');
+ylabel('$Y$', 'fontsize', 20, 'interpreter', 'latex');
+title(plot_title)
+axis equal;
+
+% Velocities
+% figure(i+1);
+% ylabs = {'$\psi$', '$u$', '$v$', '$\dot{\psi}$'};
+% for jj = 3:6
+%     subplot(2, 2, jj-2);
+%     hold on;
+%     grid on;
+%     plot(t_hc, Z_hc(:,jj), 'linewidth', 1.5);
+%     ylabel(ylabs{jj-2}, 'fontsize', 20, 'interpreter', 'latex');
+%     grid on;
+% end
+% title(plot_title)
+
+% Inputs
+% figure(i+2);
+% subplot(2, 1, 1);
+% stairs(t_hc, fv(:,12), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\delta$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% subplot(2, 1, 2);
+% stairs(t_hc, fv(:,11), 'linewidth', 1.5);
+% hold on;
+% ylabel('$\tau$', 'fontsize', 20, 'Interpreter', 'latex');
+% grid on;
+% title(plot_title)
+
+% % Observables
+% figure(i+3)
+% hold on;
+% hold on; grid on;
+% scatter3(Z_hc(:,4),Z_hc(:,5),Z_hc(:,6),'b','filled','MarkerFaceAlpha',0.1,'MarkerEdgeColor','none')
+% xlabel('$u$','fontsize',20,'interpreter','latex')
+% ylabel('$v$','fontsize',20,'interpreter','latex')
+% zlabel('$\dot{\psi}$','fontsize',20,'interpreter','latex')
+% title(plot_title)
+
 end
