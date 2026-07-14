@@ -34,28 +34,36 @@ The Koopman predictors are evaluated separately on sandy-loam and clay test traj
 The representative trajectory compares the simulated response (blue) with the K-SSID prediction (red) over 20 seconds.
 
 <p align="center">
-  <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_rand_traj_6_150.png" alt="Sandy-loam trajectory and velocity prediction" width="900">
+  <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_rand_traj_6_150.png" alt="Sandy-loam trajectory and velocity prediction" width="650">
 </p>
 
 Prediction error generally increases as the interval between measurement refreshes grows and as the open-loop prediction advances in time.
 
 | Error over the refreshing horizon | Error over prediction time |
 |:---:|:---:|
-| <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_refreshing_time_NRMSE.png" alt="Sandy-loam prediction error versus refreshing horizon" width="100%"> | <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_error_with_time_time_RMSE.png" alt="Sandy-loam prediction error over time" width="100%"> |
+| <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_refreshing_time_NRMSE.png" alt="Sandy-loam prediction error versus refreshing horizon" width="80%"> | <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_error_with_time_time_RMSE.png" alt="Sandy-loam prediction error over time" width="80%"> |
 
 ### Clay
 
 The clay example likewise compares the simulated and Koopman-predicted trajectory and velocity states over 20 seconds.
 
 <p align="center">
-  <img src="result_analysis/Clay_prediction/clay_123_rand_trajectory_23_v2.png" alt="Clay trajectory and velocity prediction" width="900">
+  <img src="result_analysis/Clay_prediction/clay_123_rand_trajectory_23_v2.png" alt="Clay trajectory and velocity prediction" width="650">
 </p>
 
 The clay error plots show the effect of extending the measurement-refresh interval and the growth of prediction error with time.
 
 | Error over the refreshing horizon | Error over prediction time |
 |:---:|:---:|
-| <img src="result_analysis/Clay_prediction/clay_refreshing_time_RMSE_123_v2.png" alt="Clay prediction error versus refreshing horizon" width="100%"> | <img src="result_analysis/Clay_prediction/clay_error_with_time_123_v2.png" alt="Clay prediction error over time" width="100%"> |
+| <img src="result_analysis/Clay_prediction/clay_refreshing_time_RMSE_123_v2.png" alt="Clay prediction error versus refreshing horizon" width="80%"> | <img src="result_analysis/Clay_prediction/clay_error_with_time_123_v2.png" alt="Clay prediction error over time" width="80%"> |
+
+### Need for terrain-specific Koopman operators
+
+A Koopman operator trained on sandy loam fails when it is used to control the vehicle on clay because the terrain mismatch causes prediction drift and loss of safe trajectory tracking. In contrast, the clay-specific operator remains stable on clay and successfully completes the maneuver, motivating terrain-aware operator selection or online adaptation.
+
+| **Failure:** sandy-loam operator on clay | **Success:** clay operator on clay |
+|:---:|:---:|
+| <img src="docs/media/kmpc_sandy_operator_on_clay_failure.gif" alt="Failure of the sandy-loam Koopman operator during closed-loop control on clay" width="80%"> | <img src="docs/media/kmpc_clay_operator_on_clay_safe.gif" alt="Successful closed-loop control using the clay Koopman operator on clay" width="80%"> |
 
 ## Repository structure
 
