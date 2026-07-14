@@ -1,11 +1,16 @@
-# Ignore files to upload to git
-# ignore all slurm.out files
-*.out
-*.mat
-*.fig
-*.avi
+# Large local datasets (individual combined files are approximately 10 GB)
+/Datasets/
+/datasets/
 
-# Ignore all dataset file as they are large
-Datasets/
-datasets/
-*.fig
+# Generated Koopman model workspaces (many files exceed 100 MB)
+/scripts/koopman_training/results/*/models_with_error/
+
+# Generated binary analysis artifacts
+/result_analysis/**/*.mat
+/result_analysis/**/*.fig
+/result_analysis/**/*.avi
+
+# MATLAB and cluster temporary files
+*.asv
+*.out
+slurm-*.out
