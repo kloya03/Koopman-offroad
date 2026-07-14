@@ -7,6 +7,12 @@ MATLAB research code accompanying the paper **“Koopman Operator Framework for 
 
 The paper is available on [arXiv](https://arxiv.org/abs/2603.28965) and has been submitted to the *ASME Journal of Autonomous Vehicles and Systems* (JAVS-26-1012).
 
+## About this repository
+
+This repository contains the MATLAB simulation, data-processing, Koopman-model training, prediction-analysis, and model predictive control code used to study off-road vehicle dynamics on sandy-loam and clay terrain.
+
+**Paper conclusion:** Terrain-specific Koopman operators provide accurate short-horizon predictions at a computational cost suitable for constrained MPC. The results also show that using an operator learned for the wrong terrain can cause large prediction errors and unsafe closed-loop behavior, motivating terrain-aware model selection or online adaptation.
+
 ## Overview
 
 This repository implements a hybrid physics-informed and data-driven framework for predicting and controlling off-road vehicle motion on deformable terrain. The workflow combines:
@@ -19,45 +25,37 @@ This repository implements a hybrid physics-informed and data-driven framework f
 
 The learned models provide stable short-horizon predictions, can account for mild terrain-height variation, and support closed-loop tracking subject to steering and wheel-torque constraints.
 
-## Representative results
+## Prediction results
 
-### Koopman prediction
+The Koopman predictors are evaluated separately on sandy-loam and clay test trajectories. The plots report the predicted body-frame longitudinal velocity $u$, lateral velocity $v$, and yaw rate $\dot{\psi}$.
 
-The following examples compare the simulated vehicle response (blue) against the K-SSID prediction (red) over a 20-second horizon.
+### Sandy loam
 
-| Sandy loam | Clay |
-|:---:|:---:|
-| <img src="result_analysis/Sandyloam_prediction/SL_rand_traj_6_150_v2.png" alt="Sandy-loam trajectory and velocity prediction" width="100%"> | <img src="result_analysis/Clay_prediction/clay_123_rand_trajectory_23_v2.png" alt="Clay trajectory and velocity prediction" width="100%"> |
-
-### Koopman model predictive control
-
-The constrained KMPC comparison below shows reference tracking and the predicted body-frame velocity states using the clay and sandy-loam Koopman models.
+The representative trajectory compares the simulated response (blue) with the K-SSID prediction (red) over 20 seconds.
 
 <p align="center">
-  <img src="result_analysis/koopman_MPC/mpc_tune_sandy_20251215_012717/MPC1_dual.png" alt="Koopman MPC trajectory tracking comparison on clay and sandy loam" width="900">
+  <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_rand_traj_6_150.png" alt="Sandy-loam trajectory and velocity prediction" width="900">
 </p>
 
-### Closed-loop KMPC animations
+Prediction error generally increases as the interval between measurement refreshes grows and as the open-loop prediction advances in time.
 
-These animations show the evolving reference path, closed-loop vehicle trajectory, Koopman prediction, and constrained steering and torque inputs for terrain-matched models.
-
-| Sandy-loam model on sandy loam | Clay model on clay |
+| Error over the refreshing horizon | Error over prediction time |
 |:---:|:---:|
-| <img src="docs/media/kmpc_sandy_loam.gif" alt="Closed-loop Koopman MPC animation using the sandy-loam model on sandy loam" width="100%"> | <img src="docs/media/kmpc_clay.gif" alt="Closed-loop Koopman MPC animation using the clay model on clay" width="100%"> |
+| <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_refreshing_time_NRMSE.png" alt="Sandy-loam prediction error versus refreshing horizon" width="100%"> | <img src="result_analysis/Sandyloam_prediction/New_Images/Final/SL_error_with_time_time_RMSE.png" alt="Sandy-loam prediction error over time" width="100%"> |
 
-### Why terrain-specific Koopman operators matter
+### Clay
 
-The same clay-terrain maneuver was controlled using two different Koopman operators. The sandy-loam operator does not capture the clay vehicle–terrain interaction: its prediction diverges, the controller reaches the steering and torque limits, and the vehicle leaves the safe tracking behavior. The clay-specific operator maintains safe closed-loop tracking on clay.
+The clay example likewise compares the simulated and Koopman-predicted trajectory and velocity states over 20 seconds.
 
-| **Failure:** sandy-loam operator on clay | **Safe:** clay operator on clay |
+<p align="center">
+  <img src="result_analysis/Clay_prediction/clay_123_rand_trajectory_23_v2.png" alt="Clay trajectory and velocity prediction" width="900">
+</p>
+
+The clay error plots show the effect of extending the measurement-refresh interval and the growth of prediction error with time.
+
+| Error over the refreshing horizon | Error over prediction time |
 |:---:|:---:|
-| <img src="docs/media/kmpc_sandy_operator_on_clay_failure.gif" alt="Failure of the sandy-loam Koopman operator during closed-loop control on clay" width="100%"> | <img src="docs/media/kmpc_clay_operator_on_clay_safe.gif" alt="Safe closed-loop control using the clay Koopman operator on clay" width="100%"> |
-
-The prediction-error results reinforce the closed-loop comparison. Applying the sandy-loam operator to clay produces much larger errors as the refreshing interval increases, particularly for lateral velocity $v$. The terrain-matched clay operator retains substantially lower errors for longitudinal velocity $u$, lateral velocity $v$, and yaw rate $\dot{\psi}$.
-
-| Sandy-loam operator evaluated on clay | Clay operator evaluated on clay |
-|:---:|:---:|
-| <img src="result_analysis/Clay_prediction/sandy_on_clay_refresh_error.png" alt="Prediction RMSE versus refreshing time for the sandy-loam Koopman operator evaluated on clay" width="100%"> | <img src="result_analysis/Clay_prediction/clay_refreshing_time_RMSE_123_v2.png" alt="Prediction RMSE versus refreshing time for the clay Koopman operator evaluated on clay" width="100%"> |
+| <img src="result_analysis/Clay_prediction/clay_refreshing_time_RMSE_123_v2.png" alt="Clay prediction error versus refreshing horizon" width="100%"> | <img src="result_analysis/Clay_prediction/clay_error_with_time_123_v2.png" alt="Clay prediction error over time" width="100%"> |
 
 ## Repository structure
 
