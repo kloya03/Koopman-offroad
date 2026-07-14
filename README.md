@@ -57,13 +57,13 @@ The clay error plots show the effect of extending the measurement-refresh interv
 |:---:|:---:|
 | <img src="result_analysis/Clay_prediction/clay_refreshing_time_RMSE_123_v2.png" alt="Clay prediction error versus refreshing horizon" width="80%"> | <img src="result_analysis/Clay_prediction/clay_error_with_time_123_v2.png" alt="Clay prediction error over time" width="80%"> |
 
-### Need for terrain-specific Koopman operators
+<!-- ### Need for terrain-specific Koopman operators
 
 A Koopman operator trained on sandy loam fails when it is used to control the vehicle on clay because the terrain mismatch causes prediction drift and loss of safe trajectory tracking. In contrast, the clay-specific operator remains stable on clay and successfully completes the maneuver, motivating terrain-aware operator selection or online adaptation.
 
 | **Failure:** sandy-loam operator on clay | **Success:** clay operator on clay |
 |:---:|:---:|
-| <img src="docs/media/kmpc_sandy_operator_on_clay_failure.gif" alt="Failure of the sandy-loam Koopman operator during closed-loop control on clay" width="80%"> | <img src="docs/media/kmpc_clay_operator_on_clay_safe.gif" alt="Successful closed-loop control using the clay Koopman operator on clay" width="80%"> |
+| <img src="docs/media/kmpc_sandy_operator_on_clay_failure.gif" alt="Failure of the sandy-loam Koopman operator during closed-loop control on clay" width="80%"> | <img src="docs/media/kmpc_clay_operator_on_clay_safe.gif" alt="Successful closed-loop control using the clay Koopman operator on clay" width="80%"> | -->
 
 ## Repository structure
 
