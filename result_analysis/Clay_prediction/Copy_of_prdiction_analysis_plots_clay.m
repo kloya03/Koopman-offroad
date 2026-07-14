@@ -250,8 +250,8 @@ for i=23%randi(size(trajj,2))%2:2:size(trajj,2)
     plot(yout(tstep,1),yout(tstep,2),'b','linewidth',lw); hold on;
     plot(ypred(tstep,1),ypred(tstep,2),'r','linewidth',lw);grid on;
     legend('True','K-SSID','FontSize',35)
-    xlabel('X')
-    ylabel('Y')
+    xlabel('X (m)')
+    ylabel('Y (m)')
     box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle

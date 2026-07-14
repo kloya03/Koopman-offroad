@@ -318,12 +318,12 @@ for jj=1:3
     grid on;
     hold off;
 end
-
+%%
 figure(3)
 for jj=1:2
     subplot(2,1,jj)
-    plot(b.tspan,Data.InputData(:,jj),'LineWidth',lw); hold on;
-    plot(b.tspan,usol(jj,1:2001),'LineWidth',lw); grid on;
+    % plot(b.tspan,Data.InputData(:,jj),'LineWidth',lw); %hold on;
+    plot(b.tspan,usol(jj,1:2001),'r','LineWidth',lw); grid on;
     xlabel('Time [s]')
     ylabel(Data.InputName{jj},'Interpreter','latex')
     box on;

@@ -142,6 +142,7 @@ addpath('../../functions/utility/')
 folder = '../../scripts/koopman_training/results/clay_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
+load(
 load(filename,"MDL_fitr","A","B","Bc1","C",...
     "Cc1","K_obs","mean_std_out","rr","base_name");   % load the file
 load('../../datasets/sandyloam_100hz_elev_experiment_1572.mat','testData','b');
@@ -241,20 +242,20 @@ load(filename,"MDL_fitr","A","B","Bc1","C",...
 test_ntr = size(testData,4);
 refresh = [25,50,75,100,125,150,175,200,225,250];
 k=6; tstep = 0+(1:2001); lw=4;
-trajj = [2,3,5,6,8,25,26,27,49,67,73,76,79,80,84,88,94,97,98,99];
-for i=4;%randi(size(trajj,2))%2:2:size(trajj,2)
+trajj = 6;%[2,3,5,6,8,25,26,27,49,67,73,76,79,80,84,88,94,97,98,99];
+for i=randi(size(trajj,2))%2:2:size(trajj,2)
     trajj(i)
     allErr = []; allY = [];
     [ypred,yout,~,ypred_95]  = K_RSSID_prediction(getexp(testData,trajj(i)),...
         MDL_fitr,A,B,Bc1,...
         C,Cc1,K_obs,mean_std_out,refresh(k));
     figure(1)
-    subplot(2,2,1)
+    % subplot(2,2,1)
     plot(yout(tstep,1),yout(tstep,2),'b','linewidth',lw); hold on;
     plot(ypred(tstep,1),ypred(tstep,2),'r','linewidth',lw-1);grid on;
     legend('True','K-SSID')
-    xlabel('X')
-    ylabel('Y')
+    xlabel('X (m)')
+    ylabel('Y (m)')
     box on;
     set(gca, 'LineWidth', 1.5)
     ax = gca;   % Get the current axes handle
@@ -262,7 +263,8 @@ for i=4;%randi(size(trajj,2))%2:2:size(trajj,2)
     hold off;
 
     for jj=K_obs
-        subplot(2,2,jj-2)
+        % subplot(2,2,jj-2)
+        figure(jj)
         plot(t_hc(tstep),yout(tstep,jj),'b','linewidth',lw); hold on;
         plot(t_hc(tstep),ypred(tstep,jj),'r','linewidth',lw);hold on;
         % plot(t_hc(tstep),squeeze(ypred_95(1,tstep,jj-3)),'-k','linewidth',lw);hold on;
@@ -273,7 +275,7 @@ for i=4;%randi(size(trajj,2))%2:2:size(trajj,2)
         box on;
         set(gca, 'LineWidth', 1.5)
         ax = gca;   % Get the current axes handle
-        ax.FontSize = 35; % Set the font size to 14 points
+        ax.FontSize = 45; % Set the font size to 14 points
         grid on;
         hold off;
         if jj==4
@@ -299,7 +301,7 @@ kk =124
 folder = '../../scripts/koopman_training/results/sandyloam_noelev_models/models_with_error/';
 files = dir(fullfile(folder, '*.mat'));   % or *.txt, *.csv, etc.
 filename = fullfile(folder, files(kk).name);
-load(filename,"A")
+load(filename),"A")
 eigvals = eig(A);     % typically you get them from a matrix
 % Compute magnitudes
 mag = abs(eigvals);

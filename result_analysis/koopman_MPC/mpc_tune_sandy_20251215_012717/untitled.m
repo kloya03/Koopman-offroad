@@ -373,7 +373,7 @@ end
 
 figure(5)
 for jj=1:2
-    subplot(2,2,jj)
+    subplot(2,1,jj)
     % hold on;
     plot(0,0,'LineWidth',lw-3);
     plot(models{2}.tspan,models{2}.usol(jj,:),cc{2},'LineWidth',lw); hold on;
